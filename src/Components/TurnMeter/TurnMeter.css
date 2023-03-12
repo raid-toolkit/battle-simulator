@@ -1,7 +1,20 @@
+.turn-meter-container {
+  display: inline-flex;
+  min-height: 24px;
+  flex-direction: row;
+  align-items: center;
+}
+
+.turn-meter-container.has-details {
+  cursor: pointer;
+}
+
 .turn-meter {
+  flex: 1;
   position: relative;
-  display: inline-block;
-  background-color: rgba(0, 0, 0, 0.25);
+  display: block;
+  min-height: 10px;
+  background-color: rgb(96, 96, 96);
 }
 
 .turn-meter .turn-meter-details {
@@ -28,32 +41,8 @@
   visibility: visible;
 }
 
-.turn-meter.has-details {
-  cursor: pointer;
-}
-
-.turn-meter .filled {
-  background-color: #e5d45b; /* in-game */
-  position: absolute;
-  left: 0px;
-  top: 0px;
-  bottom: 0px;
-}
-
-.turn-meter .over-filled {
-  background-color: #e58b5b; /* in-game */
-  position: absolute;
-  right: 0px;
-  top: 0px;
-  bottom: 0px;
-}
-
-.turn-meter .layer {
-  position: absolute;
-  left: 0px;
-  top: 0px;
-  right: 0px;
-  bottom: 0px;
+.turn-meter .fill {
+  background-color: rgba(128, 128, 128, 0.25);
 }
 
 .turn-meter .grid {
@@ -69,4 +58,45 @@
 
 .turn-meter .cell:last-child {
   border-right: 1px solid #000;
+}
+
+.turn-meter .filled {
+  background-color: #e5d45b; /* in-game */
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  bottom: 0px;
+}
+
+.turn-meter.winner .filled {
+  background-color: #85b61b; /* in-game */
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  bottom: 0px;
+}
+
+.turn-meter .over-filled {
+  background-color: #e58b5b;
+  background: linear-gradient(to right, #c21919 75%, #e58b5b);
+  background-clip: content-box;
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
+}
+
+.turn-meter.winner .over-filled {
+  background: initial;
+  background-color: #6bea22;
+  background-clip: content-box;
+}
+
+.turn-meter .layer {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
 }
