@@ -1,0 +1,13 @@
+.tooltip-host {
+  position: relative;
+}
+
+.tooltip-host .tooltip {
+  visibility: hidden;
+  position: absolute;
+  z-index: 1;
+}
+
+.tooltip-host:hover .tooltip {
+  visibility: visible;
+}

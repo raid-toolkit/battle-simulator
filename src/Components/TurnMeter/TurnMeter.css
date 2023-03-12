@@ -1,0 +1,72 @@
+.turn-meter {
+  position: relative;
+  display: inline-block;
+  background-color: rgba(0, 0, 0, 0.25);
+}
+
+.turn-meter .turn-meter-details {
+  visibility: hidden;
+  position: absolute;
+  z-index: 1;
+  top: 100%;
+  left: 0px;
+  right: 0px;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+  text-align: center;
+  padding: 4px;
+  overflow: visible;
+  border-width: 0px 1px 1px 1px;
+  border-style: solid;
+  border-color: #000;
+}
+
+.turn-meter:focus-within .turn-meter-details,
+.turn-meter:hover .turn-meter-details {
+  visibility: visible;
+}
+
+.turn-meter.has-details {
+  cursor: pointer;
+}
+
+.turn-meter .filled {
+  background-color: #e5d45b; /* in-game */
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  bottom: 0px;
+}
+
+.turn-meter .over-filled {
+  background-color: #e58b5b; /* in-game */
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
+}
+
+.turn-meter .layer {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+}
+
+.turn-meter .grid {
+  display: grid;
+  grid-template-columns: repeat(4, auto);
+}
+
+.turn-meter .cell {
+  border-top: 1px solid #000;
+  border-left: 1px solid #000;
+  border-bottom: 1px solid #000;
+}
+
+.turn-meter .cell:last-child {
+  border-right: 1px solid #000;
+}
