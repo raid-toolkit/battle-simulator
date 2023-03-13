@@ -25,7 +25,8 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "extract-images": "node ./scripts/getImages.mjs --verbose"
   },
   "eslintConfig": {
     "extends": [
@@ -67,6 +68,8 @@
     "@storybook/react": "^6.5.16",
     "@storybook/testing-library": "^0.0.13",
     "babel-plugin-named-exports-order": "^0.0.2",
+    "execa": "^6.1.0",
+    "multiview": "^3.0.1",
     "prop-types": "^15.8.1",
     "webpack": "^5.76.1"
   }

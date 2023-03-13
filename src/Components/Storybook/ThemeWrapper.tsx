@@ -1,9 +1,6 @@
 import { ConfigProvider, theme } from "antd";
 import React from "react";
 
-const storyApi = (globalThis as any).__STORYBOOK_CLIENT_API__;
-const storyPreview = (globalThis as any).__STORYBOOK_PREVIEW__;
-
 function getTheme(backgroundValue?: string) {
   switch (backgroundValue) {
     case "#F8F8F8":
@@ -19,7 +16,9 @@ export const ThemeWrapper: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
   const [algorithm, setAlgorithm] = React.useState<any>(() =>
-    getTheme(storyApi?.storyStore?.globals)
+    getTheme(
+      __STORYBOOK_CLIENT_API__?.storyStore?.globals.globals.backgrounds?.value
+    )
   );
 
   React.useEffect(() => {
@@ -28,13 +27,13 @@ export const ThemeWrapper: React.FC<React.PropsWithChildren> = ({
       setAlgorithm(() => getTheme(backgroundValue));
     };
 
-    const currentValue = storyApi?.storyStore?.globals;
+    const currentValue = __STORYBOOK_CLIENT_API__?.storyStore?.globals;
     currentValue && listener(currentValue);
-    storyPreview.channel.addListener("updateGlobals", listener);
-    storyPreview.channel.addListener("setGlobals", listener);
+    __STORYBOOK_PREVIEW__?.channel.addListener("updateGlobals", listener);
+    __STORYBOOK_PREVIEW__?.channel.addListener("setGlobals", listener);
     return () => {
-      storyPreview.channel.removeListener("setGlobals", listener);
-      storyPreview.channel.removeListener("updateGlobals", listener);
+      __STORYBOOK_PREVIEW__?.channel.removeListener("setGlobals", listener);
+      __STORYBOOK_PREVIEW__?.channel.removeListener("updateGlobals", listener);
     };
   }, []);
   return <ConfigProvider theme={{ algorithm }}>{children}</ConfigProvider>;

@@ -2,7 +2,7 @@ import React from "react";
 import { RTK } from "../../Data";
 import { Select } from "antd";
 import { Avatar } from "../Avatar/Avatar";
-import { HeroType } from "@raid-toolkit/webclient";
+import { Faction, HeroType } from "@raid-toolkit/webclient";
 import { createAsyncDataSource, useAsyncDataSource } from "../Hooks";
 
 export interface ChampionSelectMenuProps {}
@@ -53,7 +53,10 @@ function heroTypeToOption([, heroType]: [
 const heroTypes = createAsyncDataSource(() => {
   return RTK.wait().then((rtk) => {
     return Object.entries(rtk.heroTypes)
-      .filter(([id]) => parseInt(id, 10) % 10 === 0)
+      .filter(
+        ([id, type]) =>
+          parseInt(id, 10) % 10 === 0 && type.faction !== Faction.Unknown
+      )
       .map(heroTypeToOption);
   });
 }, []);
