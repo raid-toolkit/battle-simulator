@@ -1,14 +1,22 @@
 import React from "react";
-import { RTK } from "../../Data";
 import { Select } from "antd";
+import { useAsyncDataSource } from "../Hooks";
+import "./ChampionSelectMenu.css";
+import { heroTypesDataSource } from "../DataSources/HeroTypesDataSource";
+import { HeroType } from "@raid-toolkit/webclient";
 import { Avatar } from "../Avatar/Avatar";
-import { Faction, HeroType } from "@raid-toolkit/webclient";
-import { createAsyncDataSource, useAsyncDataSource } from "../Hooks";
 
-export interface ChampionSelectMenuProps {}
+export interface ChampionSelectMenuProps {
+  selectedValue?: string;
+  onSelect?: (
+    typeId: string | undefined,
+    heroType: HeroType | undefined
+  ) => void;
+}
 
 export interface ChampionSelectItemProps {
-  value: string;
+  readonly value: string;
+  readonly heroType: HeroType;
   readonly label: JSX.Element;
   readonly children: JSX.Element;
   match(value: string): boolean;
@@ -19,6 +27,7 @@ function heroTypeToOption([, heroType]: [
   heroType: HeroType
 ]): ChampionSelectItemProps {
   return {
+    heroType,
     value: heroType.typeId.toString(),
     match(value: string) {
       return heroType.name.defaultValue
@@ -27,19 +36,8 @@ function heroTypeToOption([, heroType]: [
     },
     get label() {
       return (
-        <div
-          style={{
-            cursor: "pointer",
-            display: "flex",
-            alignItems: "center",
-            gap: 4,
-          }}
-        >
-          <Avatar
-            height="1em"
-            width="1em"
-            id={(heroType.typeId - (heroType.typeId % 10)).toString()}
-          />
+        <div className="champion-select-item">
+          <Avatar height="1em" width="1em" id={heroType.avatarKey} />
           {heroType.name.defaultValue}
         </div>
       );
@@ -50,21 +48,23 @@ function heroTypeToOption([, heroType]: [
   };
 }
 
-const heroTypes = createAsyncDataSource(() => {
-  return RTK.wait().then((rtk) => {
-    return Object.entries(rtk.heroTypes)
-      .filter(
-        ([id, type]) =>
-          parseInt(id, 10) % 10 === 0 && type.faction !== Faction.Unknown
-      )
-      .map(heroTypeToOption);
-  });
-}, []);
-
-export const ChampionSelectMenu: React.FC<ChampionSelectMenuProps> = (
-  props
-) => {
-  const options = useAsyncDataSource(heroTypes);
+export const ChampionSelectMenu: React.FC<ChampionSelectMenuProps> = ({
+  onSelect,
+  selectedValue,
+}) => {
+  const heroTypes = useAsyncDataSource(heroTypesDataSource);
+  const options = React.useMemo(
+    () => heroTypes.map(heroTypeToOption),
+    [heroTypes]
+  );
+  const [value, setValue] = React.useState<string | undefined>(undefined);
+  const handleSelect = React.useCallback(
+    (_: unknown, value?: ChampionSelectItemProps) => {
+      setValue(value?.value);
+      onSelect?.(value?.value, value?.heroType);
+    },
+    [onSelect]
+  );
   return (
     <Select
       showSearch
@@ -76,6 +76,8 @@ export const ChampionSelectMenu: React.FC<ChampionSelectMenuProps> = (
       style={{ width: 300 }}
       filterOption={(input, option) => !!option?.match(input)}
       options={options}
+      value={selectedValue ?? value}
+      onSelect={handleSelect}
     />
   );
 };

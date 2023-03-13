@@ -7,7 +7,10 @@ import { ThemeWrapper } from "../Storybook/ThemeWrapper";
 export default {
   title: "Components/ChampionSelectMenu",
   component: ChampionSelectMenu,
-  argTypes: {},
+  argTypes: {
+    selectedValue: { type: "string" },
+    onSelect: { onClick: { action: "selected" } },
+  },
 } as ComponentMeta<typeof ChampionSelectMenu>;
 
 const Template: ComponentStory<typeof ChampionSelectMenu> = (args) => (

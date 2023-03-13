@@ -1,0 +1,11 @@
+.card-divider {
+  position: relative;
+}
+
+.card-divider .card-divider-title {
+  position: absolute;
+  top: -0.5lh;
+  left: -8px;
+  padding: 1px 8px;
+  border-radius: 6px 6px 0px 0px;
+}

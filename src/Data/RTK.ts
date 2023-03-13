@@ -4,6 +4,7 @@ import {
   IAccountApi,
   IStaticDataApi,
   HeroType,
+  SkillType,
 } from "@raid-toolkit/webclient";
 import { staticDataStore } from "./Forage";
 
@@ -12,6 +13,8 @@ export class RTKApp {
   public readonly staticApi: IStaticDataApi;
 
   public readonly heroTypes: Record<number, HeroType> = {};
+  public readonly skillTypes: Record<number, SkillType> = {};
+  public readonly strings: Record<string, string | undefined> = {};
   private readonly _loadPromise: Promise<void>;
 
   public async wait(): Promise<this> {
@@ -25,19 +28,31 @@ export class RTKApp {
     this._loadPromise = this.load();
   }
 
-  public async load() {
-    await Promise.all([this.loadHeroTypes()]);
+  public async load(): Promise<void> {
+    const loadMap: { [key in keyof RTKApp]?: () => Promise<RTKApp[key]> } = {
+      heroTypes: () =>
+        RTK.staticApi.getHeroData().then((data) => data.heroTypes),
+      skillTypes: () =>
+        RTK.staticApi.getSkillData().then((data) => data.skillTypes),
+      strings: () => RTK.staticApi.getLocalizedStrings(),
+    };
+    await Promise.all(
+      Object.entries(loadMap).map(([key, load]) =>
+        this.loadData(key as keyof RTKApp, load)
+      )
+    );
   }
 
-  private async loadHeroTypes() {
-    let data = await staticDataStore.getItem<Record<number, HeroType>>(
-      "heroTypes"
-    );
+  private async loadData<P extends keyof RTKApp>(
+    key: P,
+    load: () => Promise<RTKApp[P]>
+  ) {
+    let data = await staticDataStore.getItem<RTKApp[P]>(key);
     if (!data) {
-      data = (await RTK.staticApi.getHeroData()).heroTypes;
-      await staticDataStore.setItem("heroTypes", data);
+      data = await load();
+      await staticDataStore.setItem(key, data);
     }
-    Object.assign(this.heroTypes, data);
+    Object.assign(this[key] as {}, data);
   }
 }
 

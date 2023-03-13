@@ -1,5 +1,6 @@
 import { ConfigProvider, theme } from "antd";
 import React from "react";
+import "antd/dist/reset.css";
 
 function getTheme(backgroundValue?: string) {
   switch (backgroundValue) {

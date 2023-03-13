@@ -10,3 +10,7 @@ localforage.config({
 export const staticDataStore = localforage.createInstance({
   name: "static-data",
 });
+
+export const userDataStore = localforage.createInstance({
+  name: "user-data",
+});

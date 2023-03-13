@@ -1,0 +1,52 @@
+.card {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  margin: 0px 0px 16px;
+  background-color: rgb(20, 20, 20);
+  border: 1px solid rgba(253, 253, 253, 0.12);
+  border-radius: 6px;
+}
+
+.card .card-main {
+  border-radius: 6px 6px 0px 0px;
+}
+
+.card-main {
+  padding: 42px 24px 50px;
+  color: rgba(255, 255, 255, 0.85);
+  border-bottom: 1px solid rgba(253, 253, 253, 0.12);
+}
+
+.card-section {
+  position: relative;
+  width: 100%;
+  font-size: 14px;
+  border-radius: 0px 0px 6px 6px;
+  padding: 18px 24px 12px;
+}
+
+.card-section-title {
+  position: absolute;
+  top: -14px;
+  margin-left: 16px;
+  padding: 1px 8px;
+  color: rgb(119, 119, 119);
+  background: rgb(20, 20, 20);
+  border-radius: 6px 6px 0px 0px;
+}
+
+.card .card-section-title,
+.card .card-section-title a {
+  background: rgb(20, 20, 20);
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.ant-card .ant-divider {
+  width: unset;
+  margin: 24px -24px;
+}
+
+.ant-card .ant-divider-inner-text {
+  padding: 0px 4px;
+}
