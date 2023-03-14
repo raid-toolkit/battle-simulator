@@ -1,5 +1,5 @@
 import { renderHook, act } from "@testing-library/react";
-import { useDebounceCallback } from "./useCollect";
+import { useCollector } from "./useCollector";
 
 function renderDebounceCallback<CallbackArgs extends any[], CallbackState>(
   callback: (state: CallbackState) => void,
@@ -10,9 +10,7 @@ function renderDebounceCallback<CallbackArgs extends any[], CallbackState>(
   wait = 100,
   leading = false
 ) {
-  return renderHook(() =>
-    useDebounceCallback(callback, collect, wait, leading)
-  );
+  return renderHook(() => useCollector(callback, collect, wait, leading));
 }
 
 describe("useDebounce()", () => {

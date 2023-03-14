@@ -1,7 +1,7 @@
 import React from "react";
 import { useLatest } from "./useLatest";
 
-export function useDebounceCallback<CallbackArgs extends any[], CallbackState>(
+export function useCollector<CallbackArgs extends any[], CallbackState>(
   callback: (state: CallbackState) => void,
   collect: (
     state: CallbackState | undefined,

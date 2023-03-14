@@ -7,6 +7,7 @@ import { HeroType } from "@raid-toolkit/webclient";
 import { Avatar } from "../Avatar/Avatar";
 
 export interface ChampionSelectMenuProps {
+  style?: React.CSSProperties;
   selectedValue?: string;
   onSelect?: (
     typeId: string | undefined,
@@ -51,6 +52,7 @@ function heroTypeToOption([, heroType]: [
 export const ChampionSelectMenu: React.FC<ChampionSelectMenuProps> = ({
   onSelect,
   selectedValue,
+  style,
 }) => {
   const heroTypes = useAsyncDataSource(heroTypesDataSource);
   const options = React.useMemo(
@@ -65,6 +67,7 @@ export const ChampionSelectMenu: React.FC<ChampionSelectMenuProps> = ({
     },
     [onSelect]
   );
+  const styleMemo = React.useMemo(() => ({ width: 300, ...style }), [style]);
   return (
     <Select
       showSearch
@@ -73,7 +76,7 @@ export const ChampionSelectMenu: React.FC<ChampionSelectMenuProps> = ({
       placeholder="Select a champion"
       optionLabelProp="label"
       size="large"
-      style={{ width: 300 }}
+      style={styleMemo}
       filterOption={(input, option) => !!option?.match(input)}
       options={options}
       value={selectedValue ?? value}

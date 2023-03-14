@@ -1,60 +1,72 @@
 import React from "react";
 import { SkillType } from "@raid-toolkit/webclient";
-import { Card, Descriptions, InputNumber, Space } from "antd";
-import { SettingOutlined } from "@ant-design/icons";
+import { Card, Space, Button } from "antd";
 import {
   getString,
   skillTypesDataSource,
   stringsDataSource,
 } from "../DataSources";
-import { useAsyncDataSource, useForage } from "../Hooks";
+import { useAsyncDataSource } from "../Hooks";
 import { ThemeWrapper } from "../Storybook/ThemeWrapper";
-import "./SkillEditor.css";
-import { CardDivider } from "../CardDivider/CardDivider";
 import { RichString } from "../RichString/RichString";
-import { userDataStore } from "../../Data/Forage";
+import { NumberSpinner } from "../NumberSpinner/NumberSpinner";
 
 export interface SkillEditorProps {
   skillId: number;
 }
 
+const Addon: React.FC<React.PropsWithChildren> = ({ children }) => (
+  <span style={{ width: 75, textAlign: "left", display: "inline-block" }}>
+    {children}
+  </span>
+);
+
 export const SkillEditor: React.FC<SkillEditorProps> = ({ skillId }) => {
   const skillTypes = useAsyncDataSource(skillTypesDataSource);
   const skillType = skillTypes[skillId] as SkillType | undefined;
   const strings = useAsyncDataSource(stringsDataSource);
-  const name = getString(strings, skillType?.name);
   const description = getString(strings, skillType?.description);
-
-  const [hits, setHits] = useForage<number | null>(
-    userDataStore,
-    `(skill:${skillId}).hits`,
-    1
-  );
 
   return (
     <ThemeWrapper>
-      <Card title={name} actions={[<SettingOutlined key="setting" />]}>
-        <Space>
-          <InputNumber
-            addonBefore="# of hits"
-            value={hits}
-            onChange={setHits}
+      <Card
+        title={skillType?.name.defaultValue}
+        size="small"
+        style={{ width: 250 }}
+      >
+        <Space direction="vertical">
+          <RichString>{description}</RichString>
+          <NumberSpinner
+            addonAfter={<Addon>cooldown</Addon>}
             min={0}
             max={10}
             maxLength={2}
-            onWheel={(e) => {
-              if (e.deltaY > 0) {
-                setHits((hits) => (hits ?? 1) - 1);
-              } else if (e.deltaY < 0) {
-                setHits((hits) => (hits ?? 1) + 1);
-              }
-              e.preventDefault();
-            }}
-            style={{ width: 136 }}
+            precision={0}
           />
+          <NumberSpinner
+            addonAfter={<Addon>hits</Addon>}
+            min={0}
+            max={10}
+            maxLength={2}
+            precision={0}
+          />
+          <Space.Compact>
+            <Button type={"primary"}>
+              <img
+                alt="block heal"
+                src="/images/effects/BlockHeal2.png"
+                style={{ width: 24, height: 24 }}
+              />
+            </Button>
+            <NumberSpinner
+              addonAfter={<Addon>turns</Addon>}
+              min={0}
+              max={10}
+              maxLength={2}
+              precision={0}
+            />
+          </Space.Compact>
         </Space>
-        <CardDivider>Description</CardDivider>
-        <RichString>{description}</RichString>
       </Card>
     </ThemeWrapper>
   );

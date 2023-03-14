@@ -14,8 +14,9 @@ function getCache(forage: LocalForage) {
 export function useForage<T>(
   forage: LocalForage,
   key: string,
-  defaultValue: T
-): [T, React.Dispatch<React.SetStateAction<T>>] {
+  defaultValue: T,
+  validate: (value: T) => T = (a) => a
+): [T, React.Dispatch<React.SetStateAction<T | null>>] {
   forage.getItem(key);
 
   const [state, setState] = React.useState<T>(defaultValue);
@@ -26,9 +27,9 @@ export function useForage<T>(
     //   return;
     // }
     forage.getItem<T>(key).then((value) => {
-      setState(value ?? defaultValue);
+      setState(validate(value ?? defaultValue));
     });
-  }, [defaultValue, forage, key]);
+  }, [defaultValue, forage, key, validate]);
 
   const setValue = React.useCallback<React.Dispatch<React.SetStateAction<T>>>(
     (value) => {
@@ -40,10 +41,10 @@ export function useForage<T>(
         forage.setItem(key, newValue).then(() => {
           getCache(forage)[key] = newValue;
         });
-        return newValue;
+        return validate(newValue);
       });
     },
-    [forage, key]
+    [forage, key, validate]
   );
-  return [state, setValue];
+  return [state, setValue as React.Dispatch<React.SetStateAction<T | null>>];
 }

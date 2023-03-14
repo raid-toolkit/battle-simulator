@@ -1,4 +1,4 @@
 export * from "./AsyncDataSource";
 export * from "./useForage";
-export * from "./useCollect";
+export * from "./useWheelHack";
 export * from "./useLatest";
