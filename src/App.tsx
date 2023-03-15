@@ -1,33 +1,46 @@
-import React from "react";
-import logo from "./logo.svg";
 import "./App.css";
-import { ChampionSetup } from "./ChampionSetup";
-import { Card, ConfigProvider, Grid, Input, Layout, Space, theme } from "antd";
+import { ChampionSetupListView } from "./Views/ChampionSetupListView";
+import { ConfigProvider, Input, Layout, theme } from "antd";
 
 function App() {
+  const {
+    token: { colorBgContainerDisabled, borderRadius, colorBorder },
+  } = theme.useToken();
   return (
-    <ConfigProvider theme={{ algorithm: theme.darkAlgorithm }}>
+    <Layout>
+      <Layout.Header
+        style={{ background: colorBgContainerDisabled }}
+      ></Layout.Header>
       <Layout>
-        <Layout.Header></Layout.Header>
-        <Layout>
-          <Layout.Sider width={350}>
-            <Input addonBefore="Boss Speed" />
-            <Input addonBefore="Shield Hit Count" />
-            <Input addonBefore="Speed Aura" suffix="%" />
-            <Space direction="vertical">
-              <ChampionSetup index={0} />
-              <ChampionSetup index={1} />
-              <ChampionSetup index={2} />
-              <ChampionSetup index={3} />
-              <ChampionSetup index={4} />
-            </Space>
-          </Layout.Sider>
-          <Layout.Content></Layout.Content>
-        </Layout>
-        <Layout.Footer></Layout.Footer>
+        <Layout.Sider
+          width={382}
+          style={{
+            background: colorBgContainerDisabled,
+            borderWidth: "1px 1px 1px 0px",
+            borderColor: colorBorder,
+            borderStyle: "solid",
+            borderBottomRightRadius: borderRadius,
+            display: "flex",
+            flexDirection: "column",
+            padding: 8,
+          }}
+        >
+          <Input addonBefore="Boss Speed" />
+          <Input addonBefore="Shield Hit Count" />
+          <Input addonBefore="Speed Aura" suffix="%" />
+          <ChampionSetupListView />
+        </Layout.Sider>
+        <Layout.Content></Layout.Content>
       </Layout>
-    </ConfigProvider>
+      <Layout.Footer></Layout.Footer>
+    </Layout>
   );
 }
 
-export default App;
+const AppHost = () => (
+  <ConfigProvider theme={{ algorithm: theme.darkAlgorithm }}>
+    <App />
+  </ConfigProvider>
+);
+
+export default AppHost;

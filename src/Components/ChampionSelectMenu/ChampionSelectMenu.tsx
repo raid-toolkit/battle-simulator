@@ -7,9 +7,11 @@ import { HeroType } from "@raid-toolkit/webclient";
 import { Avatar } from "../Avatar/Avatar";
 
 export interface ChampionSelectMenuProps {
+  bordered?: boolean;
   style?: React.CSSProperties;
   selectedValue?: string;
-  onSelect?: (
+  onClear?: () => void;
+  onSelect: (
     typeId: string | undefined,
     heroType: HeroType | undefined
   ) => void;
@@ -51,35 +53,36 @@ function heroTypeToOption([, heroType]: [
 
 export const ChampionSelectMenu: React.FC<ChampionSelectMenuProps> = ({
   onSelect,
+  onClear,
   selectedValue,
   style,
+  bordered,
 }) => {
   const heroTypes = useAsyncDataSource(heroTypesDataSource);
   const options = React.useMemo(
     () => heroTypes.map(heroTypeToOption),
     [heroTypes]
   );
-  const [value, setValue] = React.useState<string | undefined>(undefined);
   const handleSelect = React.useCallback(
     (_: unknown, value?: ChampionSelectItemProps) => {
-      setValue(value?.value);
-      onSelect?.(value?.value, value?.heroType);
+      onSelect(value?.value, value?.heroType);
     },
     [onSelect]
   );
-  const styleMemo = React.useMemo(() => ({ width: 300, ...style }), [style]);
+  const styleMemo = React.useMemo(() => ({ ...style }), [style]);
   return (
     <Select
+      bordered={bordered}
       showSearch
       menuItemSelectedIcon
-      allowClear
+      allowClear={!!onClear}
       placeholder="Select a champion"
       optionLabelProp="label"
-      size="large"
       style={styleMemo}
+      onClear={onClear}
       filterOption={(input, option) => !!option?.match(input)}
       options={options}
-      value={selectedValue ?? value}
+      value={selectedValue}
       onSelect={handleSelect}
     />
   );

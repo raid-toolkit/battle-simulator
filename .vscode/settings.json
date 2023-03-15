@@ -1,4 +1,7 @@
 {
+  "javascript.inlayHints.parameterNames.enabled": "literals",
+  "typescript.inlayHints.parameterNames.enabled": "literals",
+  "typescript.inlayHints.parameterTypes.enabled": false,
   "xmlTools.splitAttributesOnFormat": false,
   "editor.detectIndentation": false,
   "editor.tabSize": 2,

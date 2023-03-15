@@ -1,7 +1,7 @@
 import React from "react";
 import { InputNumber, InputNumberProps } from "antd";
 import { useRefWithWheelHandler } from "../Hooks";
-import { round } from "../Common";
+import { round } from "../../Common";
 
 export interface NumberSpinnerProps extends InputNumberProps<number> {
   scalar?: number;

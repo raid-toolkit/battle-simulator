@@ -1,5 +1,5 @@
 import React from "react";
-import { round } from "../Common";
+import { round } from "../../Common";
 import "./TurnMeter.css";
 
 export interface TurnMeterProps extends React.PropsWithChildren {
