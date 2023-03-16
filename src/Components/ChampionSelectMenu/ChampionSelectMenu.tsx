@@ -9,16 +9,16 @@ import { Avatar } from "../Avatar/Avatar";
 export interface ChampionSelectMenuProps {
   bordered?: boolean;
   style?: React.CSSProperties;
-  selectedValue?: string;
+  selectedValue?: number;
   onClear?: () => void;
   onSelect: (
-    typeId: string | undefined,
+    typeId: number | undefined,
     heroType: HeroType | undefined
   ) => void;
 }
 
 export interface ChampionSelectItemProps {
-  readonly value: string;
+  readonly value: number;
   readonly heroType: HeroType;
   readonly label: JSX.Element;
   readonly children: JSX.Element;
@@ -31,7 +31,7 @@ function heroTypeToOption([, heroType]: [
 ]): ChampionSelectItemProps {
   return {
     heroType,
-    value: heroType.typeId.toString(),
+    value: heroType.typeId,
     match(value: string) {
       return heroType.name.defaultValue
         .toLocaleLowerCase()

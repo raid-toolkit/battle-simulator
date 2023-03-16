@@ -5,6 +5,7 @@ import {
   IStaticDataApi,
   HeroType,
   SkillType,
+  LocalizedText,
 } from "@raid-toolkit/webclient";
 import { staticDataStore } from "./Forage";
 
@@ -26,6 +27,12 @@ export class RTKApp {
     this.accountApi = useRaidToolkitApi(IAccountApi);
     this.staticApi = useRaidToolkitApi(IStaticDataApi);
     this._loadPromise = this.load();
+  }
+
+  public getString(value: LocalizedText | undefined): string {
+    return value
+      ? this.strings[value.key] || value.localizedValue || value.defaultValue
+      : "";
   }
 
   public async load(): Promise<void> {

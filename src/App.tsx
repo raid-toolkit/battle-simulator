@@ -13,7 +13,7 @@ function App() {
       ></Layout.Header>
       <Layout>
         <Layout.Sider
-          width={382}
+          width={532}
           style={{
             background: colorBgContainerDisabled,
             borderWidth: "1px 1px 1px 0px",

@@ -2,7 +2,7 @@ import React from "react";
 import { Button, Divider, Space } from "antd";
 import { UserAddOutlined } from "@ant-design/icons";
 import { validateSetup, ChampionSetupView } from "./ChampionSetupView";
-import { ChampionSetup } from "../ChampionSetup";
+import { ChampionSetup } from "../Model";
 import { removeItemAtIndex, replaceItemAtIndex } from "../Common";
 
 export const ChampionSetupListView: React.FC = () => {
@@ -42,7 +42,7 @@ export const ChampionSetupListView: React.FC = () => {
           />
         ))}
       </Space>
-      <Divider dashed style={{ margin: "8px 0px" }} />
+      <Divider dashed style={{ margin: "0px 0px 16px 0px" }} />
       <Button
         icon={<UserAddOutlined />}
         ghost={allStatesValid}

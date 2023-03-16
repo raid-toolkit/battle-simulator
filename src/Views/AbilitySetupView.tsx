@@ -1,21 +1,26 @@
 import React from "react";
-import { Button, Input, Select, Space } from "antd";
+import { Button, Input, Select, Space, theme } from "antd";
 import {
   FlagOutlined,
   FlagFilled,
   DeleteOutlined,
   StopOutlined,
-  CheckCircleOutlined,
+  HistoryOutlined,
 } from "@ant-design/icons";
-import { ChampionAbilitySetup } from "../ChampionAbilitySetup";
+import { AbilitySetup } from "../Model";
 
 export interface AbilitySetupViewProps {
   index: number;
-  ability: Readonly<ChampionAbilitySetup>;
+  ability: Readonly<AbilitySetup>;
   abilityCount: number;
-  onDeleted: (index: number) => void;
-  onUpdated: (index: number, ability: Readonly<ChampionAbilitySetup>) => void;
+  onDeleted?: (index: number) => void;
+  onUpdated: (index: number, ability: Readonly<AbilitySetup>) => void;
 }
+
+const AbilityPrefix: React.FC<React.PropsWithChildren> = ({ children }) => {
+  const { token } = theme.useToken();
+  return <span style={{ color: token.colorTextSecondary }}>{children}</span>;
+};
 
 export const AbilitySetupView: React.FC<AbilitySetupViewProps> = ({
   index,
@@ -52,16 +57,13 @@ export const AbilitySetupView: React.FC<AbilitySetupViewProps> = ({
   }, [index, ability, onUpdated]);
 
   const deleteSelf = React.useCallback(
-    () => onDeleted(index),
+    () => onDeleted?.(index),
     [index, onDeleted]
   );
 
   const priorityOptions = React.useMemo(
     () =>
-      [
-        { label: <CheckCircleOutlined />, value: undefined },
-        { label: <StopOutlined />, value: -1 },
-      ].concat(
+      [{ label: <StopOutlined style={{ color: "red" }} />, value: -1 }].concat(
         Array.from({ length: abilityCount }).map((_, i) => {
           return { label: <>{`${i + 1}`}</>, value: i + 1 };
         })
@@ -70,11 +72,14 @@ export const AbilitySetupView: React.FC<AbilitySetupViewProps> = ({
   );
 
   return (
-    <Space.Compact key={`ability_${index}`}>
+    <Space.Compact block>
       <Input
-        placeholder={`A${index + 1}`}
-        style={{ flex: 2 }}
+        autoComplete="off"
+        addonBefore={<AbilityPrefix>A{ability.index + 1}</AbilityPrefix>}
+        placeholder={`A${ability.index + 1}`}
+        style={{ flex: 1, borderRadius: 0 }}
         value={ability.label}
+        title={ability.label}
         onChange={(value) => {
           onUpdated(index, { ...ability, label: value.target.value });
         }}
@@ -82,41 +87,45 @@ export const AbilitySetupView: React.FC<AbilitySetupViewProps> = ({
       <Select
         allowClear
         value={ability.priority}
-        placeholder="Priority"
-        style={{ width: 65 }}
+        placeholder="Pri"
+        style={{ width: 60 }}
         options={priorityOptions}
         onClear={setPriority}
         onChange={setPriority}
       />
       <Input
         placeholder="CD"
+        suffix={<HistoryOutlined />}
         title="Cooldown"
-        style={{ flex: 1 }}
+        style={{ width: 55 }}
         value={isNaN(ability.cooldown) ? "" : ability.cooldown}
         status={isNaN(ability.cooldown) ? "error" : undefined}
         onChange={setCooldown}
       />
       <Button
         title="Opener"
-        style={{ flex: 1 }}
+        style={{ width: 32 }}
         type={ability.opener ? "primary" : "default"}
         icon={ability.opener ? <FlagFilled /> : <FlagOutlined />}
         onClick={toggleOpener}
       />
       <Input
         placeholder="Hits"
+        prefix={ability.hits ? "x" : ""}
         title="# of hits"
-        style={{ flex: 1 }}
-        value={isNaN(ability.hits) || ability.hits === 0 ? "" : ability.hits}
+        style={{ width: 50 }}
+        value={!ability.hits ? "" : ability.hits}
         onChange={setHits}
       />
-      <Button
-        title="Delete"
-        danger
-        style={{ flex: 1 }}
-        icon={<DeleteOutlined />}
-        onClick={deleteSelf}
-      />
+      {onDeleted && (
+        <Button
+          title="Delete"
+          danger
+          style={{ width: 32 }}
+          icon={<DeleteOutlined />}
+          onClick={deleteSelf}
+        />
+      )}
     </Space.Compact>
   );
 };
