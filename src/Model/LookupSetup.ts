@@ -1,7 +1,6 @@
-import { Visibility } from "@raid-toolkit/webclient";
-import { RTK } from "../Data";
-import { AbilitySetup } from "./AbilitySetup";
-import { ChampionSetup } from "./ChampionSetup";
+import { Visibility } from '@raid-toolkit/webclient';
+import { RTK } from '../Data';
+import { AbilitySetup, ChampionSetup } from './Types';
 
 export function lookupChampionSetup(typeId: number): ChampionSetup | undefined {
   const heroType = RTK.heroTypes[typeId];
@@ -14,10 +13,7 @@ export function lookupChampionSetup(typeId: number): ChampionSetup | undefined {
       continue;
     }
 
-    const hits = skill.effects.reduce(
-      (acc, effect) => acc + (effect.kindId === 6000 ? effect.count : 0),
-      0
-    );
+    const hits = skill.effects.reduce((acc, effect) => acc + (effect.kindId === 6000 ? effect.count : 0), 0);
 
     const ability: AbilitySetup = {
       index: abilities.length,

@@ -1,4 +1,2 @@
-export * from "./AbilitySetup";
-export * from "./ChampionSetup";
-export * from "./LookupSetup";
-export * from "./SavedTeam";
+export * from './Types';
+export * from './LookupSetup';
