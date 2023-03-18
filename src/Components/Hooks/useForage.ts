@@ -11,6 +11,49 @@ function getCache(forage: LocalForage) {
   return cache;
 }
 
+export function useForageCollection<T>(forage: LocalForage): {
+  items: Readonly<Record<string, Readonly<T>>>;
+  addOrUpdate(key: string, item: T, update: (existing: T) => T): Promise<void>;
+  remove(key: string): Promise<void>;
+} {
+  const [items, setItems] = React.useState<Readonly<Record<string, T>>>({});
+  React.useEffect(() => {
+    async function init() {
+      const keys = await forage.keys();
+      const items: [string, T][] = [];
+      for (const key of keys) {
+        const item = await forage.getItem<T>(key);
+        if (item) {
+          items.push([key, item]);
+        }
+      }
+      setItems(Object.fromEntries(items));
+    }
+    init();
+  }, [forage]);
+  return {
+    items,
+    async addOrUpdate(key, item, updateFn) {
+      const existing = await forage.getItem<T>(key);
+      const newItem = existing ? updateFn(existing) : item;
+      await forage.setItem(key, newItem);
+      setItems((items) => {
+        const newItems = { ...items };
+        newItems[key] = newItem;
+        return newItems;
+      });
+    },
+    async remove(key) {
+      await forage.removeItem(key);
+      setItems((items) => {
+        const newItems = { ...items };
+        delete newItems[key];
+        return newItems;
+      });
+    },
+  };
+}
+
 export function useForage<T>(
   forage: LocalForage,
   key: string,
@@ -37,11 +80,10 @@ export function useForage<T>(
         state: T
       ) => T;
       setState((oldValue) => {
-        const newValue = valueFn(oldValue);
-        forage.setItem(key, newValue).then(() => {
-          getCache(forage)[key] = newValue;
-        });
-        return validate(newValue);
+        const newValue = validate(valueFn(oldValue));
+        getCache(forage)[key] = newValue;
+        forage.setItem(key, newValue);
+        return newValue;
       });
     },
     [forage, key, validate]

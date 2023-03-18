@@ -1,6 +1,6 @@
-import React from "react";
-import { ChampionSetupView } from "./ChampionSetupView";
-import { ChampionSetup } from "../Model";
+import React from 'react';
+import { ChampionSetupView } from './ChampionSetupView';
+import { ChampionSetup } from '../Model';
 
 export interface ChampionSetupListViewProps {
   editable?: boolean;
@@ -19,11 +19,11 @@ export const ChampionSetupListView: React.FC<ChampionSetupListViewProps> = ({
   return (
     <div
       style={{
-        display: "flex",
-        flexDirection: "column",
-        gap: 16,
-        overflowY: "auto",
-        overflowX: "hidden",
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 8,
+        overflowY: 'auto',
+        overflowX: 'hidden',
         paddingLeft: 40,
         marginLeft: -40,
       }}

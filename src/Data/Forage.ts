@@ -14,3 +14,7 @@ export const staticDataStore = localforage.createInstance({
 export const userDataStore = localforage.createInstance({
   name: "user-data",
 });
+
+export const teamDataStore = localforage.createInstance({
+  name: "saved-teams",
+});
