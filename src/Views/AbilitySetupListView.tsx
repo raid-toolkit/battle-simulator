@@ -60,7 +60,7 @@ export const AbilitySetupListView: React.FC<AbilitiyListProps> = ({
       {abilities.length === 0 && (
         <div
           style={{
-            margin: 24,
+            margin: 16,
             textAlign: "center",
             color: token.colorTextDisabled,
           }}

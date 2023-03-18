@@ -76,6 +76,9 @@ const AppHost = () => {
   const toggleTheme = React.useCallback(() => {
     setThemeName((current) => (current === "dark" ? "light" : "dark"));
   }, []);
+  React.useEffect(() => {
+    document.body.style.colorScheme = themeName;
+  }, [themeName]);
   return (
     <ConfigProvider
       theme={{

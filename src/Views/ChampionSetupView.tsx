@@ -97,7 +97,6 @@ export const ChampionSetupView: React.FC<ChampionSetupViewProps> = ({
   return (
     <Card
       className="champion-setup-card"
-      style={{ minHeight: 150 }}
       bodyStyle={{ padding: 8 }}
       tabIndex={0}
     >
