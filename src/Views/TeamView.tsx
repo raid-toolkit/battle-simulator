@@ -1,35 +1,38 @@
 import React from "react";
 import { ChampionSetupListView } from "./ChampionSetupListView";
 import { Badge, Button, Card, Input, Space } from "antd";
-import {
-  CheckOutlined,
-  EditOutlined,
-  ThunderboltOutlined,
-  UserAddOutlined,
-} from "@ant-design/icons";
-import { useToggle } from "../Components/Hooks";
+import { ThunderboltOutlined, UserAddOutlined } from "@ant-design/icons";
 import { ChampionSetup } from "../Model";
 import { removeItemAtIndex, replaceItemAtIndex } from "../Common";
 
-export const TeamView: React.FC = () => {
-  const [championList, setChampionList] = React.useState<
-    readonly Readonly<ChampionSetup>[]
-  >([]);
+export interface TeamViewProps {
+  readonly championList: readonly Readonly<ChampionSetup>[];
+  onChampionListUpdated: (
+    championList: readonly Readonly<ChampionSetup>[]
+  ) => void;
+}
 
+export const TeamView: React.FC<TeamViewProps> = ({
+  championList,
+  onChampionListUpdated,
+}) => {
   const updateChampion = React.useCallback(
     (index: number, value: ChampionSetup) => {
-      setChampionList((state) => replaceItemAtIndex(state, index, value));
+      onChampionListUpdated(replaceItemAtIndex(championList, index, value));
     },
-    []
+    [championList, onChampionListUpdated]
   );
 
   const addChampion = React.useCallback(() => {
-    setChampionList((state) => [...state, { abilities: [] }]);
-  }, []);
+    onChampionListUpdated([...championList, { abilities: [] }]);
+  }, [championList, onChampionListUpdated]);
 
-  const deleteChampion = React.useCallback((index: number) => {
-    setChampionList((state) => removeItemAtIndex(state, index));
-  }, []);
+  const deleteChampion = React.useCallback(
+    (index: number) => {
+      onChampionListUpdated(removeItemAtIndex(championList, index));
+    },
+    [championList, onChampionListUpdated]
+  );
 
   return (
     <Badge.Ribbon text="Team" placement="start">
@@ -59,6 +62,7 @@ export const TeamView: React.FC = () => {
               <Space.Compact>
                 <Button
                   title="Add Champion"
+                  disabled={championList.length >= 5}
                   icon={<UserAddOutlined />}
                   onClick={addChampion}
                 />

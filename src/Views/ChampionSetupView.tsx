@@ -108,6 +108,13 @@ export const ChampionSetupView: React.FC<ChampionSetupViewProps> = ({
         }}
       >
         <Space.Compact block>
+          <ChampionSelectMenu
+            status={setup.typeId ? "" : "warning"}
+            style={{ flex: 1 }}
+            selectedValue={setup.typeId}
+            onSelect={selectTypeId}
+            onClear={selectTypeId}
+          />
           <Input
             status={setup.speed ? "" : "warning"}
             style={{ width: 135, textAlign: "right" }}
@@ -117,13 +124,6 @@ export const ChampionSetupView: React.FC<ChampionSetupViewProps> = ({
             maxLength={3}
             max={999}
             suffix={<ThunderboltOutlined />}
-          />
-          <ChampionSelectMenu
-            status={setup.typeId ? "" : "warning"}
-            style={{ flex: 1 }}
-            selectedValue={setup.typeId}
-            onSelect={selectTypeId}
-            onClear={selectTypeId}
           />
         </Space.Compact>
         <AbilitySetupListView

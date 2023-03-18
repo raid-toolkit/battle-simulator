@@ -15,11 +15,15 @@ import {
   HighlightOutlined,
   ThunderboltOutlined,
 } from "@ant-design/icons";
+import { ChampionSetup } from "./Model";
 
 export interface AppProps {
   toggleTheme: () => void;
 }
 function App({ toggleTheme }: AppProps) {
+  const [championList, onChampionListUpdated] = React.useState<
+    readonly Readonly<ChampionSetup>[]
+  >([]);
   return (
     <Layout>
       <Layout.Sider
@@ -65,7 +69,10 @@ function App({ toggleTheme }: AppProps) {
           flexDirection: "column",
         }}
       >
-        <TeamView />
+        <TeamView
+          championList={championList}
+          onChampionListUpdated={onChampionListUpdated}
+        />
       </Layout.Sider>
     </Layout>
   );
