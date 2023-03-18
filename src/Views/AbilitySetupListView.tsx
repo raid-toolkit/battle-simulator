@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Space } from "antd";
+import { Button, theme } from "antd";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { AbilitySetupView } from "./AbilitySetupView";
 import { removeItemAtIndex, replaceItemAtIndex } from "../Common";
@@ -16,6 +16,7 @@ export const AbilitySetupListView: React.FC<AbilitiyListProps> = ({
   onUpdated,
   editable,
 }) => {
+  const { token } = theme.useToken();
   const addAbility = React.useCallback(() => {
     onUpdated([
       ...abilities,
@@ -44,11 +45,10 @@ export const AbilitySetupListView: React.FC<AbilitiyListProps> = ({
     [abilities, onUpdated]
   );
   return (
-    <div
-      style={{ display: "flex", flexDirection: "column", padding: "0px 8px" }}
-    >
+    <div style={{ display: "flex", flexDirection: "column" }}>
       {abilities.map((ability, index) => (
         <AbilitySetupView
+          editable={editable}
           key={`ability_${index}`}
           index={index}
           ability={ability}
@@ -57,6 +57,17 @@ export const AbilitySetupListView: React.FC<AbilitiyListProps> = ({
           onDeleted={editable ? deleteAbility : undefined}
         />
       ))}
+      {abilities.length === 0 && (
+        <div
+          style={{
+            margin: 24,
+            textAlign: "center",
+            color: token.colorTextDisabled,
+          }}
+        >
+          Abilities will display when a champion is selected
+        </div>
+      )}
       {editable && (
         <Button
           style={{ alignSelf: "end" }}

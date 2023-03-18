@@ -1,0 +1,21 @@
+.champion-setup-card:focus-within {
+  border-width: 1px;
+}
+
+.champion-setup-card .champion-setup-card-actions {
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+
+.champion-setup-card:focus-within .champion-setup-card-actions {
+  display: flex;
+  opacity: 1;
+  visibility: visible;
+}
+
+.champion-setup-card:hover .champion-setup-card-actions {
+  display: flex;
+  opacity: 1;
+  visibility: visible;
+}

@@ -1,7 +1,12 @@
 import React from "react";
 
-export const RichString: React.FC<{ children: string }> = ({
+export interface RichStringProps extends React.HTMLAttributes<HTMLSpanElement> {
+  children: string;
+}
+
+export const RichString: React.FC<RichStringProps> = ({
   children: text,
+  ...props
 }) => {
   return React.useMemo(() => {
     const styles: React.CSSProperties[] = [];
@@ -30,6 +35,6 @@ export const RichString: React.FC<{ children: string }> = ({
     if (currentPos < text.length) {
       elements.push(text.substr(currentPos));
     }
-    return <span>{elements}</span>;
-  }, [text]);
+    return <span {...props}>{elements}</span>;
+  }, [text, props]);
 };

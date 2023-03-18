@@ -1,12 +1,16 @@
 import React from "react";
-import { Select } from "antd";
+import { Select, SelectProps } from "antd";
 import { useAsyncDataSource } from "../Hooks";
 import "./ChampionSelectMenu.css";
 import { heroTypesDataSource } from "../DataSources/HeroTypesDataSource";
 import { HeroType } from "@raid-toolkit/webclient";
 import { Avatar } from "../Avatar/Avatar";
 
-export interface ChampionSelectMenuProps {
+export interface ChampionSelectMenuProps
+  extends Omit<
+    SelectProps<number, ChampionSelectItemProps>,
+    "onSelect" | "options"
+  > {
   bordered?: boolean;
   style?: React.CSSProperties;
   selectedValue?: number;
@@ -55,8 +59,7 @@ export const ChampionSelectMenu: React.FC<ChampionSelectMenuProps> = ({
   onSelect,
   onClear,
   selectedValue,
-  style,
-  bordered,
+  ...selectProps
 }) => {
   const heroTypes = useAsyncDataSource(heroTypesDataSource);
   const options = React.useMemo(
@@ -69,21 +72,19 @@ export const ChampionSelectMenu: React.FC<ChampionSelectMenuProps> = ({
     },
     [onSelect]
   );
-  const styleMemo = React.useMemo(() => ({ ...style }), [style]);
   return (
     <Select
-      bordered={bordered}
       showSearch
       menuItemSelectedIcon
       allowClear={!!onClear}
       placeholder="Select a champion"
       optionLabelProp="label"
-      style={styleMemo}
       onClear={onClear}
       filterOption={(input, option) => !!option?.match(input)}
       options={options}
       value={selectedValue}
       onSelect={handleSelect}
+      {...selectProps}
     />
   );
 };

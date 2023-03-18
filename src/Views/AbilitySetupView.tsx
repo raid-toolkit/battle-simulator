@@ -6,10 +6,13 @@ import {
   DeleteOutlined,
   StopOutlined,
   HistoryOutlined,
+  CompressOutlined,
 } from "@ant-design/icons";
 import { AbilitySetup } from "../Model";
+import { RichString } from "../Components";
 
 export interface AbilitySetupViewProps {
+  editable?: boolean;
   index: number;
   ability: Readonly<AbilitySetup>;
   abilityCount: number;
@@ -23,6 +26,7 @@ const AbilityPrefix: React.FC<React.PropsWithChildren> = ({ children }) => {
 };
 
 export const AbilitySetupView: React.FC<AbilitySetupViewProps> = ({
+  editable,
   index,
   ability,
   abilityCount,
@@ -63,69 +67,82 @@ export const AbilitySetupView: React.FC<AbilitySetupViewProps> = ({
 
   const priorityOptions = React.useMemo(
     () =>
-      [{ label: <StopOutlined style={{ color: "red" }} />, value: -1 }].concat(
-        Array.from({ length: abilityCount }).map((_, i) => {
+      (index === 0
+        ? []
+        : [{ label: <StopOutlined style={{ color: "red" }} />, value: -1 }]
+      ).concat(
+        Array.from({ length: abilityCount - 1 }).map((_, i) => {
           return { label: <>{`${i + 1}`}</>, value: i + 1 };
         })
       ),
-    [abilityCount]
+    [index, abilityCount]
   );
 
   return (
-    <Space.Compact block>
-      <Input
-        autoComplete="off"
-        addonBefore={<AbilityPrefix>A{ability.index + 1}</AbilityPrefix>}
-        placeholder={`A${ability.index + 1}`}
-        style={{ flex: 1, borderRadius: 0 }}
-        value={ability.label}
-        title={ability.label}
-        onChange={(value) => {
-          onUpdated(index, { ...ability, label: value.target.value });
-        }}
-      />
-      <Select
-        allowClear
-        value={ability.priority}
-        placeholder="Pri"
-        style={{ width: 60 }}
-        options={priorityOptions}
-        onClear={setPriority}
-        onChange={setPriority}
-      />
-      <Input
-        placeholder="CD"
-        suffix={<HistoryOutlined />}
-        title="Cooldown"
-        style={{ width: 55 }}
-        value={isNaN(ability.cooldown) ? "" : ability.cooldown}
-        status={isNaN(ability.cooldown) ? "error" : undefined}
-        onChange={setCooldown}
-      />
-      <Button
-        title="Opener"
-        style={{ width: 32 }}
-        type={ability.opener ? "primary" : "default"}
-        icon={ability.opener ? <FlagFilled /> : <FlagOutlined />}
-        onClick={toggleOpener}
-      />
-      <Input
-        placeholder="Hits"
-        prefix={ability.hits ? "x" : ""}
-        title="# of hits"
-        style={{ width: 50 }}
-        value={!ability.hits ? "" : ability.hits}
-        onChange={setHits}
-      />
-      {onDeleted && (
-        <Button
-          title="Delete"
-          danger
-          style={{ width: 32 }}
-          icon={<DeleteOutlined />}
-          onClick={deleteSelf}
+    <div>
+      <Space.Compact block>
+        <Input
+          autoComplete="off"
+          addonBefore={<AbilityPrefix>A{ability.index + 1}</AbilityPrefix>}
+          placeholder={`A${ability.index + 1}`}
+          disabled={!editable}
+          style={{ flex: 1, borderRadius: 0 }}
+          value={ability.label}
+          title={ability.label}
+          onChange={(value) => {
+            onUpdated(index, { ...ability, label: value.target.value });
+          }}
         />
+        <Select
+          allowClear
+          showArrow={editable}
+          value={ability.priority}
+          placeholder="Pri"
+          style={{ width: 60 }}
+          options={priorityOptions}
+          onClear={setPriority}
+          onChange={setPriority}
+        />
+        <Input
+          placeholder="CD"
+          suffix={<HistoryOutlined />}
+          title="Cooldown"
+          style={{ width: 55 }}
+          value={isNaN(ability.cooldown) ? "" : ability.cooldown}
+          status={isNaN(ability.cooldown) ? "error" : undefined}
+          onChange={setCooldown}
+        />
+        <Button
+          title="Opener"
+          style={{ width: 32 }}
+          type={ability.opener ? "primary" : "default"}
+          icon={ability.opener ? <FlagFilled /> : <FlagOutlined />}
+          onClick={toggleOpener}
+        />
+        <Input
+          placeholder="Hits"
+          style={{ width: 50 }}
+          disabled={!editable}
+          suffix={<CompressOutlined />}
+          title="# of hits"
+          value={!ability.hits ? 0 : ability.hits}
+          onChange={setHits}
+        />
+        {onDeleted && (
+          <Button
+            title="Delete"
+            danger
+            style={{ width: 32 }}
+            icon={<DeleteOutlined />}
+            onClick={deleteSelf}
+          />
+        )}
+      </Space.Compact>
+      {editable && ability.description && (
+        <div style={{ padding: 8, marginBottom: 16 }}>
+          <RichString>{ability.description}</RichString>
+        </div>
       )}
-    </Space.Compact>
+    </div>
   );
 };

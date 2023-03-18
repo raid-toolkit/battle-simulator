@@ -14,10 +14,17 @@ export function lookupChampionSetup(typeId: number): ChampionSetup | undefined {
       continue;
     }
 
+    const hits = skill.effects.reduce(
+      (acc, effect) => acc + (effect.kindId === 6000 ? effect.count : 0),
+      0
+    );
+
     const ability: AbilitySetup = {
       index: abilities.length,
       label: RTK.getString(skill.name),
       cooldown: skill.cooldown,
+      hits,
+      description: RTK.getString(skill.description),
     };
 
     abilities.push(ability);

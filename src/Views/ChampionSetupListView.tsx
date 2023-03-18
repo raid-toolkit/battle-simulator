@@ -1,11 +1,17 @@
 import React from "react";
-import { Button, Divider, Space } from "antd";
+import { Button } from "antd";
 import { UserAddOutlined } from "@ant-design/icons";
 import { validateSetup, ChampionSetupView } from "./ChampionSetupView";
 import { ChampionSetup } from "../Model";
 import { removeItemAtIndex, replaceItemAtIndex } from "../Common";
 
-export const ChampionSetupListView: React.FC = () => {
+export interface ChampionSetupListViewProps {
+  editable?: boolean;
+}
+
+export const ChampionSetupListView: React.FC<ChampionSetupListViewProps> = ({
+  editable,
+}) => {
   const [state, setState] = React.useState<readonly Readonly<ChampionSetup>[]>(
     []
   );
@@ -26,31 +32,35 @@ export const ChampionSetupListView: React.FC = () => {
     setState((state) => removeItemAtIndex(state, index));
   }, []);
 
+  const rootRef = React.useRef<HTMLDivElement>(null);
+
   return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
-      <Space
-        direction="vertical"
-        style={{ display: "flex", flexDirection: "column", margin: 16 }}
-      >
-        {state.map((setup, index) => (
-          <ChampionSetupView
-            key={`setup_${index}`}
-            index={index}
-            setup={setup}
-            onUpdated={onUpdated}
-            onDeleted={deleteChampion}
-          />
-        ))}
-      </Space>
-      <Divider dashed style={{ margin: "0px 0px 16px 0px" }} />
-      <Button
-        icon={<UserAddOutlined />}
-        ghost={allStatesValid}
-        type={allStatesValid ? "primary" : "default"}
-        style={{ alignSelf: "center" }}
-        disabled={state.length >= 5}
-        onClick={addChampion}
-      ></Button>
+    <div
+      ref={rootRef}
+      style={{ display: "flex", flexDirection: "column", gap: 16 }}
+    >
+      {state.map((setup, index) => (
+        <ChampionSetupView
+          key={`setup_${index}`}
+          editable={editable}
+          index={index}
+          setup={setup}
+          onUpdated={onUpdated}
+          onDeleted={deleteChampion}
+        />
+      ))}
+      {editable && (
+        <Button
+          icon={<UserAddOutlined />}
+          ghost={allStatesValid}
+          type={allStatesValid ? "primary" : "default"}
+          style={{ alignSelf: "center" }}
+          disabled={state.length >= 5}
+          onClick={addChampion}
+        >
+          Add Champion
+        </Button>
+      )}
     </div>
   );
 };

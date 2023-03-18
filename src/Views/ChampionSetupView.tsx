@@ -1,27 +1,21 @@
 import React from "react";
-import {
-  Button,
-  Card,
-  Col,
-  Dropdown,
-  Grid,
-  Input,
-  MenuProps,
-  Row,
-  Space,
-} from "antd";
+import { Button, Card, Dropdown, Input, MenuProps, Space, theme } from "antd";
 import {
   DeleteOutlined,
+  EditOutlined,
   HolderOutlined,
   ThunderboltOutlined,
 } from "@ant-design/icons";
 import { ChampionSelectMenu } from "../Components";
 import { AbilitySetupListView } from "./AbilitySetupListView";
 import { ChampionSetup, AbilitySetup, lookupChampionSetup } from "../Model";
+import { useToggle } from "../Components/Hooks";
+import "./ChampionSetupView.css";
 
 export interface ChampionSetupViewProps {
   index: number;
   setup: Readonly<ChampionSetup>;
+  editable?: boolean;
   onUpdated: (index: number, value: Readonly<ChampionSetup>) => void;
   onDeleted: (index: number) => void;
 }
@@ -45,7 +39,11 @@ export const ChampionSetupView: React.FC<ChampionSetupViewProps> = ({
   setup,
   onUpdated,
   onDeleted,
+  editable,
 }) => {
+  const [skillsEditable, toggleSkillsEditable] = useToggle();
+
+  const { token } = theme.useToken();
   const selectTypeId = React.useCallback(
     (typeId?: number) => {
       if (typeId === undefined) {
@@ -97,53 +95,78 @@ export const ChampionSetupView: React.FC<ChampionSetupViewProps> = ({
   );
 
   return (
-    <Card bodyStyle={{ padding: 0 }} tabIndex={0}>
-      <Space.Compact block>
-        <Dropdown arrow placement="topLeft" trigger={["click"]} menu={menu}>
-          <Button
-            icon={<HolderOutlined />}
-            style={{
-              alignSelf: "stretch",
-              height: "unset",
-              width: 24,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              paddingTop: 8,
-            }}
+    <Card
+      className="champion-setup-card"
+      style={{ minHeight: 150 }}
+      bodyStyle={{ padding: 8 }}
+      tabIndex={0}
+    >
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          flex: 1,
+        }}
+      >
+        <Space.Compact block>
+          <Input
+            status={setup.speed ? "" : "warning"}
+            style={{ width: 135, textAlign: "right" }}
+            value={setup.speed || undefined}
+            onChange={setSpeed}
+            addonBefore="Speed"
+            maxLength={3}
+            max={999}
+            suffix={<ThunderboltOutlined />}
           />
-        </Dropdown>
-        <div
+          <ChampionSelectMenu
+            status={setup.typeId ? "" : "warning"}
+            style={{ flex: 1 }}
+            selectedValue={setup.typeId}
+            onSelect={selectTypeId}
+            onClear={selectTypeId}
+          />
+        </Space.Compact>
+        <AbilitySetupListView
+          editable={skillsEditable}
+          abilities={setup.abilities}
+          onUpdated={onAbilitiesUpdated}
+        />
+      </div>
+      <div
+        className="champion-setup-card-actions"
+        style={{
+          position: "absolute",
+          left: -40,
+          width: 40,
+          top: 0,
+          bottom: 0,
+        }}
+      >
+        <Space.Compact
+          direction="vertical"
           style={{
-            display: "flex",
-            flexDirection: "column",
-            paddingBottom: 8,
-            flex: 1,
+            position: "absolute",
+            marginTop: "auto",
+            marginBottom: "auto",
           }}
         >
-          <Space.Compact block>
-            <ChampionSelectMenu
-              bordered={false}
-              style={{ flex: 1 }}
-              selectedValue={setup.typeId}
-              onSelect={selectTypeId}
-              onClear={selectTypeId}
-            />
-            <Input
-              bordered={false}
-              placeholder="Speed"
-              style={{ width: 80 }}
-              value={setup.speed || undefined}
-              onChange={setSpeed}
-              prefix={<ThunderboltOutlined />}
-            />
-          </Space.Compact>
-          <AbilitySetupListView
-            abilities={setup.abilities}
-            onUpdated={onAbilitiesUpdated}
+          <Dropdown arrow placement="topLeft" trigger={["click"]} menu={menu}>
+            <Button icon={<HolderOutlined />} />
+          </Dropdown>
+          <Button
+            title="Edit skills"
+            icon={<EditOutlined />}
+            type={skillsEditable ? "primary" : "default"}
+            onClick={toggleSkillsEditable}
           />
-        </div>
-      </Space.Compact>
+          <Button
+            icon={<DeleteOutlined />}
+            style={{ color: token.colorError }}
+            onClick={() => onDeleted(index)}
+          />
+        </Space.Compact>
+      </div>
     </Card>
   );
 };

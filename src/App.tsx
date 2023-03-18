@@ -1,46 +1,91 @@
 import "./App.css";
-import { ChampionSetupListView } from "./Views/ChampionSetupListView";
-import { ConfigProvider, Input, Layout, theme } from "antd";
+import {
+  Badge,
+  Button,
+  Card,
+  ConfigProvider,
+  Input,
+  Layout,
+  theme,
+} from "antd";
+import { TeamView } from "./Views";
+import React from "react";
+import {
+  CompressOutlined,
+  HighlightOutlined,
+  ThunderboltOutlined,
+} from "@ant-design/icons";
 
-function App() {
-  const {
-    token: { colorBgContainerDisabled, borderRadius, colorBorder },
-  } = theme.useToken();
+export interface AppProps {
+  toggleTheme: () => void;
+}
+function App({ toggleTheme }: AppProps) {
   return (
     <Layout>
-      <Layout.Header
-        style={{ background: colorBgContainerDisabled }}
-      ></Layout.Header>
-      <Layout>
-        <Layout.Sider
-          width={532}
-          style={{
-            background: colorBgContainerDisabled,
-            borderWidth: "1px 1px 1px 0px",
-            borderColor: colorBorder,
-            borderStyle: "solid",
-            borderBottomRightRadius: borderRadius,
-            display: "flex",
-            flexDirection: "column",
-            padding: 8,
-          }}
-        >
-          <Input addonBefore="Boss Speed" />
-          <Input addonBefore="Shield Hit Count" />
-          <Input addonBefore="Speed Aura" suffix="%" />
-          <ChampionSetupListView />
-        </Layout.Sider>
-        <Layout.Content></Layout.Content>
-      </Layout>
-      <Layout.Footer></Layout.Footer>
+      <Layout.Sider
+        width={225}
+        style={{
+          background: "transparent",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        <Badge.Ribbon text="Boss">
+          <Card>
+            <Input
+              addonBefore="Boss Speed"
+              defaultValue={250}
+              style={{ textAlign: "right" }}
+              suffix={<ThunderboltOutlined />}
+            />
+            <Input
+              addonBefore="Shield Hits"
+              defaultValue={21}
+              style={{ textAlign: "right" }}
+              suffix={<CompressOutlined />}
+            />
+          </Card>
+        </Badge.Ribbon>
+      </Layout.Sider>
+      <Layout.Content>
+        <Layout>
+          <Layout.Header style={{ background: "transparent" }}>
+            <Button icon={<HighlightOutlined />} onClick={toggleTheme}>
+              Change theme
+            </Button>
+          </Layout.Header>
+        </Layout>
+      </Layout.Content>
+
+      <Layout.Sider
+        width={532}
+        style={{
+          background: "transparent",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
+        <TeamView />
+      </Layout.Sider>
     </Layout>
   );
 }
 
-const AppHost = () => (
-  <ConfigProvider theme={{ algorithm: theme.darkAlgorithm }}>
-    <App />
-  </ConfigProvider>
-);
+const AppHost = () => {
+  const [themeName, setThemeName] = React.useState("dark");
+  const toggleTheme = React.useCallback(() => {
+    setThemeName((current) => (current === "dark" ? "light" : "dark"));
+  }, []);
+  return (
+    <ConfigProvider
+      theme={{
+        algorithm:
+          themeName === "dark" ? theme.darkAlgorithm : theme.defaultAlgorithm,
+      }}
+    >
+      <App toggleTheme={toggleTheme} />
+    </ConfigProvider>
+  );
+};
 
 export default AppHost;

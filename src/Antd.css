@@ -1,0 +1,29 @@
+.ant-input-disabled,
+.ant-input[disabled] {
+  cursor: default;
+}
+
+.ant-input-group-wrapper-disabled .ant-input-group-addon {
+  cursor: default;
+}
+
+.ant-input-affix-wrapper-disabled,
+.ant-input-affix-wrapper[disabled] {
+  cursor: default;
+}
+
+.ant-btn-default:disabled,
+.ant-btn-default[disabled] {
+  cursor: default;
+}
+
+.ant-select-disabled.ant-select:not(.ant-select-customize-input)
+  .ant-select-selector {
+  cursor: default;
+}
+
+.ant-select-disabled.ant-select:not(.ant-select-customize-input)
+  .ant-select-selector
+  input {
+  cursor: default;
+}
