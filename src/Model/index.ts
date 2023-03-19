@@ -1,2 +1,2 @@
 export * from './Types';
-export * from './LookupSetup';
+export * from './Setup';

@@ -1,17 +1,21 @@
 import { Card, List } from 'antd';
 import React from 'react';
-import { RTK } from '../Data';
-import { BattleTurn, ChampionSetup, lookupChampionSetup } from '../Model';
+import { BattleTurn, ChampionSetup } from '../Model';
 import { setupBattle, simulateTurns } from '../Model/SimulateTurns';
 
-export interface TurnSimulatorProps {
+export interface TurnSimulatorViewProps {
   championList: readonly Readonly<ChampionSetup>[];
   bossSpeed: number;
   shieldHits: number;
   speedAura?: number;
 }
 
-export const TurnSimulator: React.FC<TurnSimulatorProps> = ({ championList, bossSpeed, shieldHits, speedAura }) => {
+export const TurnSimulatorView: React.FC<TurnSimulatorViewProps> = ({
+  championList,
+  bossSpeed,
+  shieldHits,
+  speedAura,
+}) => {
   const liveState = React.useMemo(() => {
     return setupBattle({
       bossSpeed,

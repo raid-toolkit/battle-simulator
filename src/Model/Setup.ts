@@ -29,3 +29,17 @@ export function lookupChampionSetup(typeId: number): ChampionSetup | undefined {
   const setup: ChampionSetup = { typeId, abilities, baseSpeed: heroType.unscaledStats.Speed };
   return setup;
 }
+
+export function validateSetup(setup: Readonly<ChampionSetup>): string[] {
+  const errors: string[] = [];
+  if (!setup.typeId) {
+    errors.push('Champion is required');
+  }
+  if (!setup.speed) {
+    errors.push('Speed is required');
+  }
+  if (setup.abilities.length === 0) {
+    errors.push('At least one ability is required');
+  }
+  return errors;
+}

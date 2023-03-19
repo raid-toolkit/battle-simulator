@@ -1,13 +1,11 @@
 import React from 'react';
 import { ChampionSetupListView } from './ChampionSetupListView';
-import { Badge, Button, Card, ConfigProvider, Divider, Input, Select, Space } from 'antd';
+import { Badge, Button, Card, Input, Space } from 'antd';
 import { FolderOpenOutlined, SaveOutlined, ThunderboltOutlined, UserAddOutlined } from '@ant-design/icons';
 import { ChampionSetup, SavedTeam, SavedTeamVersion } from '../Model';
 import { removeItemAtIndex, replaceItemAtIndex } from '../Common';
 import { teamDataStore } from '../Data/Forage';
 import { useForageCollection } from '../Components/Hooks';
-import type { DefaultOptionType } from 'antd/es/select';
-import MenuItem from 'antd/es/menu/MenuItem';
 import { SelectSavedTeam } from './SelectSavedTeam';
 import { v4 } from 'uuid';
 

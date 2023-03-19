@@ -1,16 +1,11 @@
-import React from "react";
-import { Button, Card, Dropdown, Input, MenuProps, Space, theme } from "antd";
-import {
-  DeleteOutlined,
-  EditOutlined,
-  HolderOutlined,
-  ThunderboltOutlined,
-} from "@ant-design/icons";
-import { ChampionSelectMenu } from "../Components";
-import { AbilitySetupListView } from "./AbilitySetupListView";
-import { ChampionSetup, AbilitySetup, lookupChampionSetup } from "../Model";
-import { useToggle } from "../Components/Hooks";
-import "./ChampionSetupView.css";
+import React from 'react';
+import { Button, Card, Dropdown, Input, MenuProps, Space, theme } from 'antd';
+import { DeleteOutlined, EditOutlined, HolderOutlined, ThunderboltOutlined } from '@ant-design/icons';
+import { ChampionSelectMenu } from '../Components';
+import { AbilitySetupListView } from './AbilitySetupListView';
+import { ChampionSetup, AbilitySetup, lookupChampionSetup } from '../Model';
+import { useToggle } from '../Components/Hooks';
+import './ChampionSetupView.css';
 
 export interface ChampionSetupViewProps {
   index: number;
@@ -18,20 +13,6 @@ export interface ChampionSetupViewProps {
   editable?: boolean;
   onUpdated: (index: number, value: Readonly<ChampionSetup>) => void;
   onDeleted: (index: number) => void;
-}
-
-export function validateSetup(setup: Readonly<ChampionSetup>): string[] {
-  const errors: string[] = [];
-  if (!setup.typeId) {
-    errors.push("Champion is required");
-  }
-  if (!setup.speed) {
-    errors.push("Speed is required");
-  }
-  if (setup.abilities.length === 0) {
-    errors.push("At least one ability is required");
-  }
-  return errors;
 }
 
 export const ChampionSetupView: React.FC<ChampionSetupViewProps> = ({
@@ -61,11 +42,8 @@ export const ChampionSetupView: React.FC<ChampionSetupViewProps> = ({
     [index, onUpdated, setup]
   );
 
-  const setSpeed = React.useCallback<
-    React.ChangeEventHandler<HTMLInputElement>
-  >(
-    (e) =>
-      onUpdated(index, { ...setup, speed: parseFloat(e.target.value) || 0 }),
+  const setSpeed = React.useCallback<React.ChangeEventHandler<HTMLInputElement>>(
+    (e) => onUpdated(index, { ...setup, speed: parseFloat(e.target.value) || 0 }),
     [index, onUpdated, setup]
   );
 
@@ -83,8 +61,8 @@ export const ChampionSetupView: React.FC<ChampionSetupViewProps> = ({
     () => ({
       items: [
         {
-          key: "delete",
-          label: "Delete",
+          key: 'delete',
+          label: 'Delete',
           icon: <DeleteOutlined />,
           danger: true,
           onClick: () => onDeleted(index),
@@ -95,29 +73,25 @@ export const ChampionSetupView: React.FC<ChampionSetupViewProps> = ({
   );
 
   return (
-    <Card
-      className="champion-setup-card"
-      bodyStyle={{ padding: 8 }}
-      tabIndex={0}
-    >
+    <Card className="champion-setup-card" bodyStyle={{ padding: 8 }} tabIndex={0}>
       <div
         style={{
-          display: "flex",
-          flexDirection: "column",
+          display: 'flex',
+          flexDirection: 'column',
           flex: 1,
         }}
       >
         <Space.Compact block>
           <ChampionSelectMenu
-            status={setup.typeId ? "" : "warning"}
+            status={setup.typeId ? '' : 'warning'}
             style={{ flex: 1 }}
             selectedValue={setup.typeId}
             onSelect={selectTypeId}
             onClear={selectTypeId}
           />
           <Input
-            status={setup.speed ? "" : "warning"}
-            style={{ width: 135, textAlign: "right" }}
+            status={setup.speed ? '' : 'warning'}
+            style={{ width: 135, textAlign: 'right' }}
             value={setup.speed || undefined}
             onChange={setSpeed}
             addonBefore="Speed"
@@ -126,16 +100,12 @@ export const ChampionSetupView: React.FC<ChampionSetupViewProps> = ({
             suffix={<ThunderboltOutlined />}
           />
         </Space.Compact>
-        <AbilitySetupListView
-          editable={skillsEditable}
-          abilities={setup.abilities}
-          onUpdated={onAbilitiesUpdated}
-        />
+        <AbilitySetupListView editable={skillsEditable} abilities={setup.abilities} onUpdated={onAbilitiesUpdated} />
       </div>
       <div
         className="champion-setup-card-actions"
         style={{
-          position: "absolute",
+          position: 'absolute',
           left: -40,
           width: 40,
           top: 0,
@@ -145,25 +115,21 @@ export const ChampionSetupView: React.FC<ChampionSetupViewProps> = ({
         <Space.Compact
           direction="vertical"
           style={{
-            position: "absolute",
-            marginTop: "auto",
-            marginBottom: "auto",
+            position: 'absolute',
+            marginTop: 'auto',
+            marginBottom: 'auto',
           }}
         >
-          <Dropdown arrow placement="topLeft" trigger={["click"]} menu={menu}>
+          <Dropdown arrow placement="topLeft" trigger={['click']} menu={menu}>
             <Button icon={<HolderOutlined />} />
           </Dropdown>
           <Button
             title="Edit skills"
             icon={<EditOutlined />}
-            type={skillsEditable ? "primary" : "default"}
+            type={skillsEditable ? 'primary' : 'default'}
             onClick={toggleSkillsEditable}
           />
-          <Button
-            icon={<DeleteOutlined />}
-            style={{ color: token.colorError }}
-            onClick={() => onDeleted(index)}
-          />
+          <Button icon={<DeleteOutlined />} style={{ color: token.colorError }} onClick={() => onDeleted(index)} />
         </Space.Compact>
       </div>
     </Card>

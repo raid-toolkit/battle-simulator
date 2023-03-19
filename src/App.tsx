@@ -1,11 +1,9 @@
-import './App.css';
-import { Badge, Button, Card, ConfigProvider, Input, Layout, theme } from 'antd';
-import { TeamView } from './Views';
 import React from 'react';
+import { Badge, Button, Card, ConfigProvider, Input, Layout, theme } from 'antd';
 import { CompressOutlined, HighlightOutlined, ThunderboltOutlined } from '@ant-design/icons';
-import { ChampionSetup } from './Model';
-import { TurnSimulator } from './Views/TurnSimulator';
-import { validateSetup } from './Views/ChampionSetupView';
+import { ChampionSetup, validateSetup } from './Model';
+import { TeamView, TurnSimulatorView } from './Views';
+import './App.css';
 
 export interface AppProps {
   toggleTheme: () => void;
@@ -48,7 +46,7 @@ function App({ toggleTheme }: AppProps) {
           </Layout.Header>
           <Layout.Content>
             {championList.length && championList.every((item) => validateSetup(item).length === 0) && (
-              <TurnSimulator bossSpeed={250} championList={championList} shieldHits={21} speedAura={19} />
+              <TurnSimulatorView bossSpeed={250} championList={championList} shieldHits={21} speedAura={19} />
             )}
           </Layout.Content>
         </Layout>

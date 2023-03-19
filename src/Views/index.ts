@@ -1,2 +1,2 @@
 export * from './TeamView';
-export * from './TurnSimulator';
+export * from './TurnSimulatorView';
