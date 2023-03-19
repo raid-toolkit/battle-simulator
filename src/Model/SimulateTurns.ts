@@ -101,11 +101,11 @@ export function useAbility(state: BattleState, championIndex: number, abilityInd
     // TODO apply boss debuffs (e.g. poison, hp burn, brimstone)
   }
 
-  ability.cooldownRemaining = ability.ability.cooldown;
-  // TODO: apply post-ability effects like TM somewhere else?
   for (const ability of champion.abilityState) {
     ability.cooldownRemaining = Math.max(0, ability.cooldownRemaining - 1);
   }
+  ability.cooldownRemaining = ability.ability.cooldown;
+  // TODO: apply post-ability effects like TM somewhere else?
   champion.turnMeter = 0;
   ++champion.turnsTaken;
   return {
@@ -124,7 +124,9 @@ export function takeNextTurn(state: BattleState): BattleTurn {
   if (champion.turnsTaken === 0 && starter) {
     return useAbility(state, nextTurn, starter.index);
   }
-  const nextAbility = abilities.sort((a, b) => (b.ability.priority ?? 99) - (a.ability.priority ?? 99))[0];
+  const nextAbility = abilities.sort((a, b) => (a.ability.priority ?? 99) - (b.ability.priority ?? 99))[
+    abilities.length - 1
+  ];
   assert(nextAbility, 'No ability to use');
   return useAbility(state, nextTurn, nextAbility.index);
 }
