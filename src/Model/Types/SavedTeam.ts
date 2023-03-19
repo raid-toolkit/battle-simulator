@@ -1,6 +1,7 @@
-import { ChampionSetup } from "./ChampionSetup";
+import { ChampionSetup } from './ChampionSetup';
 
 export interface SavedTeamVersion {
+  speedAura: number;
   champions: readonly Readonly<ChampionSetup>[];
 }
 

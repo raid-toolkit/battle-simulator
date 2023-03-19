@@ -27,6 +27,7 @@ export const TeamView: React.FC<TeamViewProps> = ({ championList, onChampionList
   const { items, addOrUpdate: addOrUpdateTeam /*, remove*/ } = useForageCollection<SavedTeam>(teamDataStore);
 
   const [selectedTeam, setSelectedTeam] = React.useState<SelectedTeam>();
+  const [speedAura, setSpeedAura] = React.useState<number>(0);
 
   const teamSelected = React.useCallback(
     (key: string) => {
@@ -44,6 +45,7 @@ export const TeamView: React.FC<TeamViewProps> = ({ championList, onChampionList
     if (selectedTeam) {
       const versions: SavedTeamVersion[] = [
         {
+          speedAura,
           champions: championList,
         },
       ];
@@ -53,7 +55,7 @@ export const TeamView: React.FC<TeamViewProps> = ({ championList, onChampionList
       }));
       setSelectedTeam({ ...selectedTeam, dirty: false, isNew: false });
     }
-  }, [addOrUpdateTeam, championList, selectedTeam]);
+  }, [addOrUpdateTeam, championList, selectedTeam, speedAura]);
 
   const loadTeam = React.useCallback(() => {
     if (!selectedTeam) {
@@ -65,7 +67,9 @@ export const TeamView: React.FC<TeamViewProps> = ({ championList, onChampionList
       return;
     }
 
-    onChampionListUpdated(existingTeam.versions[existingTeam.versions.length - 1].champions);
+    const lastVersion = existingTeam.versions[existingTeam.versions.length - 1];
+    onChampionListUpdated(lastVersion.champions);
+    setSpeedAura(lastVersion.speedAura);
     setSelectedTeam({ ...selectedTeam, dirty: false });
   }, [items, onChampionListUpdated, selectedTeam]);
 
@@ -118,6 +122,8 @@ export const TeamView: React.FC<TeamViewProps> = ({ championList, onChampionList
                 addonBefore="Speed Aura"
                 suffix="%"
                 defaultValue={0}
+                value={speedAura}
+                onChange={(e) => setSpeedAura(Number(e.target.value))}
                 addonAfter={<ThunderboltOutlined />}
                 style={{ width: 200, textAlign: 'right' }}
               />

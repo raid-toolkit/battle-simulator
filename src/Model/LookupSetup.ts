@@ -26,6 +26,6 @@ export function lookupChampionSetup(typeId: number): ChampionSetup | undefined {
     abilities.push(ability);
   }
 
-  const setup: ChampionSetup = { typeId, abilities };
+  const setup: ChampionSetup = { typeId, abilities, baseSpeed: heroType.unscaledStats.Speed };
   return setup;
 }
