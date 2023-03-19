@@ -1,0 +1,365 @@
+diff --git a/node_modules/@remote-ioc/ws-router/lib/ProcessRouter.js b/node_modules/@remote-ioc/ws-router/lib/ProcessRouter.js
+index 6431613..5fe8d81 100644
+--- a/node_modules/@remote-ioc/ws-router/lib/ProcessRouter.js
++++ b/node_modules/@remote-ioc/ws-router/lib/ProcessRouter.js
+@@ -1,82 +1,83 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
+ exports.ProcessRouter = void 0;
+-const runtime_1 = require("@remote-ioc/runtime");
++const runtime_1 = require('@remote-ioc/runtime');
+ class ProcessSocket {
+-    constructor(scope, ipc) {
+-        this.scope = scope;
+-        this.ipc = ipc;
+-        if (!ipc.send) {
+-            throw new Error('Process is not enabled for IPC communication');
+-        }
+-    }
+-    close() {
+-        // @ts-ignore
+-        this.ipc.kill();
+-    }
+-    send(channel, message, context) {
+-        this.ipc.send([this.scope, channel, message, context]);
+-        return this;
+-    }
+-    on(channel, handler) {
+-        const handlerWrapper = ([messageScope, messageChannel, message, context]) => {
+-            if (channel !== messageChannel || this.scope !== messageScope) {
+-                return;
+-            }
+-            handler(message, context);
+-        };
+-        // @ts-ignore
+-        // eslint-disable-next-line no-param-reassign
+-        handler.handlerWrapper = handlerWrapper;
+-        this.ipc.on('message', handlerWrapper);
+-        return this;
+-    }
+-    off(_channel, handler) {
+-        this.ipc.off('message', handler.handlerWrapper);
+-        return this;
++  constructor(scope, ipc) {
++    this.scope = scope;
++    this.ipc = ipc;
++    if (!ipc.send) {
++      throw new Error('Process is not enabled for IPC communication');
+     }
++  }
++  close() {
++    // @ts-ignore
++    this.ipc.kill();
++  }
++  send(channel, message, context) {
++    this.ipc.send([this.scope, channel, message, context]);
++    return this;
++  }
++  on(channel, handler) {
++    const handlerWrapper = ([messageScope, messageChannel, message, context]) => {
++      if (channel !== messageChannel || this.scope !== messageScope) {
++        return;
++      }
++      handler(message, context);
++    };
++    // @ts-ignore
++    // eslint-disable-next-line no-param-reassign
++    handler.handlerWrapper = handlerWrapper;
++    this.ipc.on('message', handlerWrapper);
++    return this;
++  }
++  off(_channel, handler) {
++    this.ipc.off('message', handler.handlerWrapper);
++    return this;
++  }
+ }
+ class ProcessRouter extends runtime_1.RouterBase {
+-    constructor(ipc) {
+-        super();
+-        this.ipc = ipc;
+-        this.handleProcessMessage = ([scope, channel, message]) => {
+-            if (scope !== '$process-router') {
+-                return;
+-            }
+-            switch (channel) {
+-                case 'discover/request': {
+-                    this.handleDiscoverRequest();
+-                    return;
+-                }
+-                case 'discover/response': {
+-                    this.handleDiscoverResponse(message);
+-                    break;
+-                }
+-                default:
+-            }
+-        };
+-        if (!ipc.send) {
+-            throw new Error('Process is not enabled for IPC communication');
++  constructor(ipc) {
++    super();
++    this.ipc = ipc;
++    this.handleProcessMessage = ([scope, channel, message]) => {
++      if (scope !== '$process-router') {
++        return;
++      }
++      switch (channel) {
++        case 'discover/request': {
++          this.handleDiscoverRequest();
++          return;
+         }
+-        this.ipc.on('message', this.handleProcessMessage);
+-        setTimeout(() => {
+-            this.ipc.send(['$process-router', 'discover/request']);
+-        }, 0);
+-    }
+-    getSocketCore(Definition) {
+-        return new ProcessSocket(runtime_1.ApiDefinition.nameOf(Definition), this.ipc);
+-    }
+-    handleDiscoverRequest() {
+-        const definitions = [];
+-        for (const provider of this.providers) {
+-            definitions.push(...runtime_1.ApiProvider.implementationsOf(provider).map((def) => runtime_1.ApiDefinition.nameOf(def)));
++        case 'discover/response': {
++          this.handleDiscoverResponse(message);
++          break;
+         }
+-        this.ipc.send(['$process-router', 'discover/response', definitions]);
++        default:
++      }
++    };
++    if (!ipc.send) {
++      throw new Error('Process is not enabled for IPC communication');
+     }
+-    handleDiscoverResponse(definitions) {
+-        this.emit('discover', definitions);
++    this.ipc.on('message', this.handleProcessMessage);
++    setTimeout(() => {
++      this.ipc.send(['$process-router', 'discover/request']);
++    }, 0);
++  }
++  getSocketCore(Definition) {
++    return new ProcessSocket(runtime_1.ApiDefinition.nameOf(Definition), this.ipc);
++  }
++  handleDiscoverRequest() {
++    const definitions = [];
++    for (const provider of this.providers) {
++      definitions.push(
++        ...runtime_1.ApiProvider.implementationsOf(provider).map((def) => runtime_1.ApiDefinition.nameOf(def))
++      );
+     }
++    this.ipc.send(['$process-router', 'discover/response', definitions]);
++  }
++  handleDiscoverResponse(definitions) {
++    this.emit('discover', definitions);
++  }
+ }
+ exports.ProcessRouter = ProcessRouter;
+-//# sourceMappingURL=ProcessRouter.js.map
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/ws-router/lib/ProcessRouter.js.map b/node_modules/@remote-ioc/ws-router/lib/ProcessRouter.js.map
+deleted file mode 100644
+index 256571e..0000000
+--- a/node_modules/@remote-ioc/ws-router/lib/ProcessRouter.js.map
++++ /dev/null
+@@ -1 +0,0 @@
+-{"version":3,"file":"ProcessRouter.js","sourceRoot":"","sources":["../src/ProcessRouter.ts"],"names":[],"mappings":";;;AAEA,iDAAmG;AAEnG,MAAM,aAAa;IACjB,YAA6B,KAAa,EAAmB,GAAkC;QAAlE,UAAK,GAAL,KAAK,CAAQ;QAAmB,QAAG,GAAH,GAAG,CAA+B;QAC7F,IAAI,CAAC,GAAG,CAAC,IAAI,EAAE;YACb,MAAM,IAAI,KAAK,CAAC,8CAA8C,CAAC,CAAC;SACjE;IACH,CAAC;IACD,KAAK;QACH,aAAa;QACb,IAAI,CAAC,GAAG,CAAC,IAAI,EAAE,CAAC;IAClB,CAAC;IACD,IAAI,CAAC,OAAe,EAAE,OAAY,EAAE,OAAiB;QACnD,IAAI,CAAC,GAAG,CAAC,IAAK,CAAC,CAAC,IAAI,CAAC,KAAK,EAAE,OAAO,EAAE,OAAO,EAAE,OAAO,CAAC,CAAC,CAAC;QACxD,OAAO,IAAI,CAAC;IACd,CAAC;IACD,EAAE,CAAC,OAAe,EAAE,OAAkD;QACpE,MAAM,cAAc,GAAG,CAAC,CAAC,YAAY,EAAE,cAAc,EAAE,OAAO,EAAE,OAAO,CAAiB,EAAE,EAAE;YAC1F,IAAI,OAAO,KAAK,cAAc,IAAI,IAAI,CAAC,KAAK,KAAK,YAAY,EAAE;gBAC7D,OAAO;aACR;YACD,OAAO,CAAC,OAAO,EAAE,OAAO,CAAC,CAAC;QAC5B,CAAC,CAAC;QACF,aAAa;QACb,6CAA6C;QAC7C,OAAO,CAAC,cAAc,GAAG,cAAc,CAAC;QACxC,IAAI,CAAC,GAAG,CAAC,EAAE,CAAC,SAAS,EAAE,cAAc,CAAC,CAAC;QACvC,OAAO,IAAI,CAAC;IACd,CAAC;IACD,GAAG,CAAC,QAAgB,EAAE,OAAkD;QACtE,IAAI,CAAC,GAAG,CAAC,GAAG,CAAC,SAAS,EAAG,OAAe,CAAC,cAAc,CAAC,CAAC;QACzD,OAAO,IAAI,CAAC;IACd,CAAC;CACF;AAED,MAAa,aAAc,SAAQ,oBAAU;IAC3C,YAA6B,GAAkC;QAC7D,KAAK,EAAE,CAAC;QADmB,QAAG,GAAH,GAAG,CAA+B;QAevD,yBAAoB,GAAG,CAAC,CAAC,KAAK,EAAE,OAAO,EAAE,OAAO,CAAiD,EAAE,EAAE;YAC3G,IAAI,KAAK,KAAK,iBAAiB,EAAE;gBAC/B,OAAO;aACR;YACD,QAAQ,OAAO,EAAE;gBACf,KAAK,kBAAkB,CAAC,CAAC;oBACvB,IAAI,CAAC,qBAAqB,EAAE,CAAC;oBAC7B,OAAO;iBACR;gBACD,KAAK,mBAAmB,CAAC,CAAC;oBACxB,IAAI,CAAC,sBAAsB,CAAC,OAAO,CAAC,CAAC;oBACrC,MAAM;iBACP;gBACD,QAAQ;aACT;QACH,CAAC,CAAC;QA5BA,IAAI,CAAC,GAAG,CAAC,IAAI,EAAE;YACb,MAAM,IAAI,KAAK,CAAC,8CAA8C,CAAC,CAAC;SACjE;QACD,IAAI,CAAC,GAAG,CAAC,EAAE,CAAC,SAAS,EAAE,IAAI,CAAC,oBAAoB,CAAC,CAAC;QAClD,UAAU,CAAC,GAAG,EAAE;YACd,IAAI,CAAC,GAAG,CAAC,IAAK,CAAC,CAAC,iBAAiB,EAAE,kBAAkB,CAAC,CAAC,CAAC;QAC1D,CAAC,EAAE,CAAC,CAAC,CAAC;IACR,CAAC;IAES,aAAa,CAAC,UAAuB;QAC7C,OAAO,IAAI,aAAa,CAAC,uBAAa,CAAC,MAAM,CAAC,UAAU,CAAC,EAAE,IAAI,CAAC,GAAG,CAAC,CAAC;IACvE,CAAC;IAmBO,qBAAqB;QAC3B,MAAM,WAAW,GAAa,EAAE,CAAC;QACjC,KAAK,MAAM,QAAQ,IAAI,IAAI,CAAC,SAAS,EAAE;YACrC,WAAW,CAAC,IAAI,CAAC,GAAG,qBAAW,CAAC,iBAAiB,CAAC,QAAQ,CAAC,CAAC,GAAG,CAAC,CAAC,GAAG,EAAE,EAAE,CAAC,uBAAa,CAAC,MAAM,CAAC,GAAG,CAAC,CAAC,CAAC,CAAC;SACtG;QACD,IAAI,CAAC,GAAG,CAAC,IAAK,CAAC,CAAC,iBAAiB,EAAE,mBAAmB,EAAE,WAAW,CAAC,CAAC,CAAC;IACxE,CAAC;IAEO,sBAAsB,CAAC,WAAqB;QAClD,IAAI,CAAC,IAAI,CAAC,UAAU,EAAE,WAAW,CAAC,CAAC;IACrC,CAAC;CACF;AA5CD,sCA4CC"}
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/ws-router/lib/WebSocketClientRouter.js b/node_modules/@remote-ioc/ws-router/lib/WebSocketClientRouter.js
+index 5eb1860..6d4a340 100644
+--- a/node_modules/@remote-ioc/ws-router/lib/WebSocketClientRouter.js
++++ b/node_modules/@remote-ioc/ws-router/lib/WebSocketClientRouter.js
+@@ -1,43 +1,43 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
+ exports.WebSocketClientRouter = void 0;
+-const runtime_1 = require("@remote-ioc/runtime");
+-const isomorphic_ws_1 = require("isomorphic-ws");
+-const WebSocketWithScope_1 = require("./WebSocketWithScope");
++const runtime_1 = require('@remote-ioc/runtime');
++const isomorphic_ws_1 = require('isomorphic-ws');
++const WebSocketWithScope_1 = require('./WebSocketWithScope');
+ class WebSocketClientRouter extends runtime_1.RouterBase {
+-    constructor(socket) {
+-        super();
+-        this.handleDiscoverRequest = () => {
+-            const definitions = [];
+-            for (const provider of this.providers) {
+-                definitions.push(...runtime_1.ApiProvider.implementationsOf(provider).map((def) => runtime_1.ApiDefinition.nameOf(def)));
+-            }
+-            this.discoverSocket.send('response', definitions);
+-        };
+-        this.handleDiscoverResponse = (definitions) => {
+-            this.emit('discover', definitions);
+-        };
+-        if (socket.readyState !== isomorphic_ws_1.OPEN) {
+-            this.socket = new Promise((resolve, reject) => {
+-                socket.addEventListener('error', reject);
+-                socket.addEventListener('open', () => resolve(socket));
+-            });
+-        }
+-        else {
+-            this.socket = Promise.resolve(socket);
+-        }
+-        // eslint-disable-next-line global-require
+-        this.discoverSocket = new WebSocketWithScope_1.WebSocketWithScope('$router/discover', this.socket);
+-        this.discoverSocket.on('request', this.handleDiscoverRequest);
+-        this.discoverSocket.on('response', this.handleDiscoverResponse);
+-        setTimeout(() => {
+-            this.discoverSocket.send('request', undefined);
+-        }, 0);
+-    }
+-    getSocketCore(Definition) {
+-        const name = runtime_1.ApiDefinition.nameOf(Definition);
+-        return new WebSocketWithScope_1.WebSocketWithScope(name, this.socket);
++  constructor(socket) {
++    super();
++    this.handleDiscoverRequest = () => {
++      const definitions = [];
++      for (const provider of this.providers) {
++        definitions.push(
++          ...runtime_1.ApiProvider.implementationsOf(provider).map((def) => runtime_1.ApiDefinition.nameOf(def))
++        );
++      }
++      this.discoverSocket.send('response', definitions);
++    };
++    this.handleDiscoverResponse = (definitions) => {
++      this.emit('discover', definitions);
++    };
++    if (socket.readyState !== isomorphic_ws_1.OPEN) {
++      this.socket = new Promise((resolve, reject) => {
++        socket.addEventListener('error', reject);
++        socket.addEventListener('open', () => resolve(socket));
++      });
++    } else {
++      this.socket = Promise.resolve(socket);
+     }
++    // eslint-disable-next-line global-require
++    this.discoverSocket = new WebSocketWithScope_1.WebSocketWithScope('$router/discover', this.socket);
++    this.discoverSocket.on('request', this.handleDiscoverRequest);
++    this.discoverSocket.on('response', this.handleDiscoverResponse);
++    setTimeout(() => {
++      this.discoverSocket.send('request', undefined);
++    }, 0);
++  }
++  getSocketCore(Definition) {
++    const name = runtime_1.ApiDefinition.nameOf(Definition);
++    return new WebSocketWithScope_1.WebSocketWithScope(name, this.socket);
++  }
+ }
+ exports.WebSocketClientRouter = WebSocketClientRouter;
+-//# sourceMappingURL=WebSocketClientRouter.js.map
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/ws-router/lib/WebSocketClientRouter.js.map b/node_modules/@remote-ioc/ws-router/lib/WebSocketClientRouter.js.map
+deleted file mode 100644
+index 99f8da0..0000000
+--- a/node_modules/@remote-ioc/ws-router/lib/WebSocketClientRouter.js.map
++++ /dev/null
+@@ -1 +0,0 @@
+-{"version":3,"file":"WebSocketClientRouter.js","sourceRoot":"","sources":["../src/WebSocketClientRouter.ts"],"names":[],"mappings":";;;AAAA,iDAAmG;AACnG,iDAAgD;AAChD,6DAA0D;AAE1D,MAAa,qBAAsB,SAAQ,oBAAU;IAGnD,YAAY,MAAiB;QAC3B,KAAK,EAAE,CAAC;QAkBF,0BAAqB,GAAG,GAAG,EAAE;YACnC,MAAM,WAAW,GAAa,EAAE,CAAC;YACjC,KAAK,MAAM,QAAQ,IAAI,IAAI,CAAC,SAAS,EAAE;gBACrC,WAAW,CAAC,IAAI,CAAC,GAAG,qBAAW,CAAC,iBAAiB,CAAC,QAAQ,CAAC,CAAC,GAAG,CAAC,CAAC,GAAG,EAAE,EAAE,CAAC,uBAAa,CAAC,MAAM,CAAC,GAAG,CAAC,CAAC,CAAC,CAAC;aACtG;YACD,IAAI,CAAC,cAAc,CAAC,IAAI,CAAC,UAAU,EAAE,WAAW,CAAC,CAAC;QACpD,CAAC,CAAC;QAEM,2BAAsB,GAAG,CAAC,WAAqB,EAAE,EAAE;YACzD,IAAI,CAAC,IAAI,CAAC,UAAU,EAAE,WAAW,CAAC,CAAC;QACrC,CAAC,CAAC;QA3BA,IAAI,MAAM,CAAC,UAAU,KAAK,oBAAI,EAAE;YAC9B,IAAI,CAAC,MAAM,GAAG,IAAI,OAAO,CAAC,CAAC,OAAO,EAAE,MAAM,EAAE,EAAE;gBAC5C,MAAM,CAAC,gBAAgB,CAAC,OAAO,EAAE,MAAM,CAAC,CAAC;gBACzC,MAAM,CAAC,gBAAgB,CAAC,MAAM,EAAE,GAAG,EAAE,CAAC,OAAO,CAAC,MAAM,CAAC,CAAC,CAAC;YACzD,CAAC,CAAC,CAAC;SACJ;aAAM;YACL,IAAI,CAAC,MAAM,GAAG,OAAO,CAAC,OAAO,CAAC,MAAM,CAAC,CAAC;SACvC;QACD,0CAA0C;QAC1C,IAAI,CAAC,cAAc,GAAG,IAAI,uCAAkB,CAAC,kBAAkB,EAAE,IAAI,CAAC,MAAM,CAAC,CAAC;QAC9E,IAAI,CAAC,cAAc,CAAC,EAAE,CAAC,SAAS,EAAE,IAAI,CAAC,qBAAqB,CAAC,CAAC;QAC9D,IAAI,CAAC,cAAc,CAAC,EAAE,CAAC,UAAU,EAAE,IAAI,CAAC,sBAAsB,CAAC,CAAC;QAChE,UAAU,CAAC,GAAG,EAAE;YACd,IAAI,CAAC,cAAc,CAAC,IAAI,CAAC,SAAS,EAAE,SAAS,CAAC,CAAC;QACjD,CAAC,EAAE,CAAC,CAAC,CAAC;IACR,CAAC;IAcM,aAAa,CAAC,UAAgC;QACnD,MAAM,IAAI,GAAG,uBAAa,CAAC,MAAM,CAAC,UAAU,CAAC,CAAC;QAC9C,OAAO,IAAI,uCAAkB,CAAC,IAAI,EAAE,IAAI,CAAC,MAAM,CAAC,CAAC;IACnD,CAAC;CACF;AAtCD,sDAsCC"}
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/ws-router/lib/WebSocketWithScope.js b/node_modules/@remote-ioc/ws-router/lib/WebSocketWithScope.js
+index e2efb03..11f8bee 100644
+--- a/node_modules/@remote-ioc/ws-router/lib/WebSocketWithScope.js
++++ b/node_modules/@remote-ioc/ws-router/lib/WebSocketWithScope.js
+@@ -1,35 +1,34 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
+ exports.WebSocketWithScope = void 0;
+ class WebSocketWithScope {
+-    constructor(scope, socket) {
+-        this.scope = scope;
+-        this.socket = socket;
+-    }
+-    close() {
+-        this.socket.then((socket) => socket.close());
+-    }
+-    send(channel, message, context) {
+-        this.socket.then((socket) => socket.send(JSON.stringify([this.scope, channel, message, context])));
+-        return this;
+-    }
+-    on(channel, handler) {
+-        const handlerWrapper = (event) => {
+-            const [messageScope, messageChannel, messageBody, context] = JSON.parse(event.data.toString('utf8'));
+-            if (channel !== messageChannel || this.scope !== messageScope) {
+-                return;
+-            }
+-            handler(messageBody, context);
+-        };
+-        // eslint-disable-next-line no-param-reassign
+-        handler.handlerWrapper = handlerWrapper;
+-        this.socket.then((socket) => socket.addEventListener('message', handlerWrapper));
+-        return this;
+-    }
+-    off(_channel, handler) {
+-        this.socket.then((socket) => socket.removeEventListener('message', handler.handlerWrapper));
+-        return this;
+-    }
++  constructor(scope, socket) {
++    this.scope = scope;
++    this.socket = socket;
++  }
++  close() {
++    this.socket.then((socket) => socket.close());
++  }
++  send(channel, message, context) {
++    this.socket.then((socket) => socket.send(JSON.stringify([this.scope, channel, message, context])));
++    return this;
++  }
++  on(channel, handler) {
++    const handlerWrapper = (event) => {
++      const [messageScope, messageChannel, messageBody, context] = JSON.parse(event.data.toString('utf8'));
++      if (channel !== messageChannel || this.scope !== messageScope) {
++        return;
++      }
++      handler(messageBody, context);
++    };
++    // eslint-disable-next-line no-param-reassign
++    handler.handlerWrapper = handlerWrapper;
++    this.socket.then((socket) => socket.addEventListener('message', handlerWrapper));
++    return this;
++  }
++  off(_channel, handler) {
++    this.socket.then((socket) => socket.removeEventListener('message', handler.handlerWrapper));
++    return this;
++  }
+ }
+ exports.WebSocketWithScope = WebSocketWithScope;
+-//# sourceMappingURL=WebSocketWithScope.js.map
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/ws-router/lib/WebSocketWithScope.js.map b/node_modules/@remote-ioc/ws-router/lib/WebSocketWithScope.js.map
+deleted file mode 100644
+index bbe79cc..0000000
+--- a/node_modules/@remote-ioc/ws-router/lib/WebSocketWithScope.js.map
++++ /dev/null
+@@ -1 +0,0 @@
+-{"version":3,"file":"WebSocketWithScope.js","sourceRoot":"","sources":["../src/WebSocketWithScope.ts"],"names":[],"mappings":";;;AAGA,MAAa,kBAAkB;IAC7B,YAA6B,KAAa,EAAmB,MAA0B;QAA1D,UAAK,GAAL,KAAK,CAAQ;QAAmB,WAAM,GAAN,MAAM,CAAoB;IAAG,CAAC;IAC3F,KAAK;QACH,IAAI,CAAC,MAAM,CAAC,IAAI,CAAC,CAAC,MAAM,EAAE,EAAE,CAAC,MAAM,CAAC,KAAK,EAAE,CAAC,CAAC;IAC/C,CAAC;IACD,IAAI,CAAC,OAAe,EAAE,OAAY,EAAE,OAAiB;QACnD,IAAI,CAAC,MAAM,CAAC,IAAI,CAAC,CAAC,MAAM,EAAE,EAAE,CAAC,MAAM,CAAC,IAAI,CAAC,IAAI,CAAC,SAAS,CAAC,CAAC,IAAI,CAAC,KAAK,EAAE,OAAO,EAAE,OAAO,EAAE,OAAO,CAAC,CAAC,CAAC,CAAC,CAAC;QACnG,OAAO,IAAI,CAAC;IACd,CAAC;IACD,EAAE,CAAC,OAAe,EAAE,OAAkD;QACpE,MAAM,cAAc,GAAG,CAAC,KAAmB,EAAE,EAAE;YAC7C,MAAM,CAAC,YAAY,EAAE,cAAc,EAAE,WAAW,EAAE,OAAO,CAAC,GAAG,IAAI,CAAC,KAAK,CAAC,KAAK,CAAC,IAAI,CAAC,QAAQ,CAAC,MAAM,CAAC,CAAC,CAAC;YACrG,IAAI,OAAO,KAAK,cAAc,IAAI,IAAI,CAAC,KAAK,KAAK,YAAY,EAAE;gBAC7D,OAAO;aACR;YACD,OAAO,CAAC,WAAW,EAAE,OAAO,CAAC,CAAC;QAChC,CAAC,CAAC;QACF,6CAA6C;QAC5C,OAAe,CAAC,cAAc,GAAG,cAAc,CAAC;QACjD,IAAI,CAAC,MAAM,CAAC,IAAI,CAAC,CAAC,MAAM,EAAE,EAAE,CAAC,MAAM,CAAC,gBAAgB,CAAC,SAAS,EAAE,cAAc,CAAC,CAAC,CAAC;QACjF,OAAO,IAAI,CAAC;IACd,CAAC;IACD,GAAG,CAAC,QAAgB,EAAE,OAAkD;QACtE,IAAI,CAAC,MAAM,CAAC,IAAI,CAAC,CAAC,MAAM,EAAE,EAAE,CAAC,MAAM,CAAC,mBAAmB,CAAC,SAAS,EAAG,OAAe,CAAC,cAAc,CAAC,CAAC,CAAC;QACrG,OAAO,IAAI,CAAC;IACd,CAAC;CACF;AA1BD,gDA0BC"}
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/ws-router/lib/index.js b/node_modules/@remote-ioc/ws-router/lib/index.js
+index f709214..a21feee 100644
+--- a/node_modules/@remote-ioc/ws-router/lib/index.js
++++ b/node_modules/@remote-ioc/ws-router/lib/index.js
+@@ -1,5 +1,4 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
+-const tslib_1 = require("tslib");
+-tslib_1.__exportStar(require("./WebSocketClientRouter"), exports);
+-//# sourceMappingURL=index.js.map
+\ No newline at end of file
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
++const tslib_1 = require('tslib');
++tslib_1.__exportStar(require('./WebSocketClientRouter'), exports);
+diff --git a/node_modules/@remote-ioc/ws-router/lib/index.js.map b/node_modules/@remote-ioc/ws-router/lib/index.js.map
+deleted file mode 100644
+index 1fa0959..0000000
+--- a/node_modules/@remote-ioc/ws-router/lib/index.js.map
++++ /dev/null
+@@ -1 +0,0 @@
+-{"version":3,"file":"index.js","sourceRoot":"","sources":["../src/index.ts"],"names":[],"mappings":";;;AAAA,kEAAwC"}
+\ No newline at end of file

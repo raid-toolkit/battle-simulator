@@ -1,0 +1,3173 @@
+diff --git a/node_modules/@remote-ioc/runtime/lib/Decorators/ApiDefinition.js b/node_modules/@remote-ioc/runtime/lib/Decorators/ApiDefinition.js
+index 513b877..8082b1d 100644
+--- a/node_modules/@remote-ioc/runtime/lib/Decorators/ApiDefinition.js
++++ b/node_modules/@remote-ioc/runtime/lib/Decorators/ApiDefinition.js
+@@ -1,42 +1,41 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
+ exports.methodStub = exports.ApiDefinition = void 0;
+-require("reflect-metadata");
+-const RuntimeContext_1 = require("../RuntimeContext");
++require('reflect-metadata');
++const RuntimeContext_1 = require('../RuntimeContext');
+ const ApiDefinitionName = Symbol('api:definition:name');
+ function ApiDefinitionDecorator(name) {
+-    return (target) => {
+-        const wrapper = target.definitionClass
+-            ? target
+-            : class ApiDefinitionWrapper extends target {
+-                constructor() {
+-                    super();
+-                    throw new Error(`Api definition '${wrapper.definitionClass.name}' is not constructable`);
+-                }
+-                static get definitionClass() {
+-                    return target;
+-                }
+-            };
+-        const currentMetadata = Reflect.getMetadata(ApiDefinitionName, wrapper);
+-        if (currentMetadata && currentMetadata !== name) {
+-            throw new Error(`Target '${wrapper.definitionClass.name}' is already decorated with an @ApiDefintion`);
+-        }
+-        Reflect.defineMetadata(ApiDefinitionName, name, wrapper);
+-        RuntimeContext_1.getRuntime().registerDefinition(wrapper);
+-        return wrapper;
+-    };
++  return (target) => {
++    const wrapper = target.definitionClass
++      ? target
++      : class ApiDefinitionWrapper extends target {
++          constructor() {
++            super();
++            throw new Error(`Api definition '${wrapper.definitionClass.name}' is not constructable`);
++          }
++          static get definitionClass() {
++            return target;
++          }
++        };
++    const currentMetadata = Reflect.getMetadata(ApiDefinitionName, wrapper);
++    if (currentMetadata && currentMetadata !== name) {
++      throw new Error(`Target '${wrapper.definitionClass.name}' is already decorated with an @ApiDefintion`);
++    }
++    Reflect.defineMetadata(ApiDefinitionName, name, wrapper);
++    RuntimeContext_1.getRuntime().registerDefinition(wrapper);
++    return wrapper;
++  };
+ }
+ exports.ApiDefinition = Object.assign(ApiDefinitionDecorator, {
+-    nameOf(target) {
+-        const name = Reflect.getMetadata(ApiDefinitionName, target);
+-        if (name === undefined) {
+-            throw new Error(`Target class '${target.name}' is not marked with @ApiDefinition`);
+-        }
+-        return name;
+-    },
++  nameOf(target) {
++    const name = Reflect.getMetadata(ApiDefinitionName, target);
++    if (name === undefined) {
++      throw new Error(`Target class '${target.name}' is not marked with @ApiDefinition`);
++    }
++    return name;
++  },
+ });
+ function methodStub(..._args) {
+-    throw new Error('Cannot call interface method');
++  throw new Error('Cannot call interface method');
+ }
+ exports.methodStub = methodStub;
+-//# sourceMappingURL=ApiDefinition.js.map
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/Decorators/ApiDefinition.js.map b/node_modules/@remote-ioc/runtime/lib/Decorators/ApiDefinition.js.map
+deleted file mode 100644
+index 11c3afa..0000000
+--- a/node_modules/@remote-ioc/runtime/lib/Decorators/ApiDefinition.js.map
++++ /dev/null
+@@ -1 +0,0 @@
+-{"version":3,"file":"ApiDefinition.js","sourceRoot":"","sources":["../../src/Decorators/ApiDefinition.ts"],"names":[],"mappings":";;;AAAA,4BAA0B;AAC1B,sDAA+C;AAU/C,MAAM,iBAAiB,GAAG,MAAM,CAAC,qBAAqB,CAAC,CAAC;AAMxD,SAAS,sBAAsB,CAAC,IAAY;IAC1C,OAAO,CAAwB,MAA8B,EAAK,EAAE;QAClE,MAAM,OAAO,GAA+B,MAA2C,CAAC,eAAe;YACrG,CAAC,CAAC,MAAM;YACR,CAAC,CAAE,MAAM,oBAAqB,SAAS,MAAc;gBACjD;oBACE,KAAK,EAAE,CAAC;oBACR,MAAM,IAAI,KAAK,CAAC,mBAAmB,OAAO,CAAC,eAAe,CAAC,IAAI,wBAAwB,CAAC,CAAC;gBAC3F,CAAC;gBAED,MAAM,KAAK,eAAe;oBACxB,OAAO,MAAM,CAAC;gBAChB,CAAC;aACM,CAAC;QAEd,MAAM,eAAe,GAAG,OAAO,CAAC,WAAW,CAAC,iBAAiB,EAAE,OAAO,CAAC,CAAC;QACxE,IAAI,eAAe,IAAI,eAAe,KAAK,IAAI,EAAE;YAC/C,MAAM,IAAI,KAAK,CAAC,WAAW,OAAO,CAAC,eAAe,CAAC,IAAI,8CAA8C,CAAC,CAAC;SACxG;QAED,OAAO,CAAC,cAAc,CAAC,iBAAiB,EAAE,IAAI,EAAE,OAAO,CAAC,CAAC;QACzD,2BAAU,EAAE,CAAC,kBAAkB,CAAC,OAAO,CAAC,CAAC;QACzC,OAAO,OAAc,CAAC;IACxB,CAAC,CAAC;AACJ,CAAC;AAOY,QAAA,aAAa,GAA4B,MAAM,CAAC,MAAM,CAAC,sBAAsB,EAAE;IAC1F,MAAM,CAAwB,MAAS;QACrC,MAAM,IAAI,GAAG,OAAO,CAAC,WAAW,CAAC,iBAAiB,EAAE,MAAM,CAAC,CAAC;QAC5D,IAAI,IAAI,KAAK,SAAS,EAAE;YACtB,MAAM,IAAI,KAAK,CAAC,iBAAiB,MAAM,CAAC,IAAI,qCAAqC,CAAC,CAAC;SACpF;QACD,OAAO,IAAI,CAAC;IACd,CAAC;CACF,CAAC,CAAC;AAEH,SAAgB,UAAU,CAAC,GAAG,KAAY;IACxC,MAAM,IAAI,KAAK,CAAC,8BAA8B,CAAC,CAAC;AAClD,CAAC;AAFD,gCAEC"}
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/Decorators/ApiDefinition.test.js b/node_modules/@remote-ioc/runtime/lib/Decorators/ApiDefinition.test.js
+index 2fc12b4..225c780 100644
+--- a/node_modules/@remote-ioc/runtime/lib/Decorators/ApiDefinition.test.js
++++ b/node_modules/@remote-ioc/runtime/lib/Decorators/ApiDefinition.test.js
+@@ -1,108 +1,115 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
+-const tslib_1 = require("tslib");
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
++const tslib_1 = require('tslib');
+ /* eslint-disable max-classes-per-file */
+-const ApiDefinition_1 = require("./ApiDefinition");
++const ApiDefinition_1 = require('./ApiDefinition');
+ describe('@ApiDefinition', () => {
+-    describe('errors', () => {
+-        it('is not constructable', () => {
+-            let Definition = class Definition {
+-            };
+-            Definition = tslib_1.__decorate([
+-                ApiDefinition_1.ApiDefinition('my-api')
+-            ], Definition);
+-            expect(() => new Definition()).toThrowError(`Api definition 'Definition' is not constructable`);
+-        });
+-        it('nameOf typical class', () => {
+-            class Definition {
+-            }
+-            expect(() => ApiDefinition_1.ApiDefinition.nameOf(Definition)).toThrowError(`Target class 'Definition' is not marked with @ApiDefinition`);
+-        });
+-        it('multiple definitions', () => {
+-            expect(() => {
+-                let Definition = 
+-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+-                class Definition {
+-                };
+-                Definition = tslib_1.__decorate([
+-                    ApiDefinition_1.ApiDefinition('my-api-1'),
+-                    ApiDefinition_1.ApiDefinition('my-api-2')
+-                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+-                ], Definition);
+-            }).toThrowError(`Target 'Definition' is already decorated with an @ApiDefintion`);
+-        });
+-        it('call method fails', () => {
+-            let Definition = 
+-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+-            class Definition {
+-                method(arg0, arg1) {
+-                    ApiDefinition_1.methodStub(this, arg0, arg1);
+-                }
+-            };
+-            Definition = tslib_1.__decorate([
+-                ApiDefinition_1.ApiDefinition('my-api')
+-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+-            ], Definition);
+-            expect(Definition.prototype.method.bind(undefined, 'arg0', false)).toThrowError('Cannot call interface method');
+-        });
+-        it('enforce promise types', () => {
+-            // @ts-expect-error
+-            let SyncMethod = 
+-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+-            class SyncMethod {
+-                syncMethod() {
+-                    ApiDefinition_1.methodStub(this);
+-                }
+-            };
+-            SyncMethod = tslib_1.__decorate([
+-                ApiDefinition_1.ApiDefinition('my-api')
+-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+-            ], SyncMethod);
+-            // @ts-expect-error
+-            let VoidMethod = 
+-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+-            class VoidMethod {
+-                voidMethod() {
+-                    ApiDefinition_1.methodStub(this);
+-                }
+-            };
+-            VoidMethod = tslib_1.__decorate([
+-                ApiDefinition_1.ApiDefinition('my-api')
+-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+-            ], VoidMethod);
+-            // @ts-expect-error
+-            let SyncProperty = 
++  describe('errors', () => {
++    it('is not constructable', () => {
++      let Definition = class Definition {};
++      Definition = tslib_1.__decorate([ApiDefinition_1.ApiDefinition('my-api')], Definition);
++      expect(() => new Definition()).toThrowError(`Api definition 'Definition' is not constructable`);
++    });
++    it('nameOf typical class', () => {
++      class Definition {}
++      expect(() => ApiDefinition_1.ApiDefinition.nameOf(Definition)).toThrowError(
++        `Target class 'Definition' is not marked with @ApiDefinition`
++      );
++    });
++    it('multiple definitions', () => {
++      expect(() => {
++        let Definition =
++          // eslint-disable-next-line @typescript-eslint/no-unused-vars
++          class Definition {};
++        Definition = tslib_1.__decorate(
++          [
++            ApiDefinition_1.ApiDefinition('my-api-1'),
++            ApiDefinition_1.ApiDefinition('my-api-2'),
+             // eslint-disable-next-line @typescript-eslint/no-unused-vars
+-            class SyncProperty {
+-                constructor() {
+-                    this.syncProperty = 'some-value';
+-                }
+-            };
+-            SyncProperty = tslib_1.__decorate([
+-                ApiDefinition_1.ApiDefinition('my-api')
+-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+-            ], SyncProperty);
+-        });
++          ],
++          Definition
++        );
++      }).toThrowError(`Target 'Definition' is already decorated with an @ApiDefintion`);
++    });
++    it('call method fails', () => {
++      let Definition =
++        // eslint-disable-next-line @typescript-eslint/no-unused-vars
++        class Definition {
++          method(arg0, arg1) {
++            ApiDefinition_1.methodStub(this, arg0, arg1);
++          }
++        };
++      Definition = tslib_1.__decorate(
++        [
++          ApiDefinition_1.ApiDefinition('my-api'),
++          // eslint-disable-next-line @typescript-eslint/no-unused-vars
++        ],
++        Definition
++      );
++      expect(Definition.prototype.method.bind(undefined, 'arg0', false)).toThrowError('Cannot call interface method');
++    });
++    it('enforce promise types', () => {
++      // @ts-expect-error
++      let SyncMethod =
++        // eslint-disable-next-line @typescript-eslint/no-unused-vars
++        class SyncMethod {
++          syncMethod() {
++            ApiDefinition_1.methodStub(this);
++          }
++        };
++      SyncMethod = tslib_1.__decorate(
++        [
++          ApiDefinition_1.ApiDefinition('my-api'),
++          // eslint-disable-next-line @typescript-eslint/no-unused-vars
++        ],
++        SyncMethod
++      );
++      // @ts-expect-error
++      let VoidMethod =
++        // eslint-disable-next-line @typescript-eslint/no-unused-vars
++        class VoidMethod {
++          voidMethod() {
++            ApiDefinition_1.methodStub(this);
++          }
++        };
++      VoidMethod = tslib_1.__decorate(
++        [
++          ApiDefinition_1.ApiDefinition('my-api'),
++          // eslint-disable-next-line @typescript-eslint/no-unused-vars
++        ],
++        VoidMethod
++      );
++      // @ts-expect-error
++      let SyncProperty =
++        // eslint-disable-next-line @typescript-eslint/no-unused-vars
++        class SyncProperty {
++          constructor() {
++            this.syncProperty = 'some-value';
++          }
++        };
++      SyncProperty = tslib_1.__decorate(
++        [
++          ApiDefinition_1.ApiDefinition('my-api'),
++          // eslint-disable-next-line @typescript-eslint/no-unused-vars
++        ],
++        SyncProperty
++      );
++    });
++  });
++  describe('success', () => {
++    it('multiple matching definitions', () => {
++      // not sure if this is good to actually support, but... no reason not to I guess?
++      let Definition = class Definition {};
++      Definition = tslib_1.__decorate(
++        [ApiDefinition_1.ApiDefinition('my-api'), ApiDefinition_1.ApiDefinition('my-api')],
++        Definition
++      );
++      expect(() => ApiDefinition_1.ApiDefinition.nameOf(Definition)).not.toThrow();
+     });
+-    describe('success', () => {
+-        it('multiple matching definitions', () => {
+-            // not sure if this is good to actually support, but... no reason not to I guess?
+-            let Definition = class Definition {
+-            };
+-            Definition = tslib_1.__decorate([
+-                ApiDefinition_1.ApiDefinition('my-api'),
+-                ApiDefinition_1.ApiDefinition('my-api')
+-            ], Definition);
+-            expect(() => ApiDefinition_1.ApiDefinition.nameOf(Definition)).not.toThrow();
+-        });
+-        it('nameOf decorated class', () => {
+-            let Definition = class Definition {
+-            };
+-            Definition = tslib_1.__decorate([
+-                ApiDefinition_1.ApiDefinition('my-api')
+-            ], Definition);
+-            expect(ApiDefinition_1.ApiDefinition.nameOf(Definition)).toEqual('my-api');
+-        });
++    it('nameOf decorated class', () => {
++      let Definition = class Definition {};
++      Definition = tslib_1.__decorate([ApiDefinition_1.ApiDefinition('my-api')], Definition);
++      expect(ApiDefinition_1.ApiDefinition.nameOf(Definition)).toEqual('my-api');
+     });
++  });
+ });
+-//# sourceMappingURL=ApiDefinition.test.js.map
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/Decorators/ApiDefinition.test.js.map b/node_modules/@remote-ioc/runtime/lib/Decorators/ApiDefinition.test.js.map
+deleted file mode 100644
+index a785dce..0000000
+--- a/node_modules/@remote-ioc/runtime/lib/Decorators/ApiDefinition.test.js.map
++++ /dev/null
+@@ -1 +0,0 @@
+-{"version":3,"file":"ApiDefinition.test.js","sourceRoot":"","sources":["../../src/Decorators/ApiDefinition.test.ts"],"names":[],"mappings":"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"}
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/Decorators/ApiProvider.js b/node_modules/@remote-ioc/runtime/lib/Decorators/ApiProvider.js
+index 59155a0..14ed497 100644
+--- a/node_modules/@remote-ioc/runtime/lib/Decorators/ApiProvider.js
++++ b/node_modules/@remote-ioc/runtime/lib/Decorators/ApiProvider.js
+@@ -1,25 +1,24 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
+ exports.ApiProvider = void 0;
+-require("reflect-metadata");
+-const RuntimeContext_1 = require("../RuntimeContext");
++require('reflect-metadata');
++const RuntimeContext_1 = require('../RuntimeContext');
+ const ApiProviderDefinition = Symbol('api:provider:definition');
+ function ApiProviderDecorator(definition) {
+-    return (target) => {
+-        const definitions = Reflect.getMetadata(ApiProviderDefinition, target) || [];
+-        Reflect.defineMetadata(ApiProviderDefinition, [...definitions, definition], target);
+-        const runtime = RuntimeContext_1.getRuntime();
+-        runtime.registerProvider(target);
+-        return target;
+-    };
++  return (target) => {
++    const definitions = Reflect.getMetadata(ApiProviderDefinition, target) || [];
++    Reflect.defineMetadata(ApiProviderDefinition, [...definitions, definition], target);
++    const runtime = RuntimeContext_1.getRuntime();
++    runtime.registerProvider(target);
++    return target;
++  };
+ }
+ exports.ApiProvider = Object.assign(ApiProviderDecorator, {
+-    implementationsOf(target) {
+-        const definitions = Reflect.getMetadata(ApiProviderDefinition, target);
+-        if (definitions === undefined) {
+-            throw new Error(`Target class '${target.name}' is not marked with @ApiProvider`);
+-        }
+-        return definitions;
+-    },
++  implementationsOf(target) {
++    const definitions = Reflect.getMetadata(ApiProviderDefinition, target);
++    if (definitions === undefined) {
++      throw new Error(`Target class '${target.name}' is not marked with @ApiProvider`);
++    }
++    return definitions;
++  },
+ });
+-//# sourceMappingURL=ApiProvider.js.map
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/Decorators/ApiProvider.js.map b/node_modules/@remote-ioc/runtime/lib/Decorators/ApiProvider.js.map
+deleted file mode 100644
+index b5834e8..0000000
+--- a/node_modules/@remote-ioc/runtime/lib/Decorators/ApiProvider.js.map
++++ /dev/null
+@@ -1 +0,0 @@
+-{"version":3,"file":"ApiProvider.js","sourceRoot":"","sources":["../../src/Decorators/ApiProvider.ts"],"names":[],"mappings":";;;AAAA,4BAA0B;AAC1B,sDAA+C;AAG/C,MAAM,qBAAqB,GAAG,MAAM,CAAC,yBAAyB,CAAC,CAAC;AAEhE,SAAS,oBAAoB,CAAwB,UAAa;IAChE,OAAO,CAAc,MAAS,EAAK,EAAE;QACnC,MAAM,WAAW,GAAG,OAAO,CAAC,WAAW,CAAC,qBAAqB,EAAE,MAAM,CAAC,IAAI,EAAE,CAAC;QAC7E,OAAO,CAAC,cAAc,CAAC,qBAAqB,EAAE,CAAC,GAAG,WAAW,EAAE,UAAU,CAAC,EAAE,MAAM,CAAC,CAAC;QAEpF,MAAM,OAAO,GAAG,2BAAU,EAAE,CAAC;QAC7B,OAAO,CAAC,gBAAgB,CAAC,MAAM,CAAC,CAAC;QAEjC,OAAO,MAAM,CAAC;IAChB,CAAC,CAAC;AACJ,CAAC;AAOY,QAAA,WAAW,GAA0B,MAAM,CAAC,MAAM,CAAC,oBAAoB,EAAE;IACpF,iBAAiB,CAAwB,MAAS;QAChD,MAAM,WAAW,GAAG,OAAO,CAAC,WAAW,CAAC,qBAAqB,EAAE,MAAM,CAAC,CAAC;QACvE,IAAI,WAAW,KAAK,SAAS,EAAE;YAC7B,MAAM,IAAI,KAAK,CAAC,iBAAiB,MAAM,CAAC,IAAI,mCAAmC,CAAC,CAAC;SAClF;QACD,OAAO,WAAW,CAAC;IACrB,CAAC;CACF,CAAC,CAAC"}
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/Decorators/ApiProvider.test.js b/node_modules/@remote-ioc/runtime/lib/Decorators/ApiProvider.test.js
+index 34e10d8..197d434 100644
+--- a/node_modules/@remote-ioc/runtime/lib/Decorators/ApiProvider.test.js
++++ b/node_modules/@remote-ioc/runtime/lib/Decorators/ApiProvider.test.js
+@@ -1,68 +1,55 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
+-const tslib_1 = require("tslib");
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
++const tslib_1 = require('tslib');
+ /* eslint-disable max-classes-per-file */
+-const RuntimeContext_1 = require("../RuntimeContext");
+-const ApiDefinition_1 = require("./ApiDefinition");
+-const ApiProvider_1 = require("./ApiProvider");
++const RuntimeContext_1 = require('../RuntimeContext');
++const ApiDefinition_1 = require('./ApiDefinition');
++const ApiProvider_1 = require('./ApiProvider');
+ describe('@ApiProvider', () => {
+-    it('typical class', () => {
+-        class Provider {
+-        }
+-        expect(() => ApiProvider_1.ApiProvider.implementationsOf(Provider)).toThrowError(`Target class 'Provider' is not marked with @ApiProvider`);
++  it('typical class', () => {
++    class Provider {}
++    expect(() => ApiProvider_1.ApiProvider.implementationsOf(Provider)).toThrowError(
++      `Target class 'Provider' is not marked with @ApiProvider`
++    );
++  });
++  it('decorated class', () => {
++    const runtime = {
++      registerDefinition: jest.fn(),
++      registerProvider: jest.fn(),
++      getProvider: jest.fn(),
++      useRouter: jest.fn(),
++      getProviderServer: jest.fn(),
++    };
++    RuntimeContext_1.useRuntime(runtime, () => {
++      let Definition = class Definition {};
++      Definition = tslib_1.__decorate([ApiDefinition_1.ApiDefinition('my-api')], Definition);
++      let Provider = class Provider {};
++      Provider = tslib_1.__decorate([ApiProvider_1.ApiProvider(Definition)], Provider);
++      expect(ApiProvider_1.ApiProvider.implementationsOf(Provider)).toEqual([Definition]);
++      expect(runtime.registerProvider).toBeCalledWith(Provider);
+     });
+-    it('decorated class', () => {
+-        const runtime = {
+-            registerDefinition: jest.fn(),
+-            registerProvider: jest.fn(),
+-            getProvider: jest.fn(),
+-            useRouter: jest.fn(),
+-            getProviderServer: jest.fn(),
+-        };
+-        RuntimeContext_1.useRuntime(runtime, () => {
+-            let Definition = class Definition {
+-            };
+-            Definition = tslib_1.__decorate([
+-                ApiDefinition_1.ApiDefinition('my-api')
+-            ], Definition);
+-            let Provider = class Provider {
+-            };
+-            Provider = tslib_1.__decorate([
+-                ApiProvider_1.ApiProvider(Definition)
+-            ], Provider);
+-            expect(ApiProvider_1.ApiProvider.implementationsOf(Provider)).toEqual([Definition]);
+-            expect(runtime.registerProvider).toBeCalledWith(Provider);
+-        });
+-    });
+-    it('multiple decorators', () => {
+-        const runtime = {
+-            registerDefinition: jest.fn(),
+-            registerProvider: jest.fn(),
+-            getProvider: jest.fn(),
+-            useRouter: jest.fn(),
+-            getProviderServer: jest.fn(),
+-        };
+-        RuntimeContext_1.useRuntime(runtime, () => {
+-            let Definition1 = class Definition1 {
+-            };
+-            Definition1 = tslib_1.__decorate([
+-                ApiDefinition_1.ApiDefinition('my-api-1')
+-            ], Definition1);
+-            let Definition2 = class Definition2 {
+-            };
+-            Definition2 = tslib_1.__decorate([
+-                ApiDefinition_1.ApiDefinition('my-api-2')
+-            ], Definition2);
+-            let Provider = class Provider {
+-            };
+-            Provider = tslib_1.__decorate([
+-                ApiProvider_1.ApiProvider(Definition1),
+-                ApiProvider_1.ApiProvider(Definition2)
+-            ], Provider);
+-            expect(ApiProvider_1.ApiProvider.implementationsOf(Provider)).toEqual([Definition2, Definition1]);
+-            expect(runtime.registerProvider).toHaveBeenNthCalledWith(1, Provider);
+-            expect(runtime.registerProvider).toHaveBeenNthCalledWith(2, Provider);
+-        });
++  });
++  it('multiple decorators', () => {
++    const runtime = {
++      registerDefinition: jest.fn(),
++      registerProvider: jest.fn(),
++      getProvider: jest.fn(),
++      useRouter: jest.fn(),
++      getProviderServer: jest.fn(),
++    };
++    RuntimeContext_1.useRuntime(runtime, () => {
++      let Definition1 = class Definition1 {};
++      Definition1 = tslib_1.__decorate([ApiDefinition_1.ApiDefinition('my-api-1')], Definition1);
++      let Definition2 = class Definition2 {};
++      Definition2 = tslib_1.__decorate([ApiDefinition_1.ApiDefinition('my-api-2')], Definition2);
++      let Provider = class Provider {};
++      Provider = tslib_1.__decorate(
++        [ApiProvider_1.ApiProvider(Definition1), ApiProvider_1.ApiProvider(Definition2)],
++        Provider
++      );
++      expect(ApiProvider_1.ApiProvider.implementationsOf(Provider)).toEqual([Definition2, Definition1]);
++      expect(runtime.registerProvider).toHaveBeenNthCalledWith(1, Provider);
++      expect(runtime.registerProvider).toHaveBeenNthCalledWith(2, Provider);
+     });
++  });
+ });
+-//# sourceMappingURL=ApiProvider.test.js.map
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/Decorators/ApiProvider.test.js.map b/node_modules/@remote-ioc/runtime/lib/Decorators/ApiProvider.test.js.map
+deleted file mode 100644
+index b2656c6..0000000
+--- a/node_modules/@remote-ioc/runtime/lib/Decorators/ApiProvider.test.js.map
++++ /dev/null
+@@ -1 +0,0 @@
+-{"version":3,"file":"ApiProvider.test.js","sourceRoot":"","sources":["../../src/Decorators/ApiProvider.test.ts"],"names":[],"mappings":";;;AAAA,yCAAyC;AACzC,sDAA+C;AAC/C,mDAAgD;AAChD,+CAA4C;AAE5C,QAAQ,CAAC,cAAc,EAAE,GAAG,EAAE;IAC5B,EAAE,CAAC,eAAe,EAAE,GAAG,EAAE;QACvB,MAAM,QAAQ;SAAG;QACjB,MAAM,CAAC,GAAG,EAAE,CAAC,yBAAW,CAAC,iBAAiB,CAAC,QAAQ,CAAC,CAAC,CAAC,YAAY,CAChE,yDAAyD,CAC1D,CAAC;IACJ,CAAC,CAAC,CAAC;IACH,EAAE,CAAC,iBAAiB,EAAE,GAAG,EAAE;QACzB,MAAM,OAAO,GAAG;YACd,kBAAkB,EAAE,IAAI,CAAC,EAAE,EAAE;YAC7B,gBAAgB,EAAE,IAAI,CAAC,EAAE,EAAE;YAC3B,WAAW,EAAE,IAAI,CAAC,EAAE,EAAE;YACtB,SAAS,EAAE,IAAI,CAAC,EAAE,EAAE;YACpB,iBAAiB,EAAE,IAAI,CAAC,EAAE,EAAE;SAC7B,CAAC;QACF,2BAAU,CAAC,OAAO,EAAE,GAAG,EAAE;YAEvB,IAAM,UAAU,GAAhB,MAAM,UAAU;aAAG,CAAA;YAAb,UAAU;gBADf,6BAAa,CAAC,QAAQ,CAAC;eAClB,UAAU,CAAG;YAEnB,IAAM,QAAQ,GAAd,MAAM,QAAQ;aAAG,CAAA;YAAX,QAAQ;gBADb,yBAAW,CAAC,UAAU,CAAC;eAClB,QAAQ,CAAG;YACjB,MAAM,CAAC,yBAAW,CAAC,iBAAiB,CAAC,QAAQ,CAAC,CAAC,CAAC,OAAO,CAAC,CAAC,UAAU,CAAC,CAAC,CAAC;YACtE,MAAM,CAAC,OAAO,CAAC,gBAAgB,CAAC,CAAC,cAAc,CAAC,QAAQ,CAAC,CAAC;QAC5D,CAAC,CAAC,CAAC;IACL,CAAC,CAAC,CAAC;IACH,EAAE,CAAC,qBAAqB,EAAE,GAAG,EAAE;QAC7B,MAAM,OAAO,GAAG;YACd,kBAAkB,EAAE,IAAI,CAAC,EAAE,EAAE;YAC7B,gBAAgB,EAAE,IAAI,CAAC,EAAE,EAAE;YAC3B,WAAW,EAAE,IAAI,CAAC,EAAE,EAAE;YACtB,SAAS,EAAE,IAAI,CAAC,EAAE,EAAE;YACpB,iBAAiB,EAAE,IAAI,CAAC,EAAE,EAAE;SAC7B,CAAC;QACF,2BAAU,CAAC,OAAO,EAAE,GAAG,EAAE;YAEvB,IAAM,WAAW,GAAjB,MAAM,WAAW;aAAG,CAAA;YAAd,WAAW;gBADhB,6BAAa,CAAC,UAAU,CAAC;eACpB,WAAW,CAAG;YAEpB,IAAM,WAAW,GAAjB,MAAM,WAAW;aAAG,CAAA;YAAd,WAAW;gBADhB,6BAAa,CAAC,UAAU,CAAC;eACpB,WAAW,CAAG;YAGpB,IAAM,QAAQ,GAAd,MAAM,QAAQ;aAAG,CAAA;YAAX,QAAQ;gBAFb,yBAAW,CAAC,WAAW,CAAC;gBACxB,yBAAW,CAAC,WAAW,CAAC;eACnB,QAAQ,CAAG;YACjB,MAAM,CAAC,yBAAW,CAAC,iBAAiB,CAAC,QAAQ,CAAC,CAAC,CAAC,OAAO,CAAC,CAAC,WAAW,EAAE,WAAW,CAAC,CAAC,CAAC;YACpF,MAAM,CAAC,OAAO,CAAC,gBAAgB,CAAC,CAAC,uBAAuB,CAAC,CAAC,EAAE,QAAQ,CAAC,CAAC;YACtE,MAAM,CAAC,OAAO,CAAC,gBAAgB,CAAC,CAAC,uBAAuB,CAAC,CAAC,EAAE,QAAQ,CAAC,CAAC;QACxE,CAAC,CAAC,CAAC;IACL,CAAC,CAAC,CAAC;AACL,CAAC,CAAC,CAAC"}
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/Decorators/index.js b/node_modules/@remote-ioc/runtime/lib/Decorators/index.js
+index 9f6682b..4d334d1 100644
+--- a/node_modules/@remote-ioc/runtime/lib/Decorators/index.js
++++ b/node_modules/@remote-ioc/runtime/lib/Decorators/index.js
+@@ -1,6 +1,5 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
+-const tslib_1 = require("tslib");
+-tslib_1.__exportStar(require("./ApiDefinition"), exports);
+-tslib_1.__exportStar(require("./ApiProvider"), exports);
+-//# sourceMappingURL=index.js.map
+\ No newline at end of file
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
++const tslib_1 = require('tslib');
++tslib_1.__exportStar(require('./ApiDefinition'), exports);
++tslib_1.__exportStar(require('./ApiProvider'), exports);
+diff --git a/node_modules/@remote-ioc/runtime/lib/Decorators/index.js.map b/node_modules/@remote-ioc/runtime/lib/Decorators/index.js.map
+deleted file mode 100644
+index 9439d4b..0000000
+--- a/node_modules/@remote-ioc/runtime/lib/Decorators/index.js.map
++++ /dev/null
+@@ -1 +0,0 @@
+-{"version":3,"file":"index.js","sourceRoot":"","sources":["../../src/Decorators/index.ts"],"names":[],"mappings":";;;AAAA,0DAAgC;AAChC,wDAA8B"}
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/FunctionalApi.js b/node_modules/@remote-ioc/runtime/lib/FunctionalApi.js
+index 987c39f..c2a8d12 100644
+--- a/node_modules/@remote-ioc/runtime/lib/FunctionalApi.js
++++ b/node_modules/@remote-ioc/runtime/lib/FunctionalApi.js
+@@ -1,16 +1,15 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
+ exports.useApi = exports.useRouter = void 0;
+-const RuntimeContext_1 = require("./RuntimeContext");
++const RuntimeContext_1 = require('./RuntimeContext');
+ function useRouter(RouterType, ...args) {
+-    const router = new RouterType(...args);
+-    RuntimeContext_1.getRuntime().useRouter(router);
+-    return router;
++  const router = new RouterType(...args);
++  RuntimeContext_1.getRuntime().useRouter(router);
++  return router;
+ }
+ exports.useRouter = useRouter;
+ function useApi(Definition) {
+-    const api = RuntimeContext_1.getRuntime().getProvider(Definition);
+-    return api;
++  const api = RuntimeContext_1.getRuntime().getProvider(Definition);
++  return api;
+ }
+ exports.useApi = useApi;
+-//# sourceMappingURL=FunctionalApi.js.map
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/FunctionalApi.js.map b/node_modules/@remote-ioc/runtime/lib/FunctionalApi.js.map
+deleted file mode 100644
+index 4be874b..0000000
+--- a/node_modules/@remote-ioc/runtime/lib/FunctionalApi.js.map
++++ /dev/null
+@@ -1 +0,0 @@
+-{"version":3,"file":"FunctionalApi.js","sourceRoot":"","sources":["../src/FunctionalApi.ts"],"names":[],"mappings":";;;AAEA,qDAA8C;AAG9C,SAAgB,SAAS,CACvB,UAAa,EACb,GAAG,IAA8B;IAEjC,MAAM,MAAM,GAAG,IAAI,UAAU,CAAC,GAAG,IAAI,CAAoB,CAAC;IAC1D,2BAAU,EAAE,CAAC,SAAS,CAAC,MAAM,CAAC,CAAC;IAC/B,OAAO,MAAM,CAAC;AAChB,CAAC;AAPD,8BAOC;AAED,SAAgB,MAAM,CAAwB,UAAkC;IAC9E,MAAM,GAAG,GAAG,2BAAU,EAAE,CAAC,WAAW,CAAC,UAAU,CAAC,CAAC;IACjD,OAAO,GAAG,CAAC;AACb,CAAC;AAHD,wBAGC"}
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/HasEvents.js b/node_modules/@remote-ioc/runtime/lib/HasEvents.js
+index 561428a..639aa21 100644
+--- a/node_modules/@remote-ioc/runtime/lib/HasEvents.js
++++ b/node_modules/@remote-ioc/runtime/lib/HasEvents.js
+@@ -1,9 +1,10 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
+ exports.hasEvents = void 0;
+ function hasEvents(Definition) {
+-    const targets = [Definition, Definition.prototype].filter(Boolean);
+-    return targets.some((target) => !!(target.on && typeof target.on === 'function' && target.off && typeof target.off === 'function'));
++  const targets = [Definition, Definition.prototype].filter(Boolean);
++  return targets.some(
++    (target) => !!(target.on && typeof target.on === 'function' && target.off && typeof target.off === 'function')
++  );
+ }
+ exports.hasEvents = hasEvents;
+-//# sourceMappingURL=HasEvents.js.map
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/HasEvents.js.map b/node_modules/@remote-ioc/runtime/lib/HasEvents.js.map
+deleted file mode 100644
+index 8b7a8cc..0000000
+--- a/node_modules/@remote-ioc/runtime/lib/HasEvents.js.map
++++ /dev/null
+@@ -1 +0,0 @@
+-{"version":3,"file":"HasEvents.js","sourceRoot":"","sources":["../src/HasEvents.ts"],"names":[],"mappings":";;;AAAA,SAAgB,SAAS,CACvB,UAAe;IAKf,MAAM,OAAO,GAAG,CAAC,UAAU,EAAE,UAAU,CAAC,SAAS,CAAC,CAAC,MAAM,CAAC,OAAO,CAAC,CAAC;IACnE,OAAO,OAAO,CAAC,IAAI,CACjB,CAAC,MAAM,EAAE,EAAE,CAAC,CAAC,CAAC,CAAC,MAAM,CAAC,EAAE,IAAI,OAAO,MAAM,CAAC,EAAE,KAAK,UAAU,IAAI,MAAM,CAAC,GAAG,IAAI,OAAO,MAAM,CAAC,GAAG,KAAK,UAAU,CAAC,CAC/G,CAAC;AACJ,CAAC;AAVD,8BAUC"}
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/HasEvents.test.js b/node_modules/@remote-ioc/runtime/lib/HasEvents.test.js
+index 21aee90..c909df8 100644
+--- a/node_modules/@remote-ioc/runtime/lib/HasEvents.test.js
++++ b/node_modules/@remote-ioc/runtime/lib/HasEvents.test.js
+@@ -1,26 +1,24 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
+ /* eslint-disable max-classes-per-file */
+-const Decorators_1 = require("./Decorators");
+-const HasEvents_1 = require("./HasEvents");
++const Decorators_1 = require('./Decorators');
++const HasEvents_1 = require('./HasEvents');
+ describe('hasEvents()', () => {
+-    describe('=true', () => {
+-        class WithEvents {
+-            on(event, handler) {
+-                Decorators_1.methodStub(this, event, handler);
+-            }
+-            off(event, handler) {
+-                Decorators_1.methodStub(this, event, handler);
+-            }
+-        }
+-        it('constructor', () => expect(HasEvents_1.hasEvents(WithEvents)).toEqual(true));
+-        it('instance', () => expect(HasEvents_1.hasEvents(new WithEvents())).toEqual(true));
+-    });
+-    describe('=false', () => {
+-        class WithoutEvents {
+-        }
+-        it('constructor', () => expect(HasEvents_1.hasEvents(WithoutEvents)).toEqual(false));
+-        it('instance', () => expect(HasEvents_1.hasEvents(new WithoutEvents())).toEqual(false));
+-    });
++  describe('=true', () => {
++    class WithEvents {
++      on(event, handler) {
++        Decorators_1.methodStub(this, event, handler);
++      }
++      off(event, handler) {
++        Decorators_1.methodStub(this, event, handler);
++      }
++    }
++    it('constructor', () => expect(HasEvents_1.hasEvents(WithEvents)).toEqual(true));
++    it('instance', () => expect(HasEvents_1.hasEvents(new WithEvents())).toEqual(true));
++  });
++  describe('=false', () => {
++    class WithoutEvents {}
++    it('constructor', () => expect(HasEvents_1.hasEvents(WithoutEvents)).toEqual(false));
++    it('instance', () => expect(HasEvents_1.hasEvents(new WithoutEvents())).toEqual(false));
++  });
+ });
+-//# sourceMappingURL=HasEvents.test.js.map
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/HasEvents.test.js.map b/node_modules/@remote-ioc/runtime/lib/HasEvents.test.js.map
+deleted file mode 100644
+index 73323a5..0000000
+--- a/node_modules/@remote-ioc/runtime/lib/HasEvents.test.js.map
++++ /dev/null
+@@ -1 +0,0 @@
+-{"version":3,"file":"HasEvents.test.js","sourceRoot":"","sources":["../src/HasEvents.test.ts"],"names":[],"mappings":";;AAAA,yCAAyC;AACzC,6CAA0C;AAC1C,2CAAwC;AAExC,QAAQ,CAAC,aAAa,EAAE,GAAG,EAAE;IAC3B,QAAQ,CAAC,OAAO,EAAE,GAAG,EAAE;QACrB,MAAM,UAAU;YACd,EAAE,CAAC,KAAgB,EAAE,OAA+B;gBAClD,uBAAU,CAAC,IAAI,EAAE,KAAK,EAAE,OAAO,CAAC,CAAC;YACnC,CAAC;YACD,GAAG,CAAC,KAAgB,EAAE,OAA+B;gBACnD,uBAAU,CAAC,IAAI,EAAE,KAAK,EAAE,OAAO,CAAC,CAAC;YACnC,CAAC;SACF;QACD,EAAE,CAAC,aAAa,EAAE,GAAG,EAAE,CAAC,MAAM,CAAC,qBAAS,CAAC,UAAU,CAAC,CAAC,CAAC,OAAO,CAAC,IAAI,CAAC,CAAC,CAAC;QACrE,EAAE,CAAC,UAAU,EAAE,GAAG,EAAE,CAAC,MAAM,CAAC,qBAAS,CAAC,IAAI,UAAU,EAAE,CAAC,CAAC,CAAC,OAAO,CAAC,IAAI,CAAC,CAAC,CAAC;IAC1E,CAAC,CAAC,CAAC;IACH,QAAQ,CAAC,QAAQ,EAAE,GAAG,EAAE;QACtB,MAAM,aAAa;SAAG;QACtB,EAAE,CAAC,aAAa,EAAE,GAAG,EAAE,CAAC,MAAM,CAAC,qBAAS,CAAC,aAAa,CAAC,CAAC,CAAC,OAAO,CAAC,KAAK,CAAC,CAAC,CAAC;QACzE,EAAE,CAAC,UAAU,EAAE,GAAG,EAAE,CAAC,MAAM,CAAC,qBAAS,CAAC,IAAI,aAAa,EAAE,CAAC,CAAC,CAAC,OAAO,CAAC,KAAK,CAAC,CAAC,CAAC;IAC9E,CAAC,CAAC,CAAC;AACL,CAAC,CAAC,CAAC"}
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/Helpers/AvailabilityMap.js b/node_modules/@remote-ioc/runtime/lib/Helpers/AvailabilityMap.js
+index 0c7c677..661eb95 100644
+--- a/node_modules/@remote-ioc/runtime/lib/Helpers/AvailabilityMap.js
++++ b/node_modules/@remote-ioc/runtime/lib/Helpers/AvailabilityMap.js
+@@ -1,31 +1,30 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
+ exports.AvailabilityMap = void 0;
+-const events_1 = require("events");
+-const Decorators_1 = require("../Decorators");
+-const DefaultedMap_1 = require("./DefaultedMap");
+-const PromiseSink_1 = require("./PromiseSink");
++const events_1 = require('events');
++const Decorators_1 = require('../Decorators');
++const DefaultedMap_1 = require('./DefaultedMap');
++const PromiseSink_1 = require('./PromiseSink');
+ // TODO: Move this out of helpers, since it's not fully generic anymore
+ class AvailabilityMap extends events_1.EventEmitter {
+-    constructor() {
+-        super(...arguments);
+-        this.requests = new DefaultedMap_1.DefaultedMap(() => new PromiseSink_1.PromiseSink());
+-    }
+-    request(key) {
+-        const name = Decorators_1.ApiDefinition.nameOf(key);
+-        if (!this.requests.has(name)) {
+-            this.emit('request', key);
+-        }
+-        return this.requests.get(name).getValue();
+-    }
+-    resolve(key, value) {
+-        const name = Decorators_1.ApiDefinition.nameOf(key);
+-        this.requests.get(name).setValue(value);
+-    }
+-    reject(key, error) {
+-        const name = Decorators_1.ApiDefinition.nameOf(key);
+-        this.requests.get(name).setValue(error);
++  constructor() {
++    super(...arguments);
++    this.requests = new DefaultedMap_1.DefaultedMap(() => new PromiseSink_1.PromiseSink());
++  }
++  request(key) {
++    const name = Decorators_1.ApiDefinition.nameOf(key);
++    if (!this.requests.has(name)) {
++      this.emit('request', key);
+     }
++    return this.requests.get(name).getValue();
++  }
++  resolve(key, value) {
++    const name = Decorators_1.ApiDefinition.nameOf(key);
++    this.requests.get(name).setValue(value);
++  }
++  reject(key, error) {
++    const name = Decorators_1.ApiDefinition.nameOf(key);
++    this.requests.get(name).setValue(error);
++  }
+ }
+ exports.AvailabilityMap = AvailabilityMap;
+-//# sourceMappingURL=AvailabilityMap.js.map
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/Helpers/AvailabilityMap.test.js b/node_modules/@remote-ioc/runtime/lib/Helpers/AvailabilityMap.test.js
+index 506d247..6a1191c 100644
+--- a/node_modules/@remote-ioc/runtime/lib/Helpers/AvailabilityMap.test.js
++++ b/node_modules/@remote-ioc/runtime/lib/Helpers/AvailabilityMap.test.js
+@@ -1,37 +1,33 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
+-const tslib_1 = require("tslib");
+-const Decorators_1 = require("../Decorators");
+-const AvailabilityMap_1 = require("./AvailabilityMap");
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
++const tslib_1 = require('tslib');
++const Decorators_1 = require('../Decorators');
++const AvailabilityMap_1 = require('./AvailabilityMap');
+ describe('AvailabilityMap', () => {
+-    let Definition = class Definition {
+-    };
+-    Definition = tslib_1.__decorate([
+-        Decorators_1.ApiDefinition('foo')
+-    ], Definition);
+-    it('request and resolve', async () => {
+-        const map = new AvailabilityMap_1.AvailabilityMap();
+-        const requestP = map.request(Definition);
+-        map.resolve(Definition, 'bar');
+-        expect(requestP).resolves.toEqual('bar');
+-    });
+-    it('resolve and request', async () => {
+-        const map = new AvailabilityMap_1.AvailabilityMap();
+-        map.resolve(Definition, 'bar');
+-        const requestP = map.request(Definition);
+-        expect(requestP).resolves.toEqual('bar');
+-    });
+-    it('reject and request', async () => {
+-        const map = new AvailabilityMap_1.AvailabilityMap();
+-        map.reject(Definition, new Error('bar'));
+-        const requestP = map.request(Definition);
+-        expect(requestP).rejects.toEqual(new Error('bar'));
+-    });
+-    it('request and reject', async () => {
+-        const map = new AvailabilityMap_1.AvailabilityMap();
+-        const requestP = map.request(Definition);
+-        map.reject(Definition, new Error('bar'));
+-        expect(requestP).rejects.toEqual(new Error('bar'));
+-    });
++  let Definition = class Definition {};
++  Definition = tslib_1.__decorate([Decorators_1.ApiDefinition('foo')], Definition);
++  it('request and resolve', async () => {
++    const map = new AvailabilityMap_1.AvailabilityMap();
++    const requestP = map.request(Definition);
++    map.resolve(Definition, 'bar');
++    expect(requestP).resolves.toEqual('bar');
++  });
++  it('resolve and request', async () => {
++    const map = new AvailabilityMap_1.AvailabilityMap();
++    map.resolve(Definition, 'bar');
++    const requestP = map.request(Definition);
++    expect(requestP).resolves.toEqual('bar');
++  });
++  it('reject and request', async () => {
++    const map = new AvailabilityMap_1.AvailabilityMap();
++    map.reject(Definition, new Error('bar'));
++    const requestP = map.request(Definition);
++    expect(requestP).rejects.toEqual(new Error('bar'));
++  });
++  it('request and reject', async () => {
++    const map = new AvailabilityMap_1.AvailabilityMap();
++    const requestP = map.request(Definition);
++    map.reject(Definition, new Error('bar'));
++    expect(requestP).rejects.toEqual(new Error('bar'));
++  });
+ });
+-//# sourceMappingURL=AvailabilityMap.test.js.map
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/Helpers/CollectionMap.js b/node_modules/@remote-ioc/runtime/lib/Helpers/CollectionMap.js
+index 9923204..21daf31 100644
+--- a/node_modules/@remote-ioc/runtime/lib/Helpers/CollectionMap.js
++++ b/node_modules/@remote-ioc/runtime/lib/Helpers/CollectionMap.js
+@@ -1,20 +1,22 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
+ exports.CollectionMap = void 0;
+-const DefaultedMap_1 = require("./DefaultedMap");
++const DefaultedMap_1 = require('./DefaultedMap');
+ class CollectionMap extends DefaultedMap_1.DefaultedMap {
+-    constructor() {
+-        super(() => []);
+-    }
+-    forEachValue(key, callback) {
+-        this.get(key).forEach(callback);
+-    }
+-    push(key, ...values) {
+-        return this.get(key).push(...values);
+-    }
+-    remove(key, ...values) {
+-        this.set(key, this.get(key).filter((value) => !values.includes(value)));
+-    }
++  constructor() {
++    super(() => []);
++  }
++  forEachValue(key, callback) {
++    this.get(key).forEach(callback);
++  }
++  push(key, ...values) {
++    return this.get(key).push(...values);
++  }
++  remove(key, ...values) {
++    this.set(
++      key,
++      this.get(key).filter((value) => !values.includes(value))
++    );
++  }
+ }
+ exports.CollectionMap = CollectionMap;
+-//# sourceMappingURL=CollectionMap.js.map
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/Helpers/DefaultedMap.js b/node_modules/@remote-ioc/runtime/lib/Helpers/DefaultedMap.js
+index 3bfacc7..78e66c4 100644
+--- a/node_modules/@remote-ioc/runtime/lib/Helpers/DefaultedMap.js
++++ b/node_modules/@remote-ioc/runtime/lib/Helpers/DefaultedMap.js
+@@ -1,19 +1,18 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
+ exports.DefaultedMap = void 0;
+ class DefaultedMap extends Map {
+-    constructor(defaultValue) {
+-        super();
+-        this.defaultValue = defaultValue;
+-    }
+-    get(key) {
+-        let value = super.get(key);
+-        if (!value) {
+-            value = this.defaultValue(key);
+-            super.set(key, value);
+-        }
+-        return value;
++  constructor(defaultValue) {
++    super();
++    this.defaultValue = defaultValue;
++  }
++  get(key) {
++    let value = super.get(key);
++    if (!value) {
++      value = this.defaultValue(key);
++      super.set(key, value);
+     }
++    return value;
++  }
+ }
+ exports.DefaultedMap = DefaultedMap;
+-//# sourceMappingURL=DefaultedMap.js.map
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/Helpers/DefaultedMap.test.js b/node_modules/@remote-ioc/runtime/lib/Helpers/DefaultedMap.test.js
+index ef1cc5e..23532ee 100644
+--- a/node_modules/@remote-ioc/runtime/lib/Helpers/DefaultedMap.test.js
++++ b/node_modules/@remote-ioc/runtime/lib/Helpers/DefaultedMap.test.js
+@@ -1,28 +1,27 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
+-const DefaultedMap_1 = require("./DefaultedMap");
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
++const DefaultedMap_1 = require('./DefaultedMap');
+ describe('DefaultedMap', () => {
+-    it('first access', () => {
+-        const backfillFn = jest.fn((key) => [key]);
+-        const map = new DefaultedMap_1.DefaultedMap(backfillFn);
+-        const result = map.get('foo');
+-        expect(result).toEqual(['foo']);
+-        expect(backfillFn).toHaveBeenCalledWith('foo');
+-    });
+-    it('second access', () => {
+-        const backfillFn = jest.fn((key) => [key]);
+-        const map = new DefaultedMap_1.DefaultedMap(backfillFn);
+-        const result = map.get('foo');
+-        expect(result).toEqual(['foo']);
+-        expect(backfillFn).toHaveBeenCalledTimes(1);
+-    });
+-    it('access filled value', () => {
+-        const backfillFn = jest.fn((key) => [key]);
+-        const map = new DefaultedMap_1.DefaultedMap(backfillFn);
+-        map.set('foo', ['bar']);
+-        const result = map.get('foo');
+-        expect(result).toEqual(['bar']);
+-        expect(backfillFn).not.toHaveBeenCalled();
+-    });
++  it('first access', () => {
++    const backfillFn = jest.fn((key) => [key]);
++    const map = new DefaultedMap_1.DefaultedMap(backfillFn);
++    const result = map.get('foo');
++    expect(result).toEqual(['foo']);
++    expect(backfillFn).toHaveBeenCalledWith('foo');
++  });
++  it('second access', () => {
++    const backfillFn = jest.fn((key) => [key]);
++    const map = new DefaultedMap_1.DefaultedMap(backfillFn);
++    const result = map.get('foo');
++    expect(result).toEqual(['foo']);
++    expect(backfillFn).toHaveBeenCalledTimes(1);
++  });
++  it('access filled value', () => {
++    const backfillFn = jest.fn((key) => [key]);
++    const map = new DefaultedMap_1.DefaultedMap(backfillFn);
++    map.set('foo', ['bar']);
++    const result = map.get('foo');
++    expect(result).toEqual(['bar']);
++    expect(backfillFn).not.toHaveBeenCalled();
++  });
+ });
+-//# sourceMappingURL=DefaultedMap.test.js.map
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/Helpers/NotReached.js b/node_modules/@remote-ioc/runtime/lib/Helpers/NotReached.js
+index 9fcc2ed..c77824b 100644
+--- a/node_modules/@remote-ioc/runtime/lib/Helpers/NotReached.js
++++ b/node_modules/@remote-ioc/runtime/lib/Helpers/NotReached.js
+@@ -1,11 +1,10 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
+ exports.notReached = void 0;
+-const tslib_1 = require("tslib");
+-const callsites_1 = tslib_1.__importDefault(require("callsites"));
++const tslib_1 = require('tslib');
++const callsites_1 = tslib_1.__importDefault(require('callsites'));
+ function notReached(msg, ..._ignore) {
+-    const caller = callsites_1.default()[1];
+-    throw new Error(`${msg} at [${caller.getTypeName()}.${caller.getFunctionName()}]`);
++  const caller = callsites_1.default()[1];
++  throw new Error(`${msg} at [${caller.getTypeName()}.${caller.getFunctionName()}]`);
+ }
+ exports.notReached = notReached;
+-//# sourceMappingURL=NotReached.js.map
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/Helpers/NotReached.test.js b/node_modules/@remote-ioc/runtime/lib/Helpers/NotReached.test.js
+index f17d71f..ff62cf9 100644
+--- a/node_modules/@remote-ioc/runtime/lib/Helpers/NotReached.test.js
++++ b/node_modules/@remote-ioc/runtime/lib/Helpers/NotReached.test.js
+@@ -1,14 +1,13 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
+-const NotReached_1 = require("./NotReached");
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
++const NotReached_1 = require('./NotReached');
+ describe('NotReached', () => {
+-    it('throws', () => {
+-        class Test {
+-            Method() {
+-                NotReached_1.notReached('foo', this);
+-            }
+-        }
+-        expect(() => new Test().Method()).toThrowError(new Error('foo at [Test.Method]'));
+-    });
++  it('throws', () => {
++    class Test {
++      Method() {
++        NotReached_1.notReached('foo', this);
++      }
++    }
++    expect(() => new Test().Method()).toThrowError(new Error('foo at [Test.Method]'));
++  });
+ });
+-//# sourceMappingURL=NotReached.test.js.map
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/Helpers/PromiseSink.js b/node_modules/@remote-ioc/runtime/lib/Helpers/PromiseSink.js
+index 855b63b..86585e9 100644
+--- a/node_modules/@remote-ioc/runtime/lib/Helpers/PromiseSink.js
++++ b/node_modules/@remote-ioc/runtime/lib/Helpers/PromiseSink.js
+@@ -1,37 +1,33 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
+ exports.PromiseSink = void 0;
+ class PromiseSink {
+-    constructor(value) {
+-        if (value) {
+-            if (value instanceof Error) {
+-                this.promise = Promise.reject(value);
+-            }
+-            else {
+-                this.promise = Promise.resolve(value);
+-            }
+-        }
+-        else {
+-            this.promise = new Promise((resolve, reject) => {
+-                this.resolve = resolve;
+-                this.reject = reject;
+-            });
+-        }
++  constructor(value) {
++    if (value) {
++      if (value instanceof Error) {
++        this.promise = Promise.reject(value);
++      } else {
++        this.promise = Promise.resolve(value);
++      }
++    } else {
++      this.promise = new Promise((resolve, reject) => {
++        this.resolve = resolve;
++        this.reject = reject;
++      });
+     }
+-    getValue() {
+-        return this.promise;
+-    }
+-    setValue(value) {
+-        var _a, _b;
+-        if (value instanceof Error) {
+-            (_a = this.reject) === null || _a === void 0 ? void 0 : _a.call(this, value);
+-        }
+-        else {
+-            (_b = this.resolve) === null || _b === void 0 ? void 0 : _b.call(this, value);
+-        }
+-        delete this.reject;
+-        delete this.resolve;
++  }
++  getValue() {
++    return this.promise;
++  }
++  setValue(value) {
++    var _a, _b;
++    if (value instanceof Error) {
++      (_a = this.reject) === null || _a === void 0 ? void 0 : _a.call(this, value);
++    } else {
++      (_b = this.resolve) === null || _b === void 0 ? void 0 : _b.call(this, value);
+     }
++    delete this.reject;
++    delete this.resolve;
++  }
+ }
+ exports.PromiseSink = PromiseSink;
+-//# sourceMappingURL=PromiseSink.js.map
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/Helpers/PromiseSink.test.js b/node_modules/@remote-ioc/runtime/lib/Helpers/PromiseSink.test.js
+index 8f129c1..bc029b8 100644
+--- a/node_modules/@remote-ioc/runtime/lib/Helpers/PromiseSink.test.js
++++ b/node_modules/@remote-ioc/runtime/lib/Helpers/PromiseSink.test.js
+@@ -1,36 +1,35 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
+-const PromiseSink_1 = require("./PromiseSink");
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
++const PromiseSink_1 = require('./PromiseSink');
+ describe('PromiseSink', () => {
+-    it('init with value', async () => {
+-        const sink = new PromiseSink_1.PromiseSink('foo');
+-        expect(sink.getValue()).resolves.toEqual('foo');
+-    });
+-    it('init with error', async () => {
+-        const sink = new PromiseSink_1.PromiseSink(new Error('bar'));
+-        expect(sink.getValue()).rejects.toThrowError(new Error('bar'));
+-    });
+-    it('resolve', async () => {
+-        const sink = new PromiseSink_1.PromiseSink();
+-        sink.setValue('foo');
+-        expect(sink.getValue()).resolves.toEqual('foo');
+-    });
+-    it('reject', async () => {
+-        const sink = new PromiseSink_1.PromiseSink();
+-        sink.setValue(new Error('bar'));
+-        expect(sink.getValue()).rejects.toThrowError(new Error('bar'));
+-    });
+-    it('double-resolve', async () => {
+-        const sink = new PromiseSink_1.PromiseSink();
+-        sink.setValue('foo');
+-        sink.setValue('baz');
+-        expect(sink.getValue()).resolves.toEqual('foo');
+-    });
+-    it('double-reject', async () => {
+-        const sink = new PromiseSink_1.PromiseSink();
+-        sink.setValue(new Error('bar'));
+-        sink.setValue(new Error('baz'));
+-        expect(sink.getValue()).rejects.toThrowError(new Error('bar'));
+-    });
++  it('init with value', async () => {
++    const sink = new PromiseSink_1.PromiseSink('foo');
++    expect(sink.getValue()).resolves.toEqual('foo');
++  });
++  it('init with error', async () => {
++    const sink = new PromiseSink_1.PromiseSink(new Error('bar'));
++    expect(sink.getValue()).rejects.toThrowError(new Error('bar'));
++  });
++  it('resolve', async () => {
++    const sink = new PromiseSink_1.PromiseSink();
++    sink.setValue('foo');
++    expect(sink.getValue()).resolves.toEqual('foo');
++  });
++  it('reject', async () => {
++    const sink = new PromiseSink_1.PromiseSink();
++    sink.setValue(new Error('bar'));
++    expect(sink.getValue()).rejects.toThrowError(new Error('bar'));
++  });
++  it('double-resolve', async () => {
++    const sink = new PromiseSink_1.PromiseSink();
++    sink.setValue('foo');
++    sink.setValue('baz');
++    expect(sink.getValue()).resolves.toEqual('foo');
++  });
++  it('double-reject', async () => {
++    const sink = new PromiseSink_1.PromiseSink();
++    sink.setValue(new Error('bar'));
++    sink.setValue(new Error('baz'));
++    expect(sink.getValue()).rejects.toThrowError(new Error('bar'));
++  });
+ });
+-//# sourceMappingURL=PromiseSink.test.js.map
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/Helpers/PromiseStore.js b/node_modules/@remote-ioc/runtime/lib/Helpers/PromiseStore.js
+index e0659da..e9733d6 100644
+--- a/node_modules/@remote-ioc/runtime/lib/Helpers/PromiseStore.js
++++ b/node_modules/@remote-ioc/runtime/lib/Helpers/PromiseStore.js
+@@ -1,42 +1,41 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
+ exports.PromiseStore = void 0;
+-const nanoid_1 = require("nanoid");
++const nanoid_1 = require('nanoid');
+ class PromiseStore {
+-    constructor() {
+-        this.promiseIdx = 0;
+-        this.salt = nanoid_1.nanoid(10);
+-        this.promises = new Map();
++  constructor() {
++    this.promiseIdx = 0;
++    this.salt = nanoid_1.nanoid(10);
++    this.promises = new Map();
++  }
++  nextPromiseId() {
++    return `${this.salt}|${this.promiseIdx++}`;
++  }
++  // TODO Add a timeout value and automatically expire stale promises
++  // must use setTimeout and let it go dormant when map is empty to avoid
++  // long running interval keeping the process alive
++  create() {
++    let callbacks;
++    const promise = new Promise((resolve, reject) => {
++      callbacks = { resolve, reject };
++    });
++    const promiseId = this.nextPromiseId();
++    this.promises.set(promiseId, callbacks);
++    return [promiseId, promise];
++  }
++  resolve(promiseId, value) {
++    const p = this.promises.get(promiseId);
++    if (!this.promises.delete(promiseId) || !p) {
++      throw new Error(`Promise '${promiseId}' not found`);
+     }
+-    nextPromiseId() {
+-        return `${this.salt}|${this.promiseIdx++}`;
+-    }
+-    // TODO Add a timeout value and automatically expire stale promises
+-    // must use setTimeout and let it go dormant when map is empty to avoid
+-    // long running interval keeping the process alive
+-    create() {
+-        let callbacks;
+-        const promise = new Promise((resolve, reject) => {
+-            callbacks = { resolve, reject };
+-        });
+-        const promiseId = this.nextPromiseId();
+-        this.promises.set(promiseId, callbacks);
+-        return [promiseId, promise];
+-    }
+-    resolve(promiseId, value) {
+-        const p = this.promises.get(promiseId);
+-        if (!this.promises.delete(promiseId) || !p) {
+-            throw new Error(`Promise '${promiseId}' not found`);
+-        }
+-        p.resolve(value);
+-    }
+-    reject(promiseId, value) {
+-        const p = this.promises.get(promiseId);
+-        if (!this.promises.delete(promiseId) || !p) {
+-            throw new Error(`Promise '${promiseId}' not found`);
+-        }
+-        p.reject(value);
++    p.resolve(value);
++  }
++  reject(promiseId, value) {
++    const p = this.promises.get(promiseId);
++    if (!this.promises.delete(promiseId) || !p) {
++      throw new Error(`Promise '${promiseId}' not found`);
+     }
++    p.reject(value);
++  }
+ }
+ exports.PromiseStore = PromiseStore;
+-//# sourceMappingURL=PromiseStore.js.map
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/Helpers/PromiseStore.test.js b/node_modules/@remote-ioc/runtime/lib/Helpers/PromiseStore.test.js
+index 6fb9066..453f344 100644
+--- a/node_modules/@remote-ioc/runtime/lib/Helpers/PromiseStore.test.js
++++ b/node_modules/@remote-ioc/runtime/lib/Helpers/PromiseStore.test.js
+@@ -1,23 +1,22 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
+-const PromiseStore_1 = require("./PromiseStore");
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
++const PromiseStore_1 = require('./PromiseStore');
+ describe('PromiseStore', () => {
+-    it('resolve', async () => {
+-        const store = new PromiseStore_1.PromiseStore();
+-        const [id, result] = store.create();
+-        store.resolve(id, 'success');
+-        expect(await result).toEqual('success');
+-    });
+-    it('reject', async () => {
+-        const store = new PromiseStore_1.PromiseStore();
+-        const [id, result] = store.create();
+-        store.reject(id, 'failed');
+-        expect(await result.catch((e) => ({ error: e }))).toEqual({ error: 'failed' });
+-    });
+-    it('invalid id', () => {
+-        const store = new PromiseStore_1.PromiseStore();
+-        expect(() => store.resolve('42', 'the answer')).toThrow();
+-        expect(() => store.reject('42', new Error())).toThrow();
+-    });
++  it('resolve', async () => {
++    const store = new PromiseStore_1.PromiseStore();
++    const [id, result] = store.create();
++    store.resolve(id, 'success');
++    expect(await result).toEqual('success');
++  });
++  it('reject', async () => {
++    const store = new PromiseStore_1.PromiseStore();
++    const [id, result] = store.create();
++    store.reject(id, 'failed');
++    expect(await result.catch((e) => ({ error: e }))).toEqual({ error: 'failed' });
++  });
++  it('invalid id', () => {
++    const store = new PromiseStore_1.PromiseStore();
++    expect(() => store.resolve('42', 'the answer')).toThrow();
++    expect(() => store.reject('42', new Error())).toThrow();
++  });
+ });
+-//# sourceMappingURL=PromiseStore.test.js.map
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/Helpers/index.js b/node_modules/@remote-ioc/runtime/lib/Helpers/index.js
+index c8f1551..49d7a87 100644
+--- a/node_modules/@remote-ioc/runtime/lib/Helpers/index.js
++++ b/node_modules/@remote-ioc/runtime/lib/Helpers/index.js
+@@ -1,10 +1,9 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
+-const tslib_1 = require("tslib");
+-tslib_1.__exportStar(require("./AvailabilityMap"), exports);
+-tslib_1.__exportStar(require("./CollectionMap"), exports);
+-tslib_1.__exportStar(require("./DefaultedMap"), exports);
+-tslib_1.__exportStar(require("./NotReached"), exports);
+-tslib_1.__exportStar(require("./PromiseSink"), exports);
+-tslib_1.__exportStar(require("./PromiseStore"), exports);
+-//# sourceMappingURL=index.js.map
+\ No newline at end of file
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
++const tslib_1 = require('tslib');
++tslib_1.__exportStar(require('./AvailabilityMap'), exports);
++tslib_1.__exportStar(require('./CollectionMap'), exports);
++tslib_1.__exportStar(require('./DefaultedMap'), exports);
++tslib_1.__exportStar(require('./NotReached'), exports);
++tslib_1.__exportStar(require('./PromiseSink'), exports);
++tslib_1.__exportStar(require('./PromiseStore'), exports);
+diff --git a/node_modules/@remote-ioc/runtime/lib/Interfaces/IRouter.js b/node_modules/@remote-ioc/runtime/lib/Interfaces/IRouter.js
+index f64a94a..db8b17d 100644
+--- a/node_modules/@remote-ioc/runtime/lib/Interfaces/IRouter.js
++++ b/node_modules/@remote-ioc/runtime/lib/Interfaces/IRouter.js
+@@ -1,3 +1,2 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
+-//# sourceMappingURL=IRouter.js.map
+\ No newline at end of file
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
+diff --git a/node_modules/@remote-ioc/runtime/lib/Interfaces/IRuntime.js b/node_modules/@remote-ioc/runtime/lib/Interfaces/IRuntime.js
+index df720c5..db8b17d 100644
+--- a/node_modules/@remote-ioc/runtime/lib/Interfaces/IRuntime.js
++++ b/node_modules/@remote-ioc/runtime/lib/Interfaces/IRuntime.js
+@@ -1,3 +1,2 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
+-//# sourceMappingURL=IRuntime.js.map
+\ No newline at end of file
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
+diff --git a/node_modules/@remote-ioc/runtime/lib/Interfaces/ISocket.js b/node_modules/@remote-ioc/runtime/lib/Interfaces/ISocket.js
+index b7e340a..db8b17d 100644
+--- a/node_modules/@remote-ioc/runtime/lib/Interfaces/ISocket.js
++++ b/node_modules/@remote-ioc/runtime/lib/Interfaces/ISocket.js
+@@ -1,3 +1,2 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
+-//# sourceMappingURL=ISocket.js.map
+\ No newline at end of file
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
+diff --git a/node_modules/@remote-ioc/runtime/lib/Interfaces/SocketMessage.js b/node_modules/@remote-ioc/runtime/lib/Interfaces/SocketMessage.js
+index a4c5681..db8b17d 100644
+--- a/node_modules/@remote-ioc/runtime/lib/Interfaces/SocketMessage.js
++++ b/node_modules/@remote-ioc/runtime/lib/Interfaces/SocketMessage.js
+@@ -1,3 +1,2 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
+-//# sourceMappingURL=SocketMessage.js.map
+\ No newline at end of file
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
+diff --git a/node_modules/@remote-ioc/runtime/lib/Interfaces/index.js b/node_modules/@remote-ioc/runtime/lib/Interfaces/index.js
+index ec56e43..dec8bf1 100644
+--- a/node_modules/@remote-ioc/runtime/lib/Interfaces/index.js
++++ b/node_modules/@remote-ioc/runtime/lib/Interfaces/index.js
+@@ -1,8 +1,7 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
+-const tslib_1 = require("tslib");
+-tslib_1.__exportStar(require("./IRouter"), exports);
+-tslib_1.__exportStar(require("./IRuntime"), exports);
+-tslib_1.__exportStar(require("./ISocket"), exports);
+-tslib_1.__exportStar(require("./SocketMessage"), exports);
+-//# sourceMappingURL=index.js.map
+\ No newline at end of file
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
++const tslib_1 = require('tslib');
++tslib_1.__exportStar(require('./IRouter'), exports);
++tslib_1.__exportStar(require('./IRuntime'), exports);
++tslib_1.__exportStar(require('./ISocket'), exports);
++tslib_1.__exportStar(require('./SocketMessage'), exports);
+diff --git a/node_modules/@remote-ioc/runtime/lib/LocalRouter.js b/node_modules/@remote-ioc/runtime/lib/LocalRouter.js
+index 04335ee..2a980bb 100644
+--- a/node_modules/@remote-ioc/runtime/lib/LocalRouter.js
++++ b/node_modules/@remote-ioc/runtime/lib/LocalRouter.js
+@@ -1,36 +1,38 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
+ exports.LocalRouter = void 0;
+-const Decorators_1 = require("./Decorators");
+-const Loopback_1 = require("./Loopback");
+-const RouterBase_1 = require("./RouterBase");
+-const RuntimeContext_1 = require("./RuntimeContext");
++const Decorators_1 = require('./Decorators');
++const Loopback_1 = require('./Loopback');
++const RouterBase_1 = require('./RouterBase');
++const RuntimeContext_1 = require('./RuntimeContext');
+ class LocalRouter extends RouterBase_1.RouterBase {
+-    constructor(name) {
+-        super();
+-        this.name = name;
+-        this.loopback = RuntimeContext_1.getLoopback() || new Loopback_1.Loopback();
+-        this.onDiscoverRequest = () => {
+-            const definitions = [];
+-            for (const provider of this.providers) {
+-                definitions.push(...Decorators_1.ApiProvider.implementationsOf(provider));
+-            }
+-            this.loopback.send('$local-router', 'discover/response', definitions);
+-        };
+-        this.onDiscoverResponse = (definitions) => {
+-            this.emit('discover', definitions.map((def) => Decorators_1.ApiDefinition.nameOf(def)));
+-        };
+-        this.loopback.on('$local-router', 'discover/request', this.onDiscoverRequest);
+-        this.loopback.on('$local-router', 'discover/response', this.onDiscoverResponse);
+-        setTimeout(() => {
+-            this.loopback.send('$local-router', 'discover/request', undefined);
+-        }, 5);
+-    }
+-    getSocketCore(Definition) {
+-        const scope = Decorators_1.ApiDefinition.nameOf(Definition);
+-        const socket = this.loopback.createSocket(scope);
+-        return socket;
+-    }
++  constructor(name) {
++    super();
++    this.name = name;
++    this.loopback = RuntimeContext_1.getLoopback() || new Loopback_1.Loopback();
++    this.onDiscoverRequest = () => {
++      const definitions = [];
++      for (const provider of this.providers) {
++        definitions.push(...Decorators_1.ApiProvider.implementationsOf(provider));
++      }
++      this.loopback.send('$local-router', 'discover/response', definitions);
++    };
++    this.onDiscoverResponse = (definitions) => {
++      this.emit(
++        'discover',
++        definitions.map((def) => Decorators_1.ApiDefinition.nameOf(def))
++      );
++    };
++    this.loopback.on('$local-router', 'discover/request', this.onDiscoverRequest);
++    this.loopback.on('$local-router', 'discover/response', this.onDiscoverResponse);
++    setTimeout(() => {
++      this.loopback.send('$local-router', 'discover/request', undefined);
++    }, 5);
++  }
++  getSocketCore(Definition) {
++    const scope = Decorators_1.ApiDefinition.nameOf(Definition);
++    const socket = this.loopback.createSocket(scope);
++    return socket;
++  }
+ }
+ exports.LocalRouter = LocalRouter;
+-//# sourceMappingURL=LocalRouter.js.map
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/LocalRouter.js.map b/node_modules/@remote-ioc/runtime/lib/LocalRouter.js.map
+deleted file mode 100644
+index 6b1a292..0000000
+--- a/node_modules/@remote-ioc/runtime/lib/LocalRouter.js.map
++++ /dev/null
+@@ -1 +0,0 @@
+-{"version":3,"file":"LocalRouter.js","sourceRoot":"","sources":["../src/LocalRouter.ts"],"names":[],"mappings":";;;AAAA,6CAA0D;AAE1D,yCAAsC;AACtC,6CAA0C;AAC1C,qDAA+C;AAG/C,MAAa,WAAY,SAAQ,uBAAU;IAEzC,YAAqB,IAAY;QAC/B,KAAK,EAAE,CAAC;QADW,SAAI,GAAJ,IAAI,CAAQ;QADzB,aAAQ,GAAa,4BAAW,EAAE,IAAI,IAAI,mBAAQ,EAAE,CAAC;QAUrD,sBAAiB,GAAG,GAAG,EAAE;YAC/B,MAAM,WAAW,GAAkB,EAAE,CAAC;YACtC,KAAK,MAAM,QAAQ,IAAI,IAAI,CAAC,SAAS,EAAE;gBACrC,WAAW,CAAC,IAAI,CAAC,GAAG,wBAAW,CAAC,iBAAiB,CAAC,QAAQ,CAAC,CAAC,CAAC;aAC9D;YACD,IAAI,CAAC,QAAQ,CAAC,IAAI,CAAC,eAAe,EAAE,mBAAmB,EAAE,WAAW,CAAC,CAAC;QACxE,CAAC,CAAC;QAEM,uBAAkB,GAAG,CAAC,WAA0B,EAAE,EAAE;YAC1D,IAAI,CAAC,IAAI,CACP,UAAU,EACV,WAAW,CAAC,GAAG,CAAC,CAAC,GAAG,EAAE,EAAE,CAAC,0BAAa,CAAC,MAAM,CAAC,GAAG,CAAC,CAAC,CACpD,CAAC;QACJ,CAAC,CAAC;QApBA,IAAI,CAAC,QAAQ,CAAC,EAAE,CAAC,eAAe,EAAE,kBAAkB,EAAE,IAAI,CAAC,iBAAiB,CAAC,CAAC;QAC9E,IAAI,CAAC,QAAQ,CAAC,EAAE,CAAC,eAAe,EAAE,mBAAmB,EAAE,IAAI,CAAC,kBAAkB,CAAC,CAAC;QAChF,UAAU,CAAC,GAAG,EAAE;YACd,IAAI,CAAC,QAAQ,CAAC,IAAI,CAAC,eAAe,EAAE,kBAAkB,EAAE,SAAS,CAAC,CAAC;QACrE,CAAC,EAAE,CAAC,CAAC,CAAC;IACR,CAAC;IAiBS,aAAa,CAAC,UAAuB;QAC7C,MAAM,KAAK,GAAG,0BAAa,CAAC,MAAM,CAAC,UAAU,CAAC,CAAC;QAC/C,MAAM,MAAM,GAAG,IAAI,CAAC,QAAQ,CAAC,YAAY,CAAC,KAAK,CAAC,CAAC;QACjD,OAAO,MAAM,CAAC;IAChB,CAAC;CACF;AA/BD,kCA+BC"}
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/LocalSocket.js b/node_modules/@remote-ioc/runtime/lib/LocalSocket.js
+index 697fff7..bc98605 100644
+--- a/node_modules/@remote-ioc/runtime/lib/LocalSocket.js
++++ b/node_modules/@remote-ioc/runtime/lib/LocalSocket.js
+@@ -1,28 +1,30 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
+ exports.LocalServerSocket = void 0;
+-const Helpers_1 = require("./Helpers");
++const Helpers_1 = require('./Helpers');
+ class LocalServerSocket {
+-    constructor() {
+-        this.handlers = new Helpers_1.DefaultedMap(() => []);
+-    }
+-    // eslint-disable-next-line class-methods-use-this
+-    close() {
+-        // no-op
+-    }
+-    send(channel, ...args) {
+-        this.handlers.get(channel).forEach((fn) => fn(...args));
+-        return this;
+-    }
+-    on(channel, handler) {
+-        this.handlers.get(channel).push(handler);
+-        return this;
+-    }
+-    off(channel, handler) {
+-        const handlers = this.handlers.get(channel);
+-        this.handlers.set(channel, handlers.filter((entry) => entry !== handler));
+-        return this;
+-    }
++  constructor() {
++    this.handlers = new Helpers_1.DefaultedMap(() => []);
++  }
++  // eslint-disable-next-line class-methods-use-this
++  close() {
++    // no-op
++  }
++  send(channel, ...args) {
++    this.handlers.get(channel).forEach((fn) => fn(...args));
++    return this;
++  }
++  on(channel, handler) {
++    this.handlers.get(channel).push(handler);
++    return this;
++  }
++  off(channel, handler) {
++    const handlers = this.handlers.get(channel);
++    this.handlers.set(
++      channel,
++      handlers.filter((entry) => entry !== handler)
++    );
++    return this;
++  }
+ }
+ exports.LocalServerSocket = LocalServerSocket;
+-//# sourceMappingURL=LocalSocket.js.map
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/LocalSocket.js.map b/node_modules/@remote-ioc/runtime/lib/LocalSocket.js.map
+deleted file mode 100644
+index 22060bb..0000000
+--- a/node_modules/@remote-ioc/runtime/lib/LocalSocket.js.map
++++ /dev/null
+@@ -1 +0,0 @@
+-{"version":3,"file":"LocalSocket.js","sourceRoot":"","sources":["../src/LocalSocket.ts"],"names":[],"mappings":";;;AAAA,uCAAyC;AAGzC,MAAa,iBAAiB;IAA9B;QACU,aAAQ,GAAG,IAAI,sBAAY,CAAuC,GAAG,EAAE,CAAC,EAAE,CAAC,CAAC;IAwBtF,CAAC;IAvBC,kDAAkD;IAClD,KAAK;QACH,QAAQ;IACV,CAAC;IAED,IAAI,CAAC,OAAe,EAAE,GAAG,IAAW;QAClC,IAAI,CAAC,QAAQ,CAAC,GAAG,CAAC,OAAO,CAAC,CAAC,OAAO,CAAC,CAAC,EAAE,EAAE,EAAE,CAAC,EAAE,CAAC,GAAG,IAAI,CAAC,CAAC,CAAC;QACxD,OAAO,IAAI,CAAC;IACd,CAAC;IAED,EAAE,CAAC,OAAe,EAAE,OAAiC;QACnD,IAAI,CAAC,QAAQ,CAAC,GAAG,CAAC,OAAO,CAAC,CAAC,IAAI,CAAC,OAAO,CAAC,CAAC;QACzC,OAAO,IAAI,CAAC;IACd,CAAC;IAED,GAAG,CAAC,OAAe,EAAE,OAAiC;QACpD,MAAM,QAAQ,GAAG,IAAI,CAAC,QAAQ,CAAC,GAAG,CAAC,OAAO,CAAC,CAAC;QAC5C,IAAI,CAAC,QAAQ,CAAC,GAAG,CACf,OAAO,EACP,QAAQ,CAAC,MAAM,CAAC,CAAC,KAAK,EAAE,EAAE,CAAC,KAAK,KAAK,OAAO,CAAC,CAC9C,CAAC;QACF,OAAO,IAAI,CAAC;IACd,CAAC;CACF;AAzBD,8CAyBC"}
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/Loopback.js b/node_modules/@remote-ioc/runtime/lib/Loopback.js
+index 588cca4..ca37e7d 100644
+--- a/node_modules/@remote-ioc/runtime/lib/Loopback.js
++++ b/node_modules/@remote-ioc/runtime/lib/Loopback.js
+@@ -1,68 +1,67 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
+ exports.Loopback = void 0;
+ /* eslint-disable max-classes-per-file */
+-const Helpers_1 = require("./Helpers");
++const Helpers_1 = require('./Helpers');
+ // TODO: restrict which channels work for client vs. server?
+ class LoopbackSocket {
+-    constructor(scope, loopback) {
+-        this.scope = scope;
+-        this.loopback = loopback;
+-        this.handlers = new Helpers_1.CollectionMap();
+-    }
+-    dispose() {
+-        for (const [channel, handlers] of this.handlers) {
+-            for (const handler of handlers) {
+-                this.loopback.off(this.scope, channel, handler);
+-            }
+-        }
+-        this.handlers.clear();
+-    }
+-    close() {
+-        this.loopback.close(this);
+-    }
+-    send(channel, message) {
+-        this.loopback.send(this.scope, channel, message);
+-        return this;
+-    }
+-    on(channel, handler) {
+-        this.handlers.push(channel, handler);
+-        this.loopback.on(this.scope, channel, handler);
+-        return this;
+-    }
+-    off(channel, handler) {
+-        this.handlers.remove(`${this.scope}\0${channel}`, handler);
++  constructor(scope, loopback) {
++    this.scope = scope;
++    this.loopback = loopback;
++    this.handlers = new Helpers_1.CollectionMap();
++  }
++  dispose() {
++    for (const [channel, handlers] of this.handlers) {
++      for (const handler of handlers) {
+         this.loopback.off(this.scope, channel, handler);
+-        return this;
++      }
+     }
++    this.handlers.clear();
++  }
++  close() {
++    this.loopback.close(this);
++  }
++  send(channel, message) {
++    this.loopback.send(this.scope, channel, message);
++    return this;
++  }
++  on(channel, handler) {
++    this.handlers.push(channel, handler);
++    this.loopback.on(this.scope, channel, handler);
++    return this;
++  }
++  off(channel, handler) {
++    this.handlers.remove(`${this.scope}\0${channel}`, handler);
++    this.loopback.off(this.scope, channel, handler);
++    return this;
++  }
+ }
+ class Loopback {
+-    constructor() {
+-        this.handlers = new Helpers_1.CollectionMap();
+-        this.sockets = new Helpers_1.CollectionMap();
+-    }
+-    // eslint-disable-next-line class-methods-use-this
+-    close(socket) {
+-        socket.dispose();
+-        this.sockets.remove(socket.scope, socket);
+-    }
+-    send(scope, channel, message, context) {
+-        this.handlers.forEachValue(`${scope}\0${channel}`, (fn) => fn(message, context));
+-        return this;
+-    }
+-    on(scope, channel, handler) {
+-        this.handlers.push(`${scope}\0${channel}`, handler);
+-        return this;
+-    }
+-    off(scope, channel, handler) {
+-        this.handlers.remove(`${scope}\0${channel}`, handler);
+-        return this;
+-    }
+-    createSocket(scope) {
+-        const server = new LoopbackSocket(scope, this);
+-        this.sockets.push(scope, server);
+-        return server;
+-    }
++  constructor() {
++    this.handlers = new Helpers_1.CollectionMap();
++    this.sockets = new Helpers_1.CollectionMap();
++  }
++  // eslint-disable-next-line class-methods-use-this
++  close(socket) {
++    socket.dispose();
++    this.sockets.remove(socket.scope, socket);
++  }
++  send(scope, channel, message, context) {
++    this.handlers.forEachValue(`${scope}\0${channel}`, (fn) => fn(message, context));
++    return this;
++  }
++  on(scope, channel, handler) {
++    this.handlers.push(`${scope}\0${channel}`, handler);
++    return this;
++  }
++  off(scope, channel, handler) {
++    this.handlers.remove(`${scope}\0${channel}`, handler);
++    return this;
++  }
++  createSocket(scope) {
++    const server = new LoopbackSocket(scope, this);
++    this.sockets.push(scope, server);
++    return server;
++  }
+ }
+ exports.Loopback = Loopback;
+-//# sourceMappingURL=Loopback.js.map
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/Loopback.js.map b/node_modules/@remote-ioc/runtime/lib/Loopback.js.map
+deleted file mode 100644
+index 0d5820d..0000000
+--- a/node_modules/@remote-ioc/runtime/lib/Loopback.js.map
++++ /dev/null
+@@ -1 +0,0 @@
+-{"version":3,"file":"Loopback.js","sourceRoot":"","sources":["../src/Loopback.ts"],"names":[],"mappings":"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"}
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/Loopback.test.js b/node_modules/@remote-ioc/runtime/lib/Loopback.test.js
+index 5ce3f07..0254f59 100644
+--- a/node_modules/@remote-ioc/runtime/lib/Loopback.test.js
++++ b/node_modules/@remote-ioc/runtime/lib/Loopback.test.js
+@@ -1,84 +1,83 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
+-const Loopback_1 = require("./Loopback");
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
++const Loopback_1 = require('./Loopback');
+ describe('loopback', () => {
+-    it('send/receive', () => {
+-        const loopback = new Loopback_1.Loopback();
+-        const handler = jest.fn();
+-        loopback.on('0', '1', handler);
+-        loopback.send('0', '0', 'foo');
+-        loopback.send('1', '0', 'foo');
+-        expect(handler).not.toHaveBeenCalled();
+-        loopback.send('0', '1', 'foo');
+-        expect(handler).toHaveBeenCalledWith('foo', undefined);
+-        loopback.off('0', '0', handler);
+-        loopback.off('1', '0', handler);
+-        loopback.send('0', '1', 'foo');
+-        expect(handler).toHaveBeenCalledTimes(2);
+-        loopback.off('0', '1', handler);
+-        loopback.send('0', '1', 'foo');
+-        expect(handler).toHaveBeenCalledTimes(2);
++  it('send/receive', () => {
++    const loopback = new Loopback_1.Loopback();
++    const handler = jest.fn();
++    loopback.on('0', '1', handler);
++    loopback.send('0', '0', 'foo');
++    loopback.send('1', '0', 'foo');
++    expect(handler).not.toHaveBeenCalled();
++    loopback.send('0', '1', 'foo');
++    expect(handler).toHaveBeenCalledWith('foo', undefined);
++    loopback.off('0', '0', handler);
++    loopback.off('1', '0', handler);
++    loopback.send('0', '1', 'foo');
++    expect(handler).toHaveBeenCalledTimes(2);
++    loopback.off('0', '1', handler);
++    loopback.send('0', '1', 'foo');
++    expect(handler).toHaveBeenCalledTimes(2);
++  });
++  describe('client/server', () => {
++    it('send without subscriber', () => {
++      const loopback = new Loopback_1.Loopback();
++      const serverA = loopback.createSocket('a');
++      const clientA = loopback.createSocket('a');
++      const handleAZ = jest.fn();
++      clientA.on('z', handleAZ);
++      serverA.send('y', 'foo');
++      expect(handleAZ).not.toHaveBeenCalled();
+     });
+-    describe('client/server', () => {
+-        it('send without subscriber', () => {
+-            const loopback = new Loopback_1.Loopback();
+-            const serverA = loopback.createSocket('a');
+-            const clientA = loopback.createSocket('a');
+-            const handleAZ = jest.fn();
+-            clientA.on('z', handleAZ);
+-            serverA.send('y', 'foo');
+-            expect(handleAZ).not.toHaveBeenCalled();
+-        });
+-        it('send with subscriber', () => {
+-            const loopback = new Loopback_1.Loopback();
+-            const serverA = loopback.createSocket('a');
+-            const clientA = loopback.createSocket('a');
+-            const handleAZ = jest.fn();
+-            clientA.on('z', handleAZ);
+-            serverA.send('z', 'foo');
+-            expect(handleAZ).toHaveBeenCalledWith('foo', undefined);
+-        });
+-        it('multiple clients', () => {
+-            const loopback = new Loopback_1.Loopback();
+-            const serverA = loopback.createSocket('a');
+-            const clientA = loopback.createSocket('a');
+-            const handleAZ = jest.fn();
+-            clientA.on('z', handleAZ);
+-            const clientA2 = loopback.createSocket('a');
+-            const handleAZ2 = jest.fn();
+-            clientA2.on('z', handleAZ2);
+-            serverA.send('z', 'foo');
+-            expect(handleAZ).toHaveBeenCalledWith('foo', undefined);
+-            expect(handleAZ2).toHaveBeenCalledWith('foo', undefined);
+-        });
+-        it('remove listener', () => {
+-            const loopback = new Loopback_1.Loopback();
+-            const serverA = loopback.createSocket('a');
+-            const clientA = loopback.createSocket('a');
+-            const clientA2 = loopback.createSocket('a');
+-            const handleAZ = jest.fn();
+-            const handleAZ2 = jest.fn();
+-            clientA.on('z', handleAZ);
+-            clientA2.on('z', handleAZ2);
+-            clientA.off('z', handleAZ);
+-            serverA.send('z', 'foo');
+-            expect(handleAZ).not.toHaveBeenCalled();
+-            expect(handleAZ2).toHaveBeenCalledWith('foo', undefined);
+-        });
+-        it('close client', () => {
+-            const loopback = new Loopback_1.Loopback();
+-            const serverA = loopback.createSocket('a');
+-            const clientA = loopback.createSocket('a');
+-            const clientA2 = loopback.createSocket('a');
+-            const handleAZ = jest.fn();
+-            const handleAZ2 = jest.fn();
+-            clientA.on('z', handleAZ);
+-            clientA2.on('z', handleAZ2);
+-            clientA.close();
+-            serverA.send('z', 'foo');
+-            expect(handleAZ).not.toHaveBeenCalled();
+-            expect(handleAZ2).toHaveBeenCalledWith('foo', undefined);
+-        });
++    it('send with subscriber', () => {
++      const loopback = new Loopback_1.Loopback();
++      const serverA = loopback.createSocket('a');
++      const clientA = loopback.createSocket('a');
++      const handleAZ = jest.fn();
++      clientA.on('z', handleAZ);
++      serverA.send('z', 'foo');
++      expect(handleAZ).toHaveBeenCalledWith('foo', undefined);
+     });
++    it('multiple clients', () => {
++      const loopback = new Loopback_1.Loopback();
++      const serverA = loopback.createSocket('a');
++      const clientA = loopback.createSocket('a');
++      const handleAZ = jest.fn();
++      clientA.on('z', handleAZ);
++      const clientA2 = loopback.createSocket('a');
++      const handleAZ2 = jest.fn();
++      clientA2.on('z', handleAZ2);
++      serverA.send('z', 'foo');
++      expect(handleAZ).toHaveBeenCalledWith('foo', undefined);
++      expect(handleAZ2).toHaveBeenCalledWith('foo', undefined);
++    });
++    it('remove listener', () => {
++      const loopback = new Loopback_1.Loopback();
++      const serverA = loopback.createSocket('a');
++      const clientA = loopback.createSocket('a');
++      const clientA2 = loopback.createSocket('a');
++      const handleAZ = jest.fn();
++      const handleAZ2 = jest.fn();
++      clientA.on('z', handleAZ);
++      clientA2.on('z', handleAZ2);
++      clientA.off('z', handleAZ);
++      serverA.send('z', 'foo');
++      expect(handleAZ).not.toHaveBeenCalled();
++      expect(handleAZ2).toHaveBeenCalledWith('foo', undefined);
++    });
++    it('close client', () => {
++      const loopback = new Loopback_1.Loopback();
++      const serverA = loopback.createSocket('a');
++      const clientA = loopback.createSocket('a');
++      const clientA2 = loopback.createSocket('a');
++      const handleAZ = jest.fn();
++      const handleAZ2 = jest.fn();
++      clientA.on('z', handleAZ);
++      clientA2.on('z', handleAZ2);
++      clientA.close();
++      serverA.send('z', 'foo');
++      expect(handleAZ).not.toHaveBeenCalled();
++      expect(handleAZ2).toHaveBeenCalledWith('foo', undefined);
++    });
++  });
+ });
+-//# sourceMappingURL=Loopback.test.js.map
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/Loopback.test.js.map b/node_modules/@remote-ioc/runtime/lib/Loopback.test.js.map
+deleted file mode 100644
+index 1ac32bb..0000000
+--- a/node_modules/@remote-ioc/runtime/lib/Loopback.test.js.map
++++ /dev/null
+@@ -1 +0,0 @@
+-{"version":3,"file":"Loopback.test.js","sourceRoot":"","sources":["../src/Loopback.test.ts"],"names":[],"mappings":"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"}
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/Messages/AsyncMessage.js b/node_modules/@remote-ioc/runtime/lib/Messages/AsyncMessage.js
+index 45d0670..db8b17d 100644
+--- a/node_modules/@remote-ioc/runtime/lib/Messages/AsyncMessage.js
++++ b/node_modules/@remote-ioc/runtime/lib/Messages/AsyncMessage.js
+@@ -1,3 +1,2 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
+-//# sourceMappingURL=AsyncMessage.js.map
+\ No newline at end of file
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
+diff --git a/node_modules/@remote-ioc/runtime/lib/Messages/CallMethod.js b/node_modules/@remote-ioc/runtime/lib/Messages/CallMethod.js
+index 46cbc8d..db8b17d 100644
+--- a/node_modules/@remote-ioc/runtime/lib/Messages/CallMethod.js
++++ b/node_modules/@remote-ioc/runtime/lib/Messages/CallMethod.js
+@@ -1,3 +1,2 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
+-//# sourceMappingURL=CallMethod.js.map
+\ No newline at end of file
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
+diff --git a/node_modules/@remote-ioc/runtime/lib/Messages/GetPropertyValue.js b/node_modules/@remote-ioc/runtime/lib/Messages/GetPropertyValue.js
+index b2b780e..db8b17d 100644
+--- a/node_modules/@remote-ioc/runtime/lib/Messages/GetPropertyValue.js
++++ b/node_modules/@remote-ioc/runtime/lib/Messages/GetPropertyValue.js
+@@ -1,3 +1,2 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
+-//# sourceMappingURL=GetPropertyValue.js.map
+\ No newline at end of file
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
+diff --git a/node_modules/@remote-ioc/runtime/lib/Messages/SendEvent.js b/node_modules/@remote-ioc/runtime/lib/Messages/SendEvent.js
+index ac5de1c..db8b17d 100644
+--- a/node_modules/@remote-ioc/runtime/lib/Messages/SendEvent.js
++++ b/node_modules/@remote-ioc/runtime/lib/Messages/SendEvent.js
+@@ -1,3 +1,2 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
+-//# sourceMappingURL=SendEvent.js.map
+\ No newline at end of file
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
+diff --git a/node_modules/@remote-ioc/runtime/lib/Messages/SetPromise.js b/node_modules/@remote-ioc/runtime/lib/Messages/SetPromise.js
+index 5fca186..db8b17d 100644
+--- a/node_modules/@remote-ioc/runtime/lib/Messages/SetPromise.js
++++ b/node_modules/@remote-ioc/runtime/lib/Messages/SetPromise.js
+@@ -1,3 +1,2 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
+-//# sourceMappingURL=SetPromise.js.map
+\ No newline at end of file
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
+diff --git a/node_modules/@remote-ioc/runtime/lib/Messages/SubscriptionMessage.js b/node_modules/@remote-ioc/runtime/lib/Messages/SubscriptionMessage.js
+index 3ba05c3..db8b17d 100644
+--- a/node_modules/@remote-ioc/runtime/lib/Messages/SubscriptionMessage.js
++++ b/node_modules/@remote-ioc/runtime/lib/Messages/SubscriptionMessage.js
+@@ -1,3 +1,2 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
+-//# sourceMappingURL=SubscriptionMessage.js.map
+\ No newline at end of file
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
+diff --git a/node_modules/@remote-ioc/runtime/lib/Messages/index.js b/node_modules/@remote-ioc/runtime/lib/Messages/index.js
+index adb4b0c..a782496 100644
+--- a/node_modules/@remote-ioc/runtime/lib/Messages/index.js
++++ b/node_modules/@remote-ioc/runtime/lib/Messages/index.js
+@@ -1,9 +1,8 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
+-const tslib_1 = require("tslib");
+-tslib_1.__exportStar(require("./CallMethod"), exports);
+-tslib_1.__exportStar(require("./GetPropertyValue"), exports);
+-tslib_1.__exportStar(require("./SendEvent"), exports);
+-tslib_1.__exportStar(require("./SetPromise"), exports);
+-tslib_1.__exportStar(require("./SubscriptionMessage"), exports);
+-//# sourceMappingURL=index.js.map
+\ No newline at end of file
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
++const tslib_1 = require('tslib');
++tslib_1.__exportStar(require('./CallMethod'), exports);
++tslib_1.__exportStar(require('./GetPropertyValue'), exports);
++tslib_1.__exportStar(require('./SendEvent'), exports);
++tslib_1.__exportStar(require('./SetPromise'), exports);
++tslib_1.__exportStar(require('./SubscriptionMessage'), exports);
+diff --git a/node_modules/@remote-ioc/runtime/lib/ProviderProxy.js b/node_modules/@remote-ioc/runtime/lib/ProviderProxy.js
+index c905bc9..a2fd9d5 100644
+--- a/node_modules/@remote-ioc/runtime/lib/ProviderProxy.js
++++ b/node_modules/@remote-ioc/runtime/lib/ProviderProxy.js
+@@ -1,15 +1,14 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
+ exports.ProviderProxy = void 0;
+-const Helpers_1 = require("./Helpers");
++const Helpers_1 = require('./Helpers');
+ class ProviderProxy {
+-    constructor(Definition, deferredRouter) {
+-        this.Definition = Definition;
+-        this.deferredRouter = deferredRouter;
+-    }
+-    get api() {
+-        return Helpers_1.notReached('not implemented', this);
+-    }
++  constructor(Definition, deferredRouter) {
++    this.Definition = Definition;
++    this.deferredRouter = deferredRouter;
++  }
++  get api() {
++    return Helpers_1.notReached('not implemented', this);
++  }
+ }
+ exports.ProviderProxy = ProviderProxy;
+-//# sourceMappingURL=ProviderProxy.js.map
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/ProviderProxy.js.map b/node_modules/@remote-ioc/runtime/lib/ProviderProxy.js.map
+deleted file mode 100644
+index 283265c..0000000
+--- a/node_modules/@remote-ioc/runtime/lib/ProviderProxy.js.map
++++ /dev/null
+@@ -1 +0,0 @@
+-{"version":3,"file":"ProviderProxy.js","sourceRoot":"","sources":["../src/ProviderProxy.ts"],"names":[],"mappings":";;;AAAA,uCAAuC;AAIvC,MAAa,aAAa;IACxB,YAA6B,UAAa,EAAmB,cAAgC;QAAhE,eAAU,GAAV,UAAU,CAAG;QAAmB,mBAAc,GAAd,cAAc,CAAkB;IAAG,CAAC;IAEjG,IAAI,GAAG;QACL,OAAO,oBAAU,CAAC,iBAAiB,EAAE,IAAI,CAAC,CAAC;IAC7C,CAAC;CACF;AAND,sCAMC"}
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/ProviderServer.js b/node_modules/@remote-ioc/runtime/lib/ProviderServer.js
+index d8d195d..ef27983 100644
+--- a/node_modules/@remote-ioc/runtime/lib/ProviderServer.js
++++ b/node_modules/@remote-ioc/runtime/lib/ProviderServer.js
+@@ -1,102 +1,105 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
+ exports.ProviderServer = exports.useCallingContext = void 0;
+-const HasEvents_1 = require("./HasEvents");
++const HasEvents_1 = require('./HasEvents');
+ const contextMap = new Map();
+ function useCallingContext(target) {
+-    return contextMap.get(target);
++  return contextMap.get(target);
+ }
+ exports.useCallingContext = useCallingContext;
+ function getWithContext(target, key, context) {
+-    contextMap.set(target, context);
+-    try {
+-        return target[key];
+-    }
+-    finally {
+-        contextMap.delete(target);
+-    }
++  contextMap.set(target, context);
++  try {
++    return target[key];
++  } finally {
++    contextMap.delete(target);
++  }
+ }
+ function callWithContext(target, fn, args, context) {
+-    contextMap.set(target, context);
+-    try {
+-        return fn.apply(target, args);
+-    }
+-    finally {
+-        contextMap.delete(target);
+-    }
++  contextMap.set(target, context);
++  try {
++    return fn.apply(target, args);
++  } finally {
++    contextMap.delete(target);
++  }
+ }
+ class ProviderServer {
+-    constructor(Definition, provider, router) {
+-        this.provider = provider;
+-        this.enabledEvents = new Map();
+-        this.socket = router.getSocket(Definition);
+-        this.socket.on('get', this.get.bind(this));
+-        this.socket.on('call', this.call.bind(this));
+-        this.socket.on('sub', this.subscribe.bind(this));
+-        this.socket.on('unsub', this.unsubscribe.bind(this));
++  constructor(Definition, provider, router) {
++    this.provider = provider;
++    this.enabledEvents = new Map();
++    this.socket = router.getSocket(Definition);
++    this.socket.on('get', this.get.bind(this));
++    this.socket.on('call', this.call.bind(this));
++    this.socket.on('sub', this.subscribe.bind(this));
++    this.socket.on('unsub', this.unsubscribe.bind(this));
++  }
++  forwardEvent(eventName, payload, context) {
++    this.socket.send('send-event', { eventName, payload }, context);
++  }
++  async get({ promiseId, propertyName }, context) {
++    try {
++      const value = getWithContext(this.provider, propertyName, context);
++      this.socket.send('set-promise', { promiseId, success: true, value });
++    } catch (e) {
++      this.socket.send(
++        'set-promise',
++        {
++          promiseId,
++          success: false,
++          error: {
++            message: e.message,
++            errorTag: e.errorTag,
++          },
++        },
++        context
++      );
+     }
+-    forwardEvent(eventName, payload, context) {
+-        this.socket.send('send-event', { eventName, payload }, context);
++  }
++  async call({ promiseId, methodName, args }, context) {
++    try {
++      const fn = this.provider[methodName];
++      if (fn === undefined || typeof fn !== 'function') {
++        throw new Error(`'${methodName}' is not a function`);
++      }
++      const value = await callWithContext(this.provider, fn, args, context);
++      this.socket.send('set-promise', { promiseId, success: true, value }, context);
++    } catch (e) {
++      this.socket.send(
++        'set-promise',
++        {
++          promiseId,
++          success: false,
++          error: {
++            message: e.message,
++            errorTag: e.errorTag,
++          },
++        },
++        context
++      );
+     }
+-    async get({ promiseId, propertyName }, context) {
+-        try {
+-            const value = getWithContext(this.provider, propertyName, context);
+-            this.socket.send('set-promise', { promiseId, success: true, value });
+-        }
+-        catch (e) {
+-            this.socket.send('set-promise', {
+-                promiseId,
+-                success: false,
+-                error: {
+-                    message: e.message,
+-                    errorTag: e.errorTag,
+-                },
+-            }, context);
+-        }
++  }
++  subscribe({ eventName }) {
++    // TODO: accept context, and store it with the listener!
++    if (!HasEvents_1.hasEvents(this.provider)) {
++      throw new Error('API does not support events!');
+     }
+-    async call({ promiseId, methodName, args }, context) {
+-        try {
+-            const fn = this.provider[methodName];
+-            if (fn === undefined || typeof fn !== 'function') {
+-                throw new Error(`'${methodName}' is not a function`);
+-            }
+-            const value = await callWithContext(this.provider, fn, args, context);
+-            this.socket.send('set-promise', { promiseId, success: true, value }, context);
+-        }
+-        catch (e) {
+-            this.socket.send('set-promise', {
+-                promiseId,
+-                success: false,
+-                error: {
+-                    message: e.message,
+-                    errorTag: e.errorTag,
+-                },
+-            }, context);
+-        }
++    if (this.enabledEvents.has(eventName)) {
++      return;
+     }
+-    subscribe({ eventName }) {
+-        // TODO: accept context, and store it with the listener!
+-        if (!HasEvents_1.hasEvents(this.provider)) {
+-            throw new Error('API does not support events!');
+-        }
+-        if (this.enabledEvents.has(eventName)) {
+-            return;
+-        }
+-        const handler = this.forwardEvent.bind(this, eventName);
+-        this.provider.on(eventName, handler);
+-        this.enabledEvents.set(eventName, handler);
++    const handler = this.forwardEvent.bind(this, eventName);
++    this.provider.on(eventName, handler);
++    this.enabledEvents.set(eventName, handler);
++  }
++  unsubscribe({ eventName }) {
++    if (!HasEvents_1.hasEvents(this.provider)) {
++      throw new Error('API does not support events!');
+     }
+-    unsubscribe({ eventName }) {
+-        if (!HasEvents_1.hasEvents(this.provider)) {
+-            throw new Error('API does not support events!');
+-        }
+-        const handler = this.enabledEvents.get(eventName);
+-        if (!handler) {
+-            return;
+-        }
+-        this.enabledEvents.delete(eventName);
+-        this.provider.off(eventName, handler);
++    const handler = this.enabledEvents.get(eventName);
++    if (!handler) {
++      return;
+     }
++    this.enabledEvents.delete(eventName);
++    this.provider.off(eventName, handler);
++  }
+ }
+ exports.ProviderServer = ProviderServer;
+-//# sourceMappingURL=ProviderServer.js.map
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/ProviderServer.js.map b/node_modules/@remote-ioc/runtime/lib/ProviderServer.js.map
+deleted file mode 100644
+index 05b0ec2..0000000
+--- a/node_modules/@remote-ioc/runtime/lib/ProviderServer.js.map
++++ /dev/null
+@@ -1 +0,0 @@
+-{"version":3,"file":"ProviderServer.js","sourceRoot":"","sources":["../src/ProviderServer.ts"],"names":[],"mappings":";;;AAAA,2CAAwC;AAKxC,MAAM,UAAU,GAAG,IAAI,GAAG,EAAoB,CAAC;AAE/C,SAAgB,iBAAiB,CAAI,MAAe;IAClD,OAAO,UAAU,CAAC,GAAG,CAAC,MAAM,CAAM,CAAC;AACrC,CAAC;AAFD,8CAEC;AAED,SAAS,cAAc,CAAI,MAAW,EAAE,GAAW,EAAE,OAAa;IAChE,UAAU,CAAC,GAAG,CAAC,MAAM,EAAE,OAAO,CAAC,CAAC;IAChC,IAAI;QACF,OAAO,MAAM,CAAC,GAAG,CAAC,CAAC;KACpB;YAAS;QACR,UAAU,CAAC,MAAM,CAAC,MAAM,CAAC,CAAC;KAC3B;AACH,CAAC;AAED,SAAS,eAAe,CAAI,MAAe,EAAE,EAAY,EAAE,IAAe,EAAE,OAAa;IACvF,UAAU,CAAC,GAAG,CAAC,MAAM,EAAE,OAAO,CAAC,CAAC;IAChC,IAAI;QACF,OAAO,EAAE,CAAC,KAAK,CAAC,MAAM,EAAE,IAAI,CAAC,CAAC;KAC/B;YAAS;QACR,UAAU,CAAC,MAAM,CAAC,MAAM,CAAC,CAAC;KAC3B;AACH,CAAC;AAED,MAAa,cAAc;IAIzB,YAAY,UAAa,EAAmB,QAAyB,EAAE,MAAe;QAA1C,aAAQ,GAAR,QAAQ,CAAiB;QAH7D,kBAAa,GAAG,IAAI,GAAG,EAAqD,CAAC;QAInF,IAAI,CAAC,MAAM,GAAG,MAAM,CAAC,SAAS,CAAC,UAAU,CAAC,CAAC;QAC3C,IAAI,CAAC,MAAM,CAAC,EAAE,CAAC,KAAK,EAAE,IAAI,CAAC,GAAG,CAAC,IAAI,CAAC,IAAI,CAAC,CAAC,CAAC;QAC3C,IAAI,CAAC,MAAM,CAAC,EAAE,CAAC,MAAM,EAAE,IAAI,CAAC,IAAI,CAAC,IAAI,CAAC,IAAI,CAAC,CAAC,CAAC;QAC7C,IAAI,CAAC,MAAM,CAAC,EAAE,CAAC,KAAK,EAAE,IAAI,CAAC,SAAS,CAAC,IAAI,CAAC,IAAI,CAAC,CAAC,CAAC;QACjD,IAAI,CAAC,MAAM,CAAC,EAAE,CAAC,OAAO,EAAE,IAAI,CAAC,WAAW,CAAC,IAAI,CAAC,IAAI,CAAC,CAAC,CAAC;IACvD,CAAC;IAEO,YAAY,CAAC,SAAiB,EAAE,OAAY,EAAE,OAAiB;QACrE,IAAI,CAAC,MAAM,CAAC,IAAI,CAAC,YAAY,EAAE,EAAE,SAAS,EAAE,OAAO,EAAE,EAAE,OAAO,CAAC,CAAC;IAClE,CAAC;IAEO,KAAK,CAAC,GAAG,CAAC,EAAE,SAAS,EAAE,YAAY,EAAoB,EAAE,OAAiB;QAChF,IAAI;YACF,MAAM,KAAK,GAAG,cAAc,CAAC,IAAI,CAAC,QAAQ,EAAE,YAAY,EAAE,OAAO,CAAC,CAAC;YACnE,IAAI,CAAC,MAAM,CAAC,IAAI,CAAC,aAAa,EAAE,EAAE,SAAS,EAAE,OAAO,EAAE,IAAI,EAAE,KAAK,EAAE,CAAC,CAAC;SACtE;QAAC,OAAO,CAAC,EAAE;YACV,IAAI,CAAC,MAAM,CAAC,IAAI,CACd,aAAa,EACb;gBACE,SAAS;gBACT,OAAO,EAAE,KAAK;gBACd,KAAK,EAAE;oBACL,OAAO,EAAE,CAAC,CAAC,OAAO;oBAClB,QAAQ,EAAE,CAAC,CAAC,QAAQ;iBACrB;aACF,EACD,OAAO,CACR,CAAC;SACH;IACH,CAAC;IAEO,KAAK,CAAC,IAAI,CAAC,EAAE,SAAS,EAAE,UAAU,EAAE,IAAI,EAAc,EAAE,OAAiB;QAC/E,IAAI;YACF,MAAM,EAAE,GAAG,IAAI,CAAC,QAAQ,CAAC,UAAmC,CAAC,CAAC;YAC9D,IAAI,EAAE,KAAK,SAAS,IAAI,OAAO,EAAE,KAAK,UAAU,EAAE;gBAChD,MAAM,IAAI,KAAK,CAAC,IAAI,UAAU,qBAAqB,CAAC,CAAC;aACtD;YACD,MAAM,KAAK,GAAiB,MAAM,eAAe,CAAC,IAAI,CAAC,QAAQ,EAAE,EAAE,EAAE,IAAI,EAAE,OAAO,CAAC,CAAC;YACpF,IAAI,CAAC,MAAM,CAAC,IAAI,CAAC,aAAa,EAAE,EAAE,SAAS,EAAE,OAAO,EAAE,IAAI,EAAE,KAAK,EAAE,EAAE,OAAO,CAAC,CAAC;SAC/E;QAAC,OAAO,CAAC,EAAE;YACV,IAAI,CAAC,MAAM,CAAC,IAAI,CACd,aAAa,EACb;gBACE,SAAS;gBACT,OAAO,EAAE,KAAK;gBACd,KAAK,EAAE;oBACL,OAAO,EAAE,CAAC,CAAC,OAAO;oBAClB,QAAQ,EAAE,CAAC,CAAC,QAAQ;iBACrB;aACF,EACD,OAAO,CACR,CAAC;SACH;IACH,CAAC;IAEO,SAAS,CAAC,EAAE,SAAS,EAAuB;QAClD,wDAAwD;QACxD,IAAI,CAAC,qBAAS,CAAC,IAAI,CAAC,QAAQ,CAAC,EAAE;YAC7B,MAAM,IAAI,KAAK,CAAC,8BAA8B,CAAC,CAAC;SACjD;QACD,IAAI,IAAI,CAAC,aAAa,CAAC,GAAG,CAAC,SAAS,CAAC,EAAE;YACrC,OAAO;SACR;QACD,MAAM,OAAO,GAAG,IAAI,CAAC,YAAY,CAAC,IAAI,CAAC,IAAI,EAAE,SAAS,CAAC,CAAC;QACxD,IAAI,CAAC,QAAQ,CAAC,EAAE,CAAC,SAAS,EAAE,OAAO,CAAC,CAAC;QACrC,IAAI,CAAC,aAAa,CAAC,GAAG,CAAC,SAAS,EAAE,OAAO,CAAC,CAAC;IAC7C,CAAC;IAEO,WAAW,CAAC,EAAE,SAAS,EAAuB;QACpD,IAAI,CAAC,qBAAS,CAAC,IAAI,CAAC,QAAQ,CAAC,EAAE;YAC7B,MAAM,IAAI,KAAK,CAAC,8BAA8B,CAAC,CAAC;SACjD;QACD,MAAM,OAAO,GAAG,IAAI,CAAC,aAAa,CAAC,GAAG,CAAC,SAAS,CAAC,CAAC;QAClD,IAAI,CAAC,OAAO,EAAE;YACZ,OAAO;SACR;QACD,IAAI,CAAC,aAAa,CAAC,MAAM,CAAC,SAAS,CAAC,CAAC;QACrC,IAAI,CAAC,QAAQ,CAAC,GAAG,CAAC,SAAS,EAAE,OAAO,CAAC,CAAC;IACxC,CAAC;CACF;AApFD,wCAoFC"}
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/ProxyBuilder.js b/node_modules/@remote-ioc/runtime/lib/ProxyBuilder.js
+index a6e2aa9..df10e22 100644
+--- a/node_modules/@remote-ioc/runtime/lib/ProxyBuilder.js
++++ b/node_modules/@remote-ioc/runtime/lib/ProxyBuilder.js
+@@ -1,109 +1,106 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
+ exports.buildProxyFor = void 0;
+ /* eslint-disable max-classes-per-file */
+-const Decorators_1 = require("./Decorators");
+-const HasEvents_1 = require("./HasEvents");
+-const Helpers_1 = require("./Helpers");
++const Decorators_1 = require('./Decorators');
++const HasEvents_1 = require('./HasEvents');
++const Helpers_1 = require('./Helpers');
+ const internalKeys = ['constructor', 'on', 'off', 'emit'];
+ function buildProxyFor(Definition, deferredRouter) {
+-    const definitionName = Decorators_1.ApiDefinition.nameOf(Definition);
+-    const className = `Proxy<${definitionName}>`;
+-    const classHolder = {
+-        [className]: class {
+-        },
++  const definitionName = Decorators_1.ApiDefinition.nameOf(Definition);
++  const className = `Proxy<${definitionName}>`;
++  const classHolder = {
++    [className]: class {},
++  };
++  const ApiProxyClass = classHolder[className];
++  const promises = new Helpers_1.PromiseStore();
++  const deferredSocket = deferredRouter.then((router) => router.getSocket(Definition));
++  const descriptors = [];
++  let proto = Definition.prototype;
++  do {
++    descriptors.push(...Object.entries(Object.getOwnPropertyDescriptors(proto)));
++    proto = Object.getPrototypeOf(proto);
++  } while (proto.constructor !== Object);
++  function makeAccessorDescriptor(propertyName) {
++    return {
++      async get() {
++        try {
++          const socket = await deferredSocket;
++          const [promiseId, result] = promises.create();
++          socket.send('get', { promiseId, propertyName });
++          return await result;
++        } catch (e) {
++          return Promise.reject(e);
++        }
++      },
++    };
++  }
++  function makeMethodDescriptor(methodName) {
++    return {
++      value: async (...args) => {
++        try {
++          const socket = await deferredSocket;
++          const [promiseId, result] = promises.create();
++          socket.send('call', { promiseId, methodName, args });
++          return await result;
++        } catch (e) {
++          return Promise.reject(e);
++        }
++      },
+     };
+-    const ApiProxyClass = classHolder[className];
+-    const promises = new Helpers_1.PromiseStore();
+-    const deferredSocket = deferredRouter.then((router) => router.getSocket(Definition));
+-    const descriptors = [];
+-    let proto = Definition.prototype;
+-    do {
+-        descriptors.push(...Object.entries(Object.getOwnPropertyDescriptors(proto)));
+-        proto = Object.getPrototypeOf(proto);
+-    } while (proto.constructor !== Object);
+-    function makeAccessorDescriptor(propertyName) {
+-        return {
+-            async get() {
+-                try {
+-                    const socket = await deferredSocket;
+-                    const [promiseId, result] = promises.create();
+-                    socket.send('get', { promiseId, propertyName });
+-                    return await result;
+-                }
+-                catch (e) {
+-                    return Promise.reject(e);
+-                }
+-            },
+-        };
++  }
++  // wire up event listeners
++  deferredSocket.then((socket) => {
++    socket.on('set-promise', (message) => {
++      if (message.success) {
++        promises.resolve(message.promiseId, message.value);
++      } else {
++        promises.reject(message.promiseId, message.error);
++      }
++    });
++  });
++  for (const [key, descriptor] of descriptors) {
++    if (internalKeys.includes(key)) {
++      continue;
+     }
+-    function makeMethodDescriptor(methodName) {
+-        return {
+-            value: async (...args) => {
+-                try {
+-                    const socket = await deferredSocket;
+-                    const [promiseId, result] = promises.create();
+-                    socket.send('call', { promiseId, methodName, args });
+-                    return await result;
+-                }
+-                catch (e) {
+-                    return Promise.reject(e);
+-                }
+-            },
+-        };
++    if (descriptor.get) {
++      Object.defineProperty(ApiProxyClass.prototype, key, makeAccessorDescriptor(key));
++      continue;
+     }
+-    // wire up event listeners
+-    deferredSocket.then((socket) => {
+-        socket.on('set-promise', (message) => {
+-            if (message.success) {
+-                promises.resolve(message.promiseId, message.value);
+-            }
+-            else {
+-                promises.reject(message.promiseId, message.error);
+-            }
+-        });
+-    });
+-    for (const [key, descriptor] of descriptors) {
+-        if (internalKeys.includes(key)) {
+-            continue;
+-        }
+-        if (descriptor.get) {
+-            Object.defineProperty(ApiProxyClass.prototype, key, makeAccessorDescriptor(key));
+-            continue;
++    if (typeof descriptor.value !== 'function' || !descriptor.value) {
++      throw new Error(`Invalid property type '${typeof descriptor.value}' for property '${key}'`);
++    }
++    Object.defineProperty(ApiProxyClass.prototype, key, makeMethodDescriptor(key));
++  }
++  if (HasEvents_1.hasEvents(Definition)) {
++    const eventListeners = new Helpers_1.CollectionMap();
++    Object.defineProperty(ApiProxyClass.prototype, 'on', {
++      value(eventName, handler) {
++        const listenerCount = eventListeners.push(eventName, handler);
++        // first listener of this type?
++        if (listenerCount === 1) {
++          deferredSocket.then((socket) => socket.send('sub', { eventName }));
+         }
+-        if (typeof descriptor.value !== 'function' || !descriptor.value) {
+-            throw new Error(`Invalid property type '${typeof descriptor.value}' for property '${key}'`);
++        return this;
++      },
++    });
++    Object.defineProperty(ApiProxyClass.prototype, 'off', {
++      value(eventName, handler) {
++        const oldLength = eventListeners.get(eventName).length;
++        eventListeners.remove(eventName, handler);
++        // last listener of this type?
++        if (oldLength > 0 && eventListeners.get(eventName).length === 0) {
++          deferredSocket.then((socket) => socket.send('unsub', { eventName }));
+         }
+-        Object.defineProperty(ApiProxyClass.prototype, key, makeMethodDescriptor(key));
+-    }
+-    if (HasEvents_1.hasEvents(Definition)) {
+-        const eventListeners = new Helpers_1.CollectionMap();
+-        Object.defineProperty(ApiProxyClass.prototype, 'on', {
+-            value(eventName, handler) {
+-                const listenerCount = eventListeners.push(eventName, handler);
+-                // first listener of this type?
+-                if (listenerCount === 1) {
+-                    deferredSocket.then((socket) => socket.send('sub', { eventName }));
+-                }
+-                return this;
+-            },
+-        });
+-        Object.defineProperty(ApiProxyClass.prototype, 'off', {
+-            value(eventName, handler) {
+-                const oldLength = eventListeners.get(eventName).length;
+-                eventListeners.remove(eventName, handler);
+-                // last listener of this type?
+-                if (oldLength > 0 && eventListeners.get(eventName).length === 0) {
+-                    deferredSocket.then((socket) => socket.send('unsub', { eventName }));
+-                }
+-                return this;
+-            },
+-        });
+-        deferredSocket.then((socket) => {
+-            socket.on('send-event', (message, context) => eventListeners.forEachValue(message.eventName, (handler) => handler(message.payload, context)));
+-        });
+-    }
+-    return ApiProxyClass;
++        return this;
++      },
++    });
++    deferredSocket.then((socket) => {
++      socket.on('send-event', (message, context) =>
++        eventListeners.forEachValue(message.eventName, (handler) => handler(message.payload, context))
++      );
++    });
++  }
++  return ApiProxyClass;
+ }
+ exports.buildProxyFor = buildProxyFor;
+-//# sourceMappingURL=ProxyBuilder.js.map
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/ProxyBuilder.js.map b/node_modules/@remote-ioc/runtime/lib/ProxyBuilder.js.map
+deleted file mode 100644
+index 0c684e9..0000000
+--- a/node_modules/@remote-ioc/runtime/lib/ProxyBuilder.js.map
++++ /dev/null
+@@ -1 +0,0 @@
+-{"version":3,"file":"ProxyBuilder.js","sourceRoot":"","sources":["../src/ProxyBuilder.ts"],"names":[],"mappings":"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"}
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/ProxyBuilder.test.js b/node_modules/@remote-ioc/runtime/lib/ProxyBuilder.test.js
+index 5c78871..18e858a 100644
+--- a/node_modules/@remote-ioc/runtime/lib/ProxyBuilder.test.js
++++ b/node_modules/@remote-ioc/runtime/lib/ProxyBuilder.test.js
+@@ -1,142 +1,129 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
+-const tslib_1 = require("tslib");
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
++const tslib_1 = require('tslib');
+ /* eslint-disable max-classes-per-file */
+-const events_1 = require("events");
+-const Decorators_1 = require("./Decorators");
+-const FunctionalApi_1 = require("./FunctionalApi");
+-const ProxyBuilder_1 = require("./ProxyBuilder");
+-const RuntimeContext_1 = require("./RuntimeContext");
++const events_1 = require('events');
++const Decorators_1 = require('./Decorators');
++const FunctionalApi_1 = require('./FunctionalApi');
++const ProxyBuilder_1 = require('./ProxyBuilder');
++const RuntimeContext_1 = require('./RuntimeContext');
+ describe('ProxyBuilder', () => {
+-    class MockSocket {
+-        constructor() {
+-            this.close = jest.fn();
+-            this.off = jest.fn();
+-            this.on = jest.fn();
+-            this.send = jest.fn();
+-        }
++  class MockSocket {
++    constructor() {
++      this.close = jest.fn();
++      this.off = jest.fn();
++      this.on = jest.fn();
++      this.send = jest.fn();
+     }
+-    class MockRouter extends events_1.EventEmitter {
+-        constructor(socket = new MockSocket()) {
+-            super();
+-            this.socket = socket;
+-            this.getServer = jest.fn(() => this.socket);
+-            this.getSocket = jest.fn(() => this.socket);
+-            this.queryDefinition = jest.fn();
+-            this.registerProvider = jest.fn();
+-        }
++  }
++  class MockRouter extends events_1.EventEmitter {
++    constructor(socket = new MockSocket()) {
++      super();
++      this.socket = socket;
++      this.getServer = jest.fn(() => this.socket);
++      this.getSocket = jest.fn(() => this.socket);
++      this.queryDefinition = jest.fn();
++      this.registerProvider = jest.fn();
+     }
+-    afterEach(() => {
+-        RuntimeContext_1.resetRuntime();
++  }
++  afterEach(() => {
++    RuntimeContext_1.resetRuntime();
++  });
++  it('class name', () => {
++    let Definition = class Definition {};
++    Definition = tslib_1.__decorate([Decorators_1.ApiDefinition('my-api')], Definition);
++    const router = FunctionalApi_1.useRouter(MockRouter);
++    const ProxyClass = ProxyBuilder_1.buildProxyFor(Definition, Promise.resolve(router));
++    expect(ProxyClass.name).toEqual('Proxy<my-api>');
++  });
++  it('method', async () => {
++    let Definition = class Definition {
++      method(arg0) {
++        Decorators_1.methodStub(this, arg0);
++      }
++    };
++    Definition = tslib_1.__decorate([Decorators_1.ApiDefinition('my-api')], Definition);
++    const socket = new MockSocket();
++    const router = FunctionalApi_1.useRouter(MockRouter, socket);
++    router.queryDefinition.mockResolvedValue(true);
++    socket.send.mockImplementationOnce((_channel, { promiseId }) => {
++      const handler = socket.on.mock.calls[0][1];
++      handler({ promiseId, success: true, value: 'bar' });
+     });
+-    it('class name', () => {
+-        let Definition = class Definition {
+-        };
+-        Definition = tslib_1.__decorate([
+-            Decorators_1.ApiDefinition('my-api')
+-        ], Definition);
+-        const router = FunctionalApi_1.useRouter(MockRouter);
+-        const ProxyClass = ProxyBuilder_1.buildProxyFor(Definition, Promise.resolve(router));
+-        expect(ProxyClass.name).toEqual('Proxy<my-api>');
++    const ProxyClass = ProxyBuilder_1.buildProxyFor(Definition, Promise.resolve(router));
++    const proxy = new ProxyClass();
++    await expect(proxy.method('foo')).resolves.toEqual('bar');
++    expect(socket.send).toBeCalledWith('call', { methodName: 'method', promiseId: expect.any(String), args: ['foo'] });
++    expect(router.getSocket).toBeCalledWith(Definition);
++  });
++  it('method:error', async () => {
++    let Definition = class Definition {
++      method(arg0) {
++        Decorators_1.methodStub(this, arg0);
++      }
++    };
++    Definition = tslib_1.__decorate([Decorators_1.ApiDefinition('my-api')], Definition);
++    const socket = new MockSocket();
++    const router = FunctionalApi_1.useRouter(MockRouter, socket);
++    router.queryDefinition.mockResolvedValue(true);
++    socket.send.mockImplementationOnce((_channel, { promiseId }) => {
++      const handler = socket.on.mock.calls[0][1];
++      handler({ promiseId, success: false, error: new Error('bar') });
+     });
+-    it('method', async () => {
+-        let Definition = class Definition {
+-            method(arg0) {
+-                Decorators_1.methodStub(this, arg0);
+-            }
+-        };
+-        Definition = tslib_1.__decorate([
+-            Decorators_1.ApiDefinition('my-api')
+-        ], Definition);
+-        const socket = new MockSocket();
+-        const router = FunctionalApi_1.useRouter(MockRouter, socket);
+-        router.queryDefinition.mockResolvedValue(true);
+-        socket.send.mockImplementationOnce((_channel, { promiseId }) => {
+-            const handler = socket.on.mock.calls[0][1];
+-            handler({ promiseId, success: true, value: 'bar' });
+-        });
+-        const ProxyClass = ProxyBuilder_1.buildProxyFor(Definition, Promise.resolve(router));
+-        const proxy = new ProxyClass();
+-        await expect(proxy.method('foo')).resolves.toEqual('bar');
+-        expect(socket.send).toBeCalledWith('call', { methodName: 'method', promiseId: expect.any(String), args: ['foo'] });
+-        expect(router.getSocket).toBeCalledWith(Definition);
++    const ProxyClass = ProxyBuilder_1.buildProxyFor(Definition, Promise.resolve(router));
++    const proxy = new ProxyClass();
++    await expect(proxy.method('foo')).rejects.toThrowError(new Error('bar'));
++    expect(socket.send).toBeCalledWith('call', { methodName: 'method', promiseId: expect.any(String), args: ['foo'] });
++    expect(router.getSocket).toBeCalledWith(Definition);
++  });
++  it('property', async () => {
++    let Definition = class Definition {
++      get property() {
++        return Decorators_1.methodStub(this);
++      }
++    };
++    Definition = tslib_1.__decorate([Decorators_1.ApiDefinition('my-api')], Definition);
++    const socket = new MockSocket();
++    const router = FunctionalApi_1.useRouter(MockRouter, socket);
++    router.queryDefinition.mockResolvedValue(true);
++    socket.send.mockImplementationOnce((_channel, { promiseId }) => {
++      const handler = socket.on.mock.calls[0][1];
++      handler({ promiseId, success: true, value: 'bar' });
+     });
+-    it('method:error', async () => {
+-        let Definition = class Definition {
+-            method(arg0) {
+-                Decorators_1.methodStub(this, arg0);
+-            }
+-        };
+-        Definition = tslib_1.__decorate([
+-            Decorators_1.ApiDefinition('my-api')
+-        ], Definition);
+-        const socket = new MockSocket();
+-        const router = FunctionalApi_1.useRouter(MockRouter, socket);
+-        router.queryDefinition.mockResolvedValue(true);
+-        socket.send.mockImplementationOnce((_channel, { promiseId }) => {
+-            const handler = socket.on.mock.calls[0][1];
+-            handler({ promiseId, success: false, error: new Error('bar') });
+-        });
+-        const ProxyClass = ProxyBuilder_1.buildProxyFor(Definition, Promise.resolve(router));
+-        const proxy = new ProxyClass();
+-        await expect(proxy.method('foo')).rejects.toThrowError(new Error('bar'));
+-        expect(socket.send).toBeCalledWith('call', { methodName: 'method', promiseId: expect.any(String), args: ['foo'] });
+-        expect(router.getSocket).toBeCalledWith(Definition);
+-    });
+-    it('property', async () => {
+-        let Definition = class Definition {
+-            get property() {
+-                return Decorators_1.methodStub(this);
+-            }
+-        };
+-        Definition = tslib_1.__decorate([
+-            Decorators_1.ApiDefinition('my-api')
+-        ], Definition);
+-        const socket = new MockSocket();
+-        const router = FunctionalApi_1.useRouter(MockRouter, socket);
+-        router.queryDefinition.mockResolvedValue(true);
+-        socket.send.mockImplementationOnce((_channel, { promiseId }) => {
+-            const handler = socket.on.mock.calls[0][1];
+-            handler({ promiseId, success: true, value: 'bar' });
+-        });
+-        const ProxyClass = ProxyBuilder_1.buildProxyFor(Definition, Promise.resolve(router));
+-        const proxy = new ProxyClass();
+-        await expect(proxy.property).resolves.toEqual('bar');
+-        expect(socket.send).toBeCalledWith('get', { promiseId: expect.any(String), propertyName: 'property' });
+-        expect(router.getSocket).toBeCalledWith(Definition);
+-    });
+-    it('property:value', () => {
+-        let Definition = class Definition {
+-        };
+-        Definition = tslib_1.__decorate([
+-            Decorators_1.ApiDefinition('my-api')
+-        ], Definition);
+-        // @ts-ignore force invalid API shape
+-        Definition.prototype.property = 'foo';
+-        const router = FunctionalApi_1.useRouter(MockRouter);
+-        expect(() => ProxyBuilder_1.buildProxyFor(Definition, Promise.resolve(router))).toThrowError(new Error(`Invalid property type 'string' for property 'property'`));
+-    });
+-    it('property:error', async () => {
+-        let Definition = class Definition {
+-            get property() {
+-                return Decorators_1.methodStub(this);
+-            }
+-        };
+-        Definition = tslib_1.__decorate([
+-            Decorators_1.ApiDefinition('my-api')
+-        ], Definition);
+-        const socket = new MockSocket();
+-        const router = FunctionalApi_1.useRouter(MockRouter, socket);
+-        router.queryDefinition.mockResolvedValue(true);
+-        socket.send.mockImplementationOnce((_channel, { promiseId }) => {
+-            const handler = socket.on.mock.calls[0][1];
+-            handler({ promiseId, success: false, error: new Error('bar') });
+-        });
+-        const ProxyClass = ProxyBuilder_1.buildProxyFor(Definition, Promise.resolve(router));
+-        const proxy = new ProxyClass();
+-        await expect(proxy.property).rejects.toThrowError(new Error('bar'));
+-        expect(socket.send).toBeCalledWith('get', { promiseId: expect.any(String), propertyName: 'property' });
+-        expect(router.getSocket).toBeCalledWith(Definition);
++    const ProxyClass = ProxyBuilder_1.buildProxyFor(Definition, Promise.resolve(router));
++    const proxy = new ProxyClass();
++    await expect(proxy.property).resolves.toEqual('bar');
++    expect(socket.send).toBeCalledWith('get', { promiseId: expect.any(String), propertyName: 'property' });
++    expect(router.getSocket).toBeCalledWith(Definition);
++  });
++  it('property:value', () => {
++    let Definition = class Definition {};
++    Definition = tslib_1.__decorate([Decorators_1.ApiDefinition('my-api')], Definition);
++    // @ts-ignore force invalid API shape
++    Definition.prototype.property = 'foo';
++    const router = FunctionalApi_1.useRouter(MockRouter);
++    expect(() => ProxyBuilder_1.buildProxyFor(Definition, Promise.resolve(router))).toThrowError(
++      new Error(`Invalid property type 'string' for property 'property'`)
++    );
++  });
++  it('property:error', async () => {
++    let Definition = class Definition {
++      get property() {
++        return Decorators_1.methodStub(this);
++      }
++    };
++    Definition = tslib_1.__decorate([Decorators_1.ApiDefinition('my-api')], Definition);
++    const socket = new MockSocket();
++    const router = FunctionalApi_1.useRouter(MockRouter, socket);
++    router.queryDefinition.mockResolvedValue(true);
++    socket.send.mockImplementationOnce((_channel, { promiseId }) => {
++      const handler = socket.on.mock.calls[0][1];
++      handler({ promiseId, success: false, error: new Error('bar') });
+     });
++    const ProxyClass = ProxyBuilder_1.buildProxyFor(Definition, Promise.resolve(router));
++    const proxy = new ProxyClass();
++    await expect(proxy.property).rejects.toThrowError(new Error('bar'));
++    expect(socket.send).toBeCalledWith('get', { promiseId: expect.any(String), propertyName: 'property' });
++    expect(router.getSocket).toBeCalledWith(Definition);
++  });
+ });
+-//# sourceMappingURL=ProxyBuilder.test.js.map
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/ProxyBuilder.test.js.map b/node_modules/@remote-ioc/runtime/lib/ProxyBuilder.test.js.map
+deleted file mode 100644
+index cc9f682..0000000
+--- a/node_modules/@remote-ioc/runtime/lib/ProxyBuilder.test.js.map
++++ /dev/null
+@@ -1 +0,0 @@
+-{"version":3,"file":"ProxyBuilder.test.js","sourceRoot":"","sources":["../src/ProxyBuilder.test.ts"],"names":[],"mappings":"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"}
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/RouterBase.js b/node_modules/@remote-ioc/runtime/lib/RouterBase.js
+index c41d8cc..9af729f 100644
+--- a/node_modules/@remote-ioc/runtime/lib/RouterBase.js
++++ b/node_modules/@remote-ioc/runtime/lib/RouterBase.js
+@@ -1,44 +1,47 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
+ exports.RouterBase = void 0;
+-const events_1 = require("events");
+-const Decorators_1 = require("./Decorators");
+-const ProviderServer_1 = require("./ProviderServer");
+-const RuntimeContext_1 = require("./RuntimeContext");
++const events_1 = require('events');
++const Decorators_1 = require('./Decorators');
++const ProviderServer_1 = require('./ProviderServer');
++const RuntimeContext_1 = require('./RuntimeContext');
+ class RouterBase extends events_1.EventEmitter {
+-    constructor() {
+-        super(...arguments);
+-        this.providers = new Set();
+-        this.serverMap = new Map();
++  constructor() {
++    super(...arguments);
++    this.providers = new Set();
++    this.serverMap = new Map();
++  }
++  getSocket(Definition) {
++    return this.getSocketCore(Definition);
++  }
++  async queryDefinition(Definition) {
++    const defName = Decorators_1.ApiDefinition.nameOf(Definition);
++    for (const provider of this.providers) {
++      if (
++        Decorators_1.ApiProvider.implementationsOf(provider).some(
++          (definition) => Decorators_1.ApiDefinition.nameOf(definition) === defName
++        )
++      ) {
++        return true;
++      }
+     }
+-    getSocket(Definition) {
+-        return this.getSocketCore(Definition);
++    return false;
++  }
++  registerProvider(Provider) {
++    this.providers.add(Provider);
++    for (const definition of Decorators_1.ApiProvider.implementationsOf(Provider)) {
++      this.createServer(definition, Provider);
+     }
+-    async queryDefinition(Definition) {
+-        const defName = Decorators_1.ApiDefinition.nameOf(Definition);
+-        for (const provider of this.providers) {
+-            if (Decorators_1.ApiProvider.implementationsOf(provider).some((definition) => Decorators_1.ApiDefinition.nameOf(definition) === defName)) {
+-                return true;
+-            }
+-        }
+-        return false;
+-    }
+-    registerProvider(Provider) {
+-        this.providers.add(Provider);
+-        for (const definition of Decorators_1.ApiProvider.implementationsOf(Provider)) {
+-            this.createServer(definition, Provider);
+-        }
+-        return this;
+-    }
+-    createServer(Definition, Provider) {
+-        if (this.serverMap.get(Definition)) {
+-            return this;
+-        }
+-        const provider = RuntimeContext_1.getRuntime().getProviderServer(Provider);
+-        const server = new ProviderServer_1.ProviderServer(Definition, provider, this);
+-        this.serverMap.set(Definition, server);
+-        return this;
++    return this;
++  }
++  createServer(Definition, Provider) {
++    if (this.serverMap.get(Definition)) {
++      return this;
+     }
++    const provider = RuntimeContext_1.getRuntime().getProviderServer(Provider);
++    const server = new ProviderServer_1.ProviderServer(Definition, provider, this);
++    this.serverMap.set(Definition, server);
++    return this;
++  }
+ }
+ exports.RouterBase = RouterBase;
+-//# sourceMappingURL=RouterBase.js.map
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/RouterBase.js.map b/node_modules/@remote-ioc/runtime/lib/RouterBase.js.map
+deleted file mode 100644
+index 5b4fc69..0000000
+--- a/node_modules/@remote-ioc/runtime/lib/RouterBase.js.map
++++ /dev/null
+@@ -1 +0,0 @@
+-{"version":3,"file":"RouterBase.js","sourceRoot":"","sources":["../src/RouterBase.ts"],"names":[],"mappings":";;;AAAA,mCAAsC;AACtC,6CAA0D;AAE1D,qDAAkD;AAClD,qDAA8C;AAG9C,MAAsB,UAAW,SAAQ,qBAAY;IAArD;;QACY,cAAS,GAAG,IAAI,GAAG,EAAe,CAAC;QACnC,cAAS,GAAG,IAAI,GAAG,EAA+B,CAAC;IAqC/D,CAAC;IAnCQ,SAAS,CACd,UAAuB;QAEvB,OAAO,IAAI,CAAC,aAAa,CAAC,UAAU,CAAqB,CAAC;IAC5D,CAAC;IAIM,KAAK,CAAC,eAAe,CAAC,UAAuB;QAClD,MAAM,OAAO,GAAG,0BAAa,CAAC,MAAM,CAAC,UAAU,CAAC,CAAC;QACjD,KAAK,MAAM,QAAQ,IAAI,IAAI,CAAC,SAAS,EAAE;YACrC,IAAI,wBAAW,CAAC,iBAAiB,CAAC,QAAQ,CAAC,CAAC,IAAI,CAAC,CAAC,UAAU,EAAE,EAAE,CAAC,0BAAa,CAAC,MAAM,CAAC,UAAU,CAAC,KAAK,OAAO,CAAC,EAAE;gBAC9G,OAAO,IAAI,CAAC;aACb;SACF;QACD,OAAO,KAAK,CAAC;IACf,CAAC;IAEM,gBAAgB,CAAwB,QAAW;QACxD,IAAI,CAAC,SAAS,CAAC,GAAG,CAAC,QAAQ,CAAC,CAAC;QAC7B,KAAK,MAAM,UAAU,IAAI,wBAAW,CAAC,iBAAiB,CAAC,QAAQ,CAAC,EAAE;YAChE,IAAI,CAAC,YAAY,CAAC,UAAU,EAAE,QAAQ,CAAC,CAAC;SACzC;QACD,OAAO,IAAI,CAAC;IACd,CAAC;IAES,YAAY,CAAqC,UAAa,EAAE,QAAW;QACnF,IAAI,IAAI,CAAC,SAAS,CAAC,GAAG,CAAC,UAAU,CAAC,EAAE;YAClC,OAAO,IAAI,CAAC;SACb;QACD,MAAM,QAAQ,GAAG,2BAAU,EAAE,CAAC,iBAAiB,CAAC,QAAQ,CAAoB,CAAC;QAC7E,MAAM,MAAM,GAAG,IAAI,+BAAc,CAAC,UAAU,EAAE,QAAQ,EAAE,IAAI,CAAC,CAAC;QAC9D,IAAI,CAAC,SAAS,CAAC,GAAG,CAAC,UAAU,EAAE,MAAM,CAAC,CAAC;QACvC,OAAO,IAAI,CAAC;IACd,CAAC;CACF;AAvCD,gCAuCC"}
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/RouterContext.js b/node_modules/@remote-ioc/runtime/lib/RouterContext.js
+index fe37a31..58c7122 100644
+--- a/node_modules/@remote-ioc/runtime/lib/RouterContext.js
++++ b/node_modules/@remote-ioc/runtime/lib/RouterContext.js
+@@ -1,21 +1,20 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
+ exports.RouterContext = void 0;
+ /**
+  * Manages multiple routers and provides find capabilities for APIs
+  */
+ class RouterContext {
+-    constructor() {
+-        this.routers = new Set();
+-    }
+-    /**
+-     * Adds a router to the collection
+-     * @param router
+-     */
+-    addRouter(router) {
+-        this.routers.add(router);
+-        return this;
+-    }
++  constructor() {
++    this.routers = new Set();
++  }
++  /**
++   * Adds a router to the collection
++   * @param router
++   */
++  addRouter(router) {
++    this.routers.add(router);
++    return this;
++  }
+ }
+ exports.RouterContext = RouterContext;
+-//# sourceMappingURL=RouterContext.js.map
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/RouterContext.js.map b/node_modules/@remote-ioc/runtime/lib/RouterContext.js.map
+deleted file mode 100644
+index 416832d..0000000
+--- a/node_modules/@remote-ioc/runtime/lib/RouterContext.js.map
++++ /dev/null
+@@ -1 +0,0 @@
+-{"version":3,"file":"RouterContext.js","sourceRoot":"","sources":["../src/RouterContext.ts"],"names":[],"mappings":";;;AAEA;;GAEG;AACH,MAAa,aAAa;IAA1B;QACU,YAAO,GAAG,IAAI,GAAG,EAAW,CAAC;IAUvC,CAAC;IARC;;;OAGG;IACH,SAAS,CAAC,MAAe;QACvB,IAAI,CAAC,OAAO,CAAC,GAAG,CAAC,MAAM,CAAC,CAAC;QACzB,OAAO,IAAI,CAAC;IACd,CAAC;CACF;AAXD,sCAWC"}
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/Runtime.js b/node_modules/@remote-ioc/runtime/lib/Runtime.js
+index eb82759..7633801 100644
+--- a/node_modules/@remote-ioc/runtime/lib/Runtime.js
++++ b/node_modules/@remote-ioc/runtime/lib/Runtime.js
+@@ -1,68 +1,69 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
+ exports.Runtime = void 0;
+ /* eslint-disable @typescript-eslint/no-unused-vars */
+ /* eslint-disable class-methods-use-this */
+-const Decorators_1 = require("./Decorators");
+-const Helpers_1 = require("./Helpers");
+-const ProxyBuilder_1 = require("./ProxyBuilder");
++const Decorators_1 = require('./Decorators');
++const Helpers_1 = require('./Helpers');
++const ProxyBuilder_1 = require('./ProxyBuilder');
+ class Runtime {
+-    constructor() {
+-        this.definitions = new Map();
+-        this.routers = new Set();
+-        this.definitionProxyMap = new Helpers_1.DefaultedMap((Definition) => ProxyBuilder_1.buildProxyFor(Definition, this.request(Definition)));
+-        this.definitionAvailability = new Helpers_1.AvailabilityMap();
+-        this.providers = new Set();
+-        this.providerMap = new Helpers_1.DefaultedMap((Provider) => new Provider());
+-        this.onFirstRequest = async (Definition) => {
+-            const fanout = Array.from(this.routers.values()).map(async (router) => {
+-                const hasProvider = await router.queryDefinition(Definition);
+-                if (hasProvider) {
+-                    this.definitionAvailability.resolve(Definition, router);
+-                }
+-            });
+-            await Promise.all(fanout);
+-        };
+-        this.onDiscover = (router, definitions) => {
+-            for (const defName of definitions) {
+-                const Definition = this.definitions.get(defName);
+-                if (!Definition) {
+-                    continue;
+-                }
+-                this.definitionAvailability.resolve(Definition, router);
+-            }
+-        };
+-        this.definitionAvailability.on('request', this.onFirstRequest);
+-    }
+-    registerDefinition(Definition) {
+-        this.definitions.set(Decorators_1.ApiDefinition.nameOf(Definition), Definition);
+-        return this;
+-    }
+-    request(Definition) {
+-        return this.definitionAvailability.request(Definition);
+-    }
+-    useRouter(router) {
+-        this.routers.add(router);
+-        router.on('discover', this.onDiscover.bind(this, router));
+-        for (const provider of this.providers) {
+-            router.registerProvider(provider);
++  constructor() {
++    this.definitions = new Map();
++    this.routers = new Set();
++    this.definitionProxyMap = new Helpers_1.DefaultedMap((Definition) =>
++      ProxyBuilder_1.buildProxyFor(Definition, this.request(Definition))
++    );
++    this.definitionAvailability = new Helpers_1.AvailabilityMap();
++    this.providers = new Set();
++    this.providerMap = new Helpers_1.DefaultedMap((Provider) => new Provider());
++    this.onFirstRequest = async (Definition) => {
++      const fanout = Array.from(this.routers.values()).map(async (router) => {
++        const hasProvider = await router.queryDefinition(Definition);
++        if (hasProvider) {
++          this.definitionAvailability.resolve(Definition, router);
+         }
+-        return this;
+-    }
+-    registerProvider(Provider) {
+-        this.providers.add(Provider);
+-        for (const router of this.routers) {
+-            router.registerProvider(Provider);
++      });
++      await Promise.all(fanout);
++    };
++    this.onDiscover = (router, definitions) => {
++      for (const defName of definitions) {
++        const Definition = this.definitions.get(defName);
++        if (!Definition) {
++          continue;
+         }
+-        return this;
+-    }
+-    getProviderServer(Provider) {
+-        return this.providerMap.get(Provider);
++        this.definitionAvailability.resolve(Definition, router);
++      }
++    };
++    this.definitionAvailability.on('request', this.onFirstRequest);
++  }
++  registerDefinition(Definition) {
++    this.definitions.set(Decorators_1.ApiDefinition.nameOf(Definition), Definition);
++    return this;
++  }
++  request(Definition) {
++    return this.definitionAvailability.request(Definition);
++  }
++  useRouter(router) {
++    this.routers.add(router);
++    router.on('discover', this.onDiscover.bind(this, router));
++    for (const provider of this.providers) {
++      router.registerProvider(provider);
+     }
+-    getProvider(Definition) {
+-        const ProxyClass = this.definitionProxyMap.get(Definition);
+-        return new ProxyClass();
++    return this;
++  }
++  registerProvider(Provider) {
++    this.providers.add(Provider);
++    for (const router of this.routers) {
++      router.registerProvider(Provider);
+     }
++    return this;
++  }
++  getProviderServer(Provider) {
++    return this.providerMap.get(Provider);
++  }
++  getProvider(Definition) {
++    const ProxyClass = this.definitionProxyMap.get(Definition);
++    return new ProxyClass();
++  }
+ }
+ exports.Runtime = Runtime;
+-//# sourceMappingURL=Runtime.js.map
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/Runtime.js.map b/node_modules/@remote-ioc/runtime/lib/Runtime.js.map
+deleted file mode 100644
+index 038fa9d..0000000
+--- a/node_modules/@remote-ioc/runtime/lib/Runtime.js.map
++++ /dev/null
+@@ -1 +0,0 @@
+-{"version":3,"file":"Runtime.js","sourceRoot":"","sources":["../src/Runtime.ts"],"names":[],"mappings":"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"}
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/RuntimeContext.js b/node_modules/@remote-ioc/runtime/lib/RuntimeContext.js
+index a50c1f2..e59ac53 100644
+--- a/node_modules/@remote-ioc/runtime/lib/RuntimeContext.js
++++ b/node_modules/@remote-ioc/runtime/lib/RuntimeContext.js
+@@ -1,47 +1,45 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
+ exports.resetRuntime = exports.getRuntime = exports.useRuntime = exports.getLoopback = void 0;
+-const Loopback_1 = require("./Loopback");
+-const Runtime_1 = require("./Runtime");
++const Loopback_1 = require('./Loopback');
++const Runtime_1 = require('./Runtime');
+ let loopback;
+ function getLoopback() {
+-    if (process.env.DISABLE_LOOPBACK === '1') {
+-        return undefined;
+-    }
+-    if (!loopback) {
+-        loopback = new Loopback_1.Loopback();
+-    }
+-    return loopback;
++  if (process.env.DISABLE_LOOPBACK === '1') {
++    return undefined;
++  }
++  if (!loopback) {
++    loopback = new Loopback_1.Loopback();
++  }
++  return loopback;
+ }
+ exports.getLoopback = getLoopback;
+ let rootRuntime;
+ let currentRuntime;
+ function useRuntime(runtime, withinScope) {
+-    const originalRuntime = currentRuntime;
+-    try {
+-        currentRuntime = runtime;
+-        return withinScope();
+-    }
+-    finally {
+-        currentRuntime = originalRuntime;
+-    }
++  const originalRuntime = currentRuntime;
++  try {
++    currentRuntime = runtime;
++    return withinScope();
++  } finally {
++    currentRuntime = originalRuntime;
++  }
+ }
+ exports.useRuntime = useRuntime;
+ function getRuntime() {
+-    if (currentRuntime) {
+-        return currentRuntime;
+-    }
+-    if (!rootRuntime) {
+-        rootRuntime = new Runtime_1.Runtime();
+-    }
+-    return rootRuntime;
++  if (currentRuntime) {
++    return currentRuntime;
++  }
++  if (!rootRuntime) {
++    rootRuntime = new Runtime_1.Runtime();
++  }
++  return rootRuntime;
+ }
+ exports.getRuntime = getRuntime;
+ function resetRuntime() {
+-    if (currentRuntime) {
+-        throw new Error('Cannot reset runtime within a useRuntime scope');
+-    }
+-    rootRuntime = undefined;
++  if (currentRuntime) {
++    throw new Error('Cannot reset runtime within a useRuntime scope');
++  }
++  rootRuntime = undefined;
+ }
+ exports.resetRuntime = resetRuntime;
+-//# sourceMappingURL=RuntimeContext.js.map
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/RuntimeContext.js.map b/node_modules/@remote-ioc/runtime/lib/RuntimeContext.js.map
+deleted file mode 100644
+index 4e00657..0000000
+--- a/node_modules/@remote-ioc/runtime/lib/RuntimeContext.js.map
++++ /dev/null
+@@ -1 +0,0 @@
+-{"version":3,"file":"RuntimeContext.js","sourceRoot":"","sources":["../src/RuntimeContext.ts"],"names":[],"mappings":";;;AACA,yCAAsC;AACtC,uCAAoC;AAEpC,IAAI,QAA8B,CAAC;AAEnC,SAAgB,WAAW;IACzB,IAAI,OAAO,CAAC,GAAG,CAAC,gBAAgB,KAAK,GAAG,EAAE;QACxC,OAAO,SAAS,CAAC;KAClB;IACD,IAAI,CAAC,QAAQ,EAAE;QACb,QAAQ,GAAG,IAAI,mBAAQ,EAAE,CAAC;KAC3B;IACD,OAAO,QAAQ,CAAC;AAClB,CAAC;AARD,kCAQC;AAED,IAAI,WAAiC,CAAC;AACtC,IAAI,cAAwB,CAAC;AAE7B,SAAgB,UAAU,CAAI,OAAiB,EAAE,WAAoB;IACnE,MAAM,eAAe,GAAG,cAAc,CAAC;IACvC,IAAI;QACF,cAAc,GAAG,OAAO,CAAC;QACzB,OAAO,WAAW,EAAE,CAAC;KACtB;YAAS;QACR,cAAc,GAAG,eAAe,CAAC;KAClC;AACH,CAAC;AARD,gCAQC;AAED,SAAgB,UAAU;IACxB,IAAI,cAAc,EAAE;QAClB,OAAO,cAAc,CAAC;KACvB;IACD,IAAI,CAAC,WAAW,EAAE;QAChB,WAAW,GAAG,IAAI,iBAAO,EAAE,CAAC;KAC7B;IACD,OAAO,WAAW,CAAC;AACrB,CAAC;AARD,gCAQC;AAED,SAAgB,YAAY;IAC1B,IAAI,cAAc,EAAE;QAClB,MAAM,IAAI,KAAK,CAAC,gDAAgD,CAAC,CAAC;KACnE;IACD,WAAW,GAAG,SAAS,CAAC;AAC1B,CAAC;AALD,oCAKC"}
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/RuntimeContext.test.js b/node_modules/@remote-ioc/runtime/lib/RuntimeContext.test.js
+index fd4460c..5acc40a 100644
+--- a/node_modules/@remote-ioc/runtime/lib/RuntimeContext.test.js
++++ b/node_modules/@remote-ioc/runtime/lib/RuntimeContext.test.js
+@@ -1,19 +1,20 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
+-const Runtime_1 = require("./Runtime");
+-const RuntimeContext_1 = require("./RuntimeContext");
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
++const Runtime_1 = require('./Runtime');
++const RuntimeContext_1 = require('./RuntimeContext');
+ describe('RuntimeContext', () => {
+-    describe('resetRuntime', () => {
+-        it('uninitialized', () => {
+-            RuntimeContext_1.resetRuntime();
+-        });
+-        it('initialized', () => {
+-            RuntimeContext_1.getRuntime();
+-            RuntimeContext_1.resetRuntime();
+-        });
+-        it('in scope', () => {
+-            expect(() => RuntimeContext_1.useRuntime(new Runtime_1.Runtime(), RuntimeContext_1.resetRuntime)).toThrowError('Cannot reset runtime within a useRuntime scope');
+-        });
++  describe('resetRuntime', () => {
++    it('uninitialized', () => {
++      RuntimeContext_1.resetRuntime();
+     });
++    it('initialized', () => {
++      RuntimeContext_1.getRuntime();
++      RuntimeContext_1.resetRuntime();
++    });
++    it('in scope', () => {
++      expect(() => RuntimeContext_1.useRuntime(new Runtime_1.Runtime(), RuntimeContext_1.resetRuntime)).toThrowError(
++        'Cannot reset runtime within a useRuntime scope'
++      );
++    });
++  });
+ });
+-//# sourceMappingURL=RuntimeContext.test.js.map
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/RuntimeContext.test.js.map b/node_modules/@remote-ioc/runtime/lib/RuntimeContext.test.js.map
+deleted file mode 100644
+index b55a172..0000000
+--- a/node_modules/@remote-ioc/runtime/lib/RuntimeContext.test.js.map
++++ /dev/null
+@@ -1 +0,0 @@
+-{"version":3,"file":"RuntimeContext.test.js","sourceRoot":"","sources":["../src/RuntimeContext.test.ts"],"names":[],"mappings":";;AAAA,uCAAoC;AACpC,qDAAwE;AAExE,QAAQ,CAAC,gBAAgB,EAAE,GAAG,EAAE;IAC9B,QAAQ,CAAC,cAAc,EAAE,GAAG,EAAE;QAC5B,EAAE,CAAC,eAAe,EAAE,GAAG,EAAE;YACvB,6BAAY,EAAE,CAAC;QACjB,CAAC,CAAC,CAAC;QACH,EAAE,CAAC,aAAa,EAAE,GAAG,EAAE;YACrB,2BAAU,EAAE,CAAC;YACb,6BAAY,EAAE,CAAC;QACjB,CAAC,CAAC,CAAC;QACH,EAAE,CAAC,UAAU,EAAE,GAAG,EAAE;YAClB,MAAM,CAAC,GAAG,EAAE,CAAC,2BAAU,CAAC,IAAI,iBAAO,EAAE,EAAE,6BAAY,CAAC,CAAC,CAAC,YAAY,CAChE,gDAAgD,CACjD,CAAC;QACJ,CAAC,CAAC,CAAC;IACL,CAAC,CAAC,CAAC;AACL,CAAC,CAAC,CAAC"}
+\ No newline at end of file
+diff --git a/node_modules/@remote-ioc/runtime/lib/Types/Constructor.js b/node_modules/@remote-ioc/runtime/lib/Types/Constructor.js
+index f0739f9..db8b17d 100644
+--- a/node_modules/@remote-ioc/runtime/lib/Types/Constructor.js
++++ b/node_modules/@remote-ioc/runtime/lib/Types/Constructor.js
+@@ -1,3 +1,2 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
+-//# sourceMappingURL=Constructor.js.map
+\ No newline at end of file
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
+diff --git a/node_modules/@remote-ioc/runtime/lib/Types/PromiseTypes.js b/node_modules/@remote-ioc/runtime/lib/Types/PromiseTypes.js
+index 51cd621..db8b17d 100644
+--- a/node_modules/@remote-ioc/runtime/lib/Types/PromiseTypes.js
++++ b/node_modules/@remote-ioc/runtime/lib/Types/PromiseTypes.js
+@@ -1,3 +1,2 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
+-//# sourceMappingURL=PromiseTypes.js.map
+\ No newline at end of file
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
+diff --git a/node_modules/@remote-ioc/runtime/lib/Types/StaticError.js b/node_modules/@remote-ioc/runtime/lib/Types/StaticError.js
+index 3887694..db8b17d 100644
+--- a/node_modules/@remote-ioc/runtime/lib/Types/StaticError.js
++++ b/node_modules/@remote-ioc/runtime/lib/Types/StaticError.js
+@@ -1,3 +1,2 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
+-//# sourceMappingURL=StaticError.js.map
+\ No newline at end of file
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
+diff --git a/node_modules/@remote-ioc/runtime/lib/Types/index.js b/node_modules/@remote-ioc/runtime/lib/Types/index.js
+index 975876c..d0a7ba6 100644
+--- a/node_modules/@remote-ioc/runtime/lib/Types/index.js
++++ b/node_modules/@remote-ioc/runtime/lib/Types/index.js
+@@ -1,7 +1,6 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
+-const tslib_1 = require("tslib");
+-tslib_1.__exportStar(require("./Constructor"), exports);
+-tslib_1.__exportStar(require("./PromiseTypes"), exports);
+-tslib_1.__exportStar(require("./StaticError"), exports);
+-//# sourceMappingURL=index.js.map
+\ No newline at end of file
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
++const tslib_1 = require('tslib');
++tslib_1.__exportStar(require('./Constructor'), exports);
++tslib_1.__exportStar(require('./PromiseTypes'), exports);
++tslib_1.__exportStar(require('./StaticError'), exports);
+diff --git a/node_modules/@remote-ioc/runtime/lib/index.js b/node_modules/@remote-ioc/runtime/lib/index.js
+index 58a5820..f1c40aa 100644
+--- a/node_modules/@remote-ioc/runtime/lib/index.js
++++ b/node_modules/@remote-ioc/runtime/lib/index.js
+@@ -1,15 +1,14 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
+-const tslib_1 = require("tslib");
+-tslib_1.__exportStar(require("./Decorators"), exports);
+-tslib_1.__exportStar(require("./Helpers"), exports);
+-tslib_1.__exportStar(require("./Interfaces"), exports);
+-tslib_1.__exportStar(require("./Messages"), exports);
+-tslib_1.__exportStar(require("./Types"), exports);
+-tslib_1.__exportStar(require("./FunctionalApi"), exports);
+-tslib_1.__exportStar(require("./LocalRouter"), exports);
+-tslib_1.__exportStar(require("./ProviderServer"), exports);
+-tslib_1.__exportStar(require("./RouterBase"), exports);
+-tslib_1.__exportStar(require("./Runtime"), exports);
+-tslib_1.__exportStar(require("./RuntimeContext"), exports);
+-//# sourceMappingURL=index.js.map
+\ No newline at end of file
++'use strict';
++Object.defineProperty(exports, '__esModule', { value: true });
++const tslib_1 = require('tslib');
++tslib_1.__exportStar(require('./Decorators'), exports);
++tslib_1.__exportStar(require('./Helpers'), exports);
++tslib_1.__exportStar(require('./Interfaces'), exports);
++tslib_1.__exportStar(require('./Messages'), exports);
++tslib_1.__exportStar(require('./Types'), exports);
++tslib_1.__exportStar(require('./FunctionalApi'), exports);
++tslib_1.__exportStar(require('./LocalRouter'), exports);
++tslib_1.__exportStar(require('./ProviderServer'), exports);
++tslib_1.__exportStar(require('./RouterBase'), exports);
++tslib_1.__exportStar(require('./Runtime'), exports);
++tslib_1.__exportStar(require('./RuntimeContext'), exports);
+diff --git a/node_modules/@remote-ioc/runtime/lib/index.js.map b/node_modules/@remote-ioc/runtime/lib/index.js.map
+deleted file mode 100644
+index 0c7d789..0000000
+--- a/node_modules/@remote-ioc/runtime/lib/index.js.map
++++ /dev/null
+@@ -1 +0,0 @@
+-{"version":3,"file":"index.js","sourceRoot":"","sources":["../src/index.ts"],"names":[],"mappings":";;;AAAA,uDAA6B;AAC7B,oDAA0B;AAC1B,uDAA6B;AAC7B,qDAA2B;AAC3B,kDAAwB;AAExB,0DAAgC;AAChC,wDAA8B;AAC9B,2DAAiC;AACjC,uDAA6B;AAC7B,oDAA0B;AAC1B,2DAAiC"}
+\ No newline at end of file
