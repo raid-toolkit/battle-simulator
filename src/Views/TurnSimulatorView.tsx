@@ -1,4 +1,3 @@
-import { Card, List } from 'antd';
 import React from 'react';
 import { BattleTurn, ChampionSetup } from '../Model';
 import { setupBattle, simulateTurns } from '../Model/SimulateTurns';

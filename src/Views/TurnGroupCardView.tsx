@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, List } from 'antd';
+import { Card } from 'antd';
 import { BattleState, BattleTurn } from '../Model';
 import { presetDarkPalettes } from '@ant-design/colors';
 import { Avatar } from '../Components';
