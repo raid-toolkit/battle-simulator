@@ -48,10 +48,19 @@ export interface ChampionState {
 export interface BattleState {
   args: SimulateTurnsArgs;
   championStates: ChampionState[];
+
+  turnState?: TurnState;
 }
 
 export interface BattleTurn {
   championIndex: number;
   abilityIndex: number;
-  state: BattleState;
+  state: Readonly<BattleState>;
+}
+
+export interface TurnState {
+  hitsToPostProcess: number[];
+  turn?: BattleTurn;
+  isProcessingAllyAttack?: boolean;
+  isProcessingCounterAttack?: boolean;
 }

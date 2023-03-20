@@ -22,7 +22,7 @@ export const TurnSimulatorView: React.FC<TurnSimulatorViewProps> = ({
       shieldHits,
       speedAura,
       championSetups: championList as readonly Required<ChampionSetup>[],
-      stopAfter: 250,
+      stopAfter: 25,
     });
   }, [championList, bossSpeed, shieldHits, speedAura]);
 
@@ -55,7 +55,7 @@ export const TurnSimulatorView: React.FC<TurnSimulatorViewProps> = ({
   }, [turns]);
 
   const turnCards = turnGroups.map((turnGroup, index) => (
-    <TurnGroupCardView turnSequence={index + 1} turns={turnGroup} />
+    <TurnGroupCardView key={`group_${index}`} turnSequence={index + 1} turns={turnGroup} />
   ));
 
   return <div style={{ display: 'flex', flexWrap: 'wrap', flexDirection: 'row' }}>{turnCards}</div>;

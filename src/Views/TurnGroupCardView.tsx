@@ -53,6 +53,8 @@ export const TurnGroupCardView: React.FC<TurnGroupCardViewProps> = ({ turns, tur
         {turns.map((turn) => (
           <div
             style={{
+              display: 'flex',
+              flexDirection: 'row',
               height: '2rem',
               backgroundColor: colors[turn.championIndex * 2],
               textShadow: '1px 1px 3px black, 1px 1px 1px black',
@@ -63,10 +65,11 @@ export const TurnGroupCardView: React.FC<TurnGroupCardViewProps> = ({ turns, tur
               height="2rem"
               style={{ marginRight: 4 }}
             />
-            <span style={{ verticalAlign: 'middle' }}>
+            <span style={{ verticalAlign: 'middle', flex: 1 }}>
               {turn.state.championStates[turn.championIndex].name}:{' '}
               {turn.state.championStates[turn.championIndex].abilityState[turn.abilityIndex].ability.label}
             </span>
+            <span>({turn.state.championStates.find((ch) => ch.isBoss)?.shieldHitsRemaining})</span>
           </div>
         ))}
       </div>

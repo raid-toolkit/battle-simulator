@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { StatusEffectTypeId } from '@raid-toolkit/webclient';
-import { assert } from '../../Common';
+import { assert, cloneObject } from '../../Common';
 import { TURN_METER_RATE } from '../Constants';
 import { BattleState, ChampionState, BattleTurn } from '../Types';
 import { useAbility } from './TurnEffects';
@@ -50,19 +50,20 @@ export function takeNextTurn(state: BattleState): BattleTurn {
   const abilities = champion.abilityState.filter((ability) => ability.cooldownRemaining === 0);
   const starter = abilities.find((a) => a.ability.opener);
   if (champion.turnsTaken === 0 && starter) {
-    return useAbility(state, nextTurn, starter.index);
+    return { state: cloneObject(state), championIndex: nextTurn, abilityIndex: starter.index };
   }
   const nextAbility = abilities.sort((a, b) => (a.ability.priority ?? 99) - (b.ability.priority ?? 99))[
     abilities.length - 1
   ];
   assert(nextAbility, 'No ability to use');
-  return useAbility(state, nextTurn, nextAbility.index);
+  return { state: cloneObject(state), championIndex: nextTurn, abilityIndex: nextAbility.index };
 }
 
 export function simulateTurns(state: BattleState) {
   const turns: BattleTurn[] = [];
   for (let i = 0; i < (state.args.stopAfter ?? 250); ++i) {
     const turn = takeNextTurn(state);
+    useAbility(state, turn);
 
     const champion = state.championStates[turn.championIndex];
     const ability = champion.abilityState[turn.abilityIndex];

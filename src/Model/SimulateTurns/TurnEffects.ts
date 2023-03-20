@@ -1,7 +1,14 @@
-import { EffectKindId, EffectTargetType, EffectType, StatusEffectTypeId } from '@raid-toolkit/webclient';
-import { assert, cloneObject } from '../../Common';
+/* eslint-disable react-hooks/rules-of-hooks */
+import {
+  EffectKindId,
+  EffectTargetType,
+  EffectType,
+  StatusEffectTypeId,
+  TeamAttackParams,
+} from '@raid-toolkit/webclient';
+import { assert, cloneObject, shuffle } from '../../Common';
 import { RTK } from '../../Data';
-import { BattleState, BattleTurn, ChampionState, StatusEffect } from '../Types';
+import { BattleState, BattleTurn, ChampionState, StatusEffect, TurnState } from '../Types';
 
 export function hitChampions(state: BattleState, targets: ChampionState[]) {
   // TODO: Handle buffs
@@ -42,6 +49,12 @@ function selectTargetIndexes(
     }
     case EffectTargetType.AllEnemies: {
       return state.championStates.filter((champion) => champion.team !== ownerTeam);
+    }
+    case EffectTargetType.RandomEnemy: {
+      return shuffle(state.championStates.filter((champion) => champion.team !== ownerTeam)).slice(0, 1);
+    }
+    case EffectTargetType.RandomAlly: {
+      return shuffle(state.championStates.filter((champion) => champion.team === ownerTeam)).slice(0, 1);
     }
     case EffectTargetType.AllHeroes: {
       // Seer: Karma Burn
@@ -129,16 +142,56 @@ function selectTargetIndexes(
   }
 }
 
-function applyEffect(effect: EffectType, targets: ChampionState[]) {
+function selectAllyAttacks(
+  state: Readonly<BattleState>,
+  ownerIndex: number,
+  params: TeamAttackParams
+): ChampionState[] {
+  const owner = state.championStates[ownerIndex];
+  const ownerTeam = owner.team;
+
+  const allies = shuffle(
+    state.championStates.filter(
+      (champion) => champion.team === ownerTeam && (!params.ExcludeProducerFromAttack || champion.index !== ownerIndex)
+    )
+  )
+    .slice(0, params.TeammatesCount)
+    .sort((a, b) => a.index - b.index);
+  return allies;
+}
+
+function applyEffect(
+  state: BattleState,
+  ownerIndex: number,
+  effect: EffectType,
+  targets: ChampionState[],
+  turnState: TurnState
+) {
   for (const target of targets) {
     switch (effect.kindId) {
       case EffectKindId.Damage: {
         if (target.shieldHitsRemaining) {
-          target.shieldHitsRemaining = Math.max(0, target.shieldHitsRemaining - effect.count);
+          target.shieldHitsRemaining = Math.max(0, target.shieldHitsRemaining - 1);
         }
+        turnState.hitsToPostProcess.push(target.index);
         break;
       }
       case EffectKindId.TeamAttack: {
+        if (turnState.isProcessingAllyAttack) {
+          break;
+        }
+
+        const allies = selectAllyAttacks(state, ownerIndex, effect.teamAttackParams!);
+
+        turnState.isProcessingAllyAttack = true;
+        try {
+          for (const ally of allies) {
+            useAbility(state, { championIndex: ally.index, abilityIndex: 0, state: cloneObject(state) });
+          }
+        } finally {
+          turnState.isProcessingAllyAttack = false;
+        }
+
         break;
       }
       case EffectKindId.ApplyBuff:
@@ -210,21 +263,45 @@ function applyEffect(effect: EffectType, targets: ChampionState[]) {
   }
 }
 
-export function useAbility(state: BattleState, championIndex: number, abilityIndex: number): BattleTurn {
-  const snapshot = cloneObject(state);
-  const champion = state.championStates[championIndex];
-  const ability = champion.abilityState[abilityIndex];
+export function useAbility(state: BattleState, turn: BattleTurn): void {
+  const champion = state.championStates[turn.championIndex];
+  const ability = champion.abilityState[turn.abilityIndex];
+
+  // TODO: Process stun/freeze/sleep/etc
 
   // process effects
-  const skill = RTK.skillTypes[ability.ability.skillTypeId];
-  for (const effect of skill.effects) {
-    const targets = selectTargetIndexes(state, championIndex, effect.targetParams!.targetType, effect.kindId);
-    applyEffect(effect, targets);
-  }
+  const turnState: TurnState = (state.turnState = {
+    hitsToPostProcess: [],
+    turn,
+    isProcessingAllyAttack: state.turnState?.isProcessingAllyAttack,
+    isProcessingCounterAttack: state.turnState?.isProcessingCounterAttack,
+  });
+  try {
+    const skill = RTK.skillTypes[ability.ability.skillTypeId];
+    for (const effect of skill.effects) {
+      for (let n = 0; n < effect.count; n++) {
+        const targets = selectTargetIndexes(state, turn.championIndex, effect.targetParams!.targetType, effect.kindId);
+        applyEffect(state, turn.championIndex, effect, targets, turnState);
+      }
+    }
 
-  return {
-    championIndex,
-    abilityIndex,
-    state: snapshot,
-  };
+    // HACK: This should come from passive FK skill
+    if (champion.shieldHitsRemaining !== undefined) {
+      champion.shieldHitsRemaining = state.args.shieldHits;
+    }
+
+    if (!turnState.isProcessingCounterAttack) {
+      turnState.isProcessingCounterAttack = true;
+      const postProcessHits = new Set(turnState.hitsToPostProcess);
+      for (const index of postProcessHits) {
+        const target = state.championStates[index];
+        if (target.buffs.some((effect) => effect.typeId === StatusEffectTypeId.Counterattack)) {
+          useAbility(state, { championIndex: index, abilityIndex: 0, state: cloneObject(state) });
+        }
+      }
+      turnState.isProcessingCounterAttack = false;
+    }
+  } finally {
+    delete state.turnState;
+  }
 }
