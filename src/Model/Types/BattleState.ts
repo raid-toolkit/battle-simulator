@@ -1,5 +1,16 @@
+import { StatusEffectTypeId } from '@raid-toolkit/webclient';
 import type { AbilitySetup } from './AbilitySetup';
 import type { ChampionSetup } from './ChampionSetup';
+
+export enum ChampionTeam {
+  Friendly,
+  Enemy,
+}
+
+export interface StatusEffect {
+  typeId: StatusEffectTypeId;
+  duration: number;
+}
 
 export interface SimulateTurnsArgs {
   championSetups: readonly Readonly<Required<ChampionSetup>>[];
@@ -17,6 +28,7 @@ export interface AbilityState {
 }
 
 export interface ChampionState {
+  team: ChampionTeam;
   isBoss?: boolean;
   definesPhase?: boolean;
   shieldHitsRemaining?: number;
@@ -28,6 +40,9 @@ export interface ChampionState {
   turnMeter: number;
   turnsTaken: number;
   abilityState: AbilityState[];
+  debuffs: StatusEffect[];
+  buffs: StatusEffect[];
+  immuneTo?: StatusEffectTypeId[];
 }
 
 export interface BattleState {

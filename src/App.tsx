@@ -45,9 +45,11 @@ function App({ toggleTheme }: AppProps) {
             </Button>
           </Layout.Header>
           <Layout.Content>
-            {championList.length && championList.every((item) => validateSetup(item).length === 0) && (
-              <TurnSimulatorView bossSpeed={250} championList={championList} shieldHits={21} speedAura={19} />
-            )}
+            <div style={{ height: '100%', overflowY: 'auto' }}>
+              {championList.length && championList.every((item) => validateSetup(item).length === 0) && (
+                <TurnSimulatorView bossSpeed={250} championList={championList} shieldHits={21} speedAura={19} />
+              )}
+            </div>
           </Layout.Content>
         </Layout>
       </Layout.Content>
@@ -72,7 +74,8 @@ const AppHost = () => {
     setThemeName((current) => (current === 'dark' ? 'light' : 'dark'));
   }, []);
   React.useEffect(() => {
-    document.body.style.colorScheme = themeName;
+    const htmlRoot = document.querySelector('html');
+    htmlRoot!.style.colorScheme = themeName;
   }, [themeName]);
   return (
     <ConfigProvider

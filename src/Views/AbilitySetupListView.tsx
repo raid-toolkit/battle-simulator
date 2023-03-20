@@ -1,9 +1,9 @@
-import React from "react";
-import { Button, theme } from "antd";
-import { PlusCircleOutlined } from "@ant-design/icons";
-import { AbilitySetupView } from "./AbilitySetupView";
-import { removeItemAtIndex, replaceItemAtIndex } from "../Common";
-import { AbilitySetup } from "../Model";
+import React from 'react';
+import { Button, theme } from 'antd';
+import { PlusCircleOutlined } from '@ant-design/icons';
+import { AbilitySetupView } from './AbilitySetupView';
+import { removeItemAtIndex, replaceItemAtIndex } from '../Common';
+import { AbilitySetup } from '../Model';
 
 export interface AbilitiyListProps {
   editable?: boolean;
@@ -11,11 +11,7 @@ export interface AbilitiyListProps {
   onUpdated: (abilities: readonly Readonly<AbilitySetup>[]) => void;
 }
 
-export const AbilitySetupListView: React.FC<AbilitiyListProps> = ({
-  abilities,
-  onUpdated,
-  editable,
-}) => {
+export const AbilitySetupListView: React.FC<AbilitiyListProps> = ({ abilities, onUpdated, editable }) => {
   const { token } = theme.useToken();
   const addAbility = React.useCallback(() => {
     onUpdated([
@@ -23,6 +19,7 @@ export const AbilitySetupListView: React.FC<AbilitiyListProps> = ({
       {
         index: abilities.length,
         label: `A${abilities.length + 1}`,
+        skillTypeId: -1, // TODO: For custom skills, this doesn't really work
         cooldown: abilities.length ? 2 : 0,
         hits: abilities.length ? 1 : 0,
         opener: false,
@@ -45,7 +42,7 @@ export const AbilitySetupListView: React.FC<AbilitiyListProps> = ({
     [abilities, onUpdated]
   );
   return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
+    <div style={{ display: 'flex', flexDirection: 'column' }}>
       {abilities.map((ability, index) => (
         <AbilitySetupView
           editable={editable}
@@ -61,7 +58,7 @@ export const AbilitySetupListView: React.FC<AbilitiyListProps> = ({
         <div
           style={{
             margin: 16,
-            textAlign: "center",
+            textAlign: 'center',
             color: token.colorTextDisabled,
           }}
         >
@@ -69,12 +66,7 @@ export const AbilitySetupListView: React.FC<AbilitiyListProps> = ({
         </div>
       )}
       {editable && (
-        <Button
-          style={{ alignSelf: "end" }}
-          type="text"
-          icon={<PlusCircleOutlined />}
-          onClick={addAbility}
-        >
+        <Button style={{ alignSelf: 'end' }} type="text" icon={<PlusCircleOutlined />} onClick={addAbility}>
           Add Ability
         </Button>
       )}

@@ -1,17 +1,21 @@
 /* eslint-disable react-hooks/rules-of-hooks */
+import { StatusEffectTypeId } from '@raid-toolkit/webclient';
 import { RTK } from '../../Data';
 import { lookupChampionSetup } from '../Setup';
-import { BattleState, ChampionState, SimulateTurnsArgs } from '../Types';
+import { BattleState, ChampionState, ChampionTeam, SimulateTurnsArgs } from '../Types';
 
 export function setupBattle(args: SimulateTurnsArgs): BattleState {
   const { championSetups, bossSpeed, shieldHits, speedAura } = args;
   const championStates = championSetups.map<ChampionState>((setup, index) => ({
     index,
     setup,
+    team: ChampionTeam.Friendly,
     name: RTK.getString(RTK.heroTypes[setup.typeId!].name),
     speed: setup.speed + (setup.baseSpeed * ((speedAura ?? 0) / 100) || 0),
     turnMeter: 0,
     turnsTaken: 0,
+    buffs: [],
+    debuffs: [],
     abilityState: setup.abilities.map((ability, index) => ({
       index,
       ability,
@@ -24,6 +28,7 @@ export function setupBattle(args: SimulateTurnsArgs): BattleState {
   // TODO: Make boss selectable
   championStates.push({
     index: championStates.length,
+    team: ChampionTeam.Enemy,
     isBoss: true,
     definesPhase: true,
     name: RTK.getString(RTK.heroTypes[bossSetup.typeId!].name),
@@ -42,6 +47,19 @@ export function setupBattle(args: SimulateTurnsArgs): BattleState {
       baseSpeed: bossSpeed,
       abilities: bossSetup.abilities,
     },
+    buffs: [],
+    debuffs: [],
+    immuneTo: [
+      StatusEffectTypeId.Stun,
+      StatusEffectTypeId.Sleep,
+      StatusEffectTypeId.BlockActiveSkills,
+      StatusEffectTypeId.BlockPassiveSkills,
+      StatusEffectTypeId.Fear1,
+      StatusEffectTypeId.Fear2,
+      StatusEffectTypeId.Freeze,
+      StatusEffectTypeId.Provoke,
+      StatusEffectTypeId.BlockRevive, // not really an immunity, but avoids treating it as a debuff slot
+    ],
   });
   return {
     args,

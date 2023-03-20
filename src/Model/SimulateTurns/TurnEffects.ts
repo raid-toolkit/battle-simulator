@@ -1,8 +1,185 @@
+import { EffectKindId, EffectTargetType, EffectType, StatusEffectTypeId } from '@raid-toolkit/webclient';
 import { assert, cloneObject } from '../../Common';
-import { BattleState, BattleTurn, ChampionState } from '../Types';
+import { RTK } from '../../Data';
+import { BattleState, BattleTurn, ChampionState, StatusEffect } from '../Types';
 
 export function hitChampions(state: BattleState, targets: ChampionState[]) {
   // TODO: Handle buffs
+}
+
+function selectTargetIndexes(
+  state: Readonly<BattleState>,
+  ownerIndex: number,
+  targetType: EffectTargetType,
+  effectKind: EffectKindId
+): ChampionState[] {
+  const owner = state.championStates[ownerIndex];
+  const ownerTeam = owner.team;
+  switch (targetType) {
+    case EffectTargetType.AllAllies: {
+      return state.championStates.filter((champion) => champion.team === ownerTeam);
+    }
+    case EffectTargetType.AllEnemies: {
+      return state.championStates.filter((champion) => champion.team !== ownerTeam);
+    }
+    case EffectTargetType.AllHeroes: {
+      // Seer: Karma Burn
+      return state.championStates;
+    }
+    case EffectTargetType.AllyWithHighestStamina: {
+      return [
+        state.championStates
+          .filter((champion) => champion.team === ownerTeam)
+          .sort((a, b) => b.turnMeter - a.turnMeter)[0],
+      ];
+    }
+    case EffectTargetType.AllyWithLowestStamina: {
+      return [
+        state.championStates
+          .filter((champion) => champion.team === ownerTeam)
+          .sort((a, b) => a.turnMeter - b.turnMeter)[0],
+      ];
+    }
+    case EffectTargetType.Boss: {
+      return state.championStates.filter((champion) => champion.isBoss);
+    }
+    case EffectTargetType.EnemyWithHighestStamina: {
+      return [
+        state.championStates
+          .filter((champion) => champion.team !== ownerTeam)
+          .sort((a, b) => b.turnMeter - a.turnMeter)[0],
+      ];
+    }
+    case EffectTargetType.EnemyWithLowestStamina: {
+      return [
+        state.championStates
+          .filter((champion) => champion.team !== ownerTeam)
+          .sort((a, b) => a.turnMeter - b.turnMeter)[0],
+      ];
+    }
+    case EffectTargetType.Owner: {
+      return [owner]; // e.g. when hit, heals self [whereas producer would be the enemy target]
+    }
+    case EffectTargetType.OwnerAllies: {
+      return state.championStates.filter((champion) => champion.team === ownerTeam && champion.index !== ownerIndex);
+    }
+    case EffectTargetType.Producer: {
+      return [owner]; // e.g. casts heal on self
+    }
+    case EffectTargetType.Target: {
+      if (
+        [
+          EffectKindId.ApplyBuff,
+          EffectKindId.Heal,
+          EffectKindId.MultiplyBuff,
+          EffectKindId.IncreaseBuffLifetime,
+          EffectKindId.ReduceDebuffLifetime,
+        ].includes(effectKind)
+      ) {
+        return state.championStates.filter((champion) => champion.team === ownerTeam).slice(0, 1);
+      }
+      if (
+        [
+          EffectKindId.ApplyDebuff,
+          EffectKindId.Damage,
+          EffectKindId.MultiplyDebuff,
+          EffectKindId.IncreaseDebuffLifetime,
+          EffectKindId.ReduceBuffLifetime,
+        ].includes(effectKind)
+      ) {
+        return state.championStates.filter((champion) => champion.team !== ownerTeam).slice(0, 1);
+      }
+      console.warn(`Unknown effect type ${effectKind}`);
+      return [];
+    }
+    default: {
+      console.warn(`Unknown target type ${targetType}`);
+      return [];
+    }
+    case EffectTargetType.ActiveHero: // e.g. passive heals each ally on their own turns
+    case EffectTargetType.HeroCausedRelationUnapply:
+    case EffectTargetType.HeroThatKilledProducer:
+    case EffectTargetType.MostInjuredAlly:
+    case EffectTargetType.MostInjuredEnemy:
+    case EffectTargetType.AllDeadAllies:
+    case EffectTargetType.AllyWithLowestMaxHp: {
+      return []; // TODO
+    }
+  }
+}
+
+function applyEffect(effect: EffectType, targets: ChampionState[]) {
+  for (const target of targets) {
+    switch (effect.kindId) {
+      case EffectKindId.Damage: {
+        if (target.shieldHitsRemaining) {
+          target.shieldHitsRemaining = Math.max(0, target.shieldHitsRemaining - effect.count);
+        }
+        return;
+      }
+      case EffectKindId.ApplyBuff:
+      case EffectKindId.ApplyDebuff: {
+        const statusEffects = effect.applyStatusEffectParams?.statusEffectInfos;
+        assert(statusEffects);
+
+        let effectList: StatusEffect[];
+        if (effect.kindId === EffectKindId.ApplyBuff) {
+          effectList = target.buffs;
+          if (target.debuffs.some((effect) => effect.typeId === StatusEffectTypeId.BlockBuffs)) {
+            // TODO: Show this somewhere in the UI?
+            console.log(`Buffs blocked by BlockBuffs :sadface:`);
+            return;
+          }
+        } else if (effect.kindId === EffectKindId.ApplyDebuff) {
+          effectList = target.debuffs;
+          if (target.buffs.some((effect) => effect.typeId === StatusEffectTypeId.BlockDebuff)) {
+            // TODO: Show this somewhere in the UI?
+            console.log(`Debuffs blocked by BlockDebuffs :happyface:`);
+            return;
+          }
+          if (target.shieldHitsRemaining) {
+            // TODO: Show this somewhere in the UI?
+            console.log(`Debuffs blocked by shield :angryface:`);
+            return;
+          }
+        } else {
+          assert(false, `Unexpected effect kind ${effect.kindId}`);
+        }
+
+        for (const statusEffect of statusEffects) {
+          if (target.immuneTo?.includes(statusEffect.typeId)) {
+            continue;
+          }
+          const existingEffect = effectList.find((effect) => effect.typeId === statusEffect.typeId);
+          // can we extend an existing effect?
+          if (
+            existingEffect &&
+            [
+              StatusEffectTypeId.ContinuousHeal075p,
+              StatusEffectTypeId.ContinuousHeal15p,
+              StatusEffectTypeId.ContinuousDamage025p,
+              StatusEffectTypeId.ContinuousDamage5p,
+              StatusEffectTypeId.Burn,
+            ].includes(statusEffect.typeId)
+          ) {
+            existingEffect.duration = Math.max(statusEffect.duration, existingEffect.duration);
+            continue;
+          }
+
+          // exceeded effect limit
+          if (effectList.length > 10 && !statusEffect.ignoreEffectsLimit) {
+            // TODO: Show this in the UI somehow?
+            continue;
+          }
+          effectList.push({
+            duration: statusEffect.duration,
+            typeId: statusEffect.typeId,
+          });
+        }
+        return;
+      }
+    }
+  }
 }
 
 export function useAbility(state: BattleState, championIndex: number, abilityIndex: number): BattleTurn {
@@ -23,6 +200,13 @@ export function useAbility(state: BattleState, championIndex: number, abilityInd
     hitChampions(state, targets);
     // TODO apply new debuffs to targets
     // TODO apply boss debuffs (e.g. poison, hp burn, brimstone)
+  }
+
+  // process effects
+  const skill = RTK.skillTypes[ability.ability.skillTypeId];
+  for (const effect of skill.effects) {
+    const targets = selectTargetIndexes(state, championIndex, effect.targetParams!.targetType, effect.kindId);
+    applyEffect(effect, targets);
   }
 
   return {

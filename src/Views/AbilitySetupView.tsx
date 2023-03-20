@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Input, Select, Space, theme } from 'antd';
+import { Button, Input, InputNumber, Select, Space, theme } from 'antd';
 import {
   FlagOutlined,
   FlagFilled,
@@ -40,18 +40,18 @@ export const AbilitySetupView: React.FC<AbilitySetupViewProps> = ({
     [index, ability, onUpdated]
   );
 
-  const setCooldown = React.useCallback<React.ChangeEventHandler<HTMLInputElement>>(
-    (e) => {
-      onUpdated(index, { ...ability, cooldown: parseInt(e.target.value, 10) });
+  const setCooldown = React.useCallback<(value: number | null) => void>(
+    (value) => {
+      onUpdated(index, { ...ability, cooldown: value ?? 0 });
     },
     [index, ability, onUpdated]
   );
 
-  const setHits = React.useCallback<React.ChangeEventHandler<HTMLInputElement>>(
-    (e) => {
-      onUpdated(index, { ...ability, hits: parseInt(e.target.value, 10) });
+  const setHits = React.useCallback<(value: number | null) => void>(
+    (value) => {
+      editable && onUpdated(index, { ...ability, hits: value ?? 0 });
     },
-    [index, ability, onUpdated]
+    [index, ability, onUpdated, editable]
   );
 
   const toggleOpener = React.useCallback(() => {
@@ -95,15 +95,6 @@ export const AbilitySetupView: React.FC<AbilitySetupViewProps> = ({
           onClear={setPriority}
           onChange={setPriority}
         />
-        <Input
-          placeholder="CD"
-          suffix={<HistoryOutlined />}
-          title="Cooldown"
-          style={{ width: 55 }}
-          value={isNaN(ability.cooldown) ? '' : ability.cooldown}
-          status={isNaN(ability.cooldown) ? 'error' : undefined}
-          onChange={setCooldown}
-        />
         <Button
           title="Opener"
           style={{ width: 32 }}
@@ -111,11 +102,22 @@ export const AbilitySetupView: React.FC<AbilitySetupViewProps> = ({
           icon={ability.opener ? <FlagFilled /> : <FlagOutlined />}
           onClick={toggleOpener}
         />
-        <Input
+        <InputNumber
+          placeholder="CD"
+          addonAfter={<HistoryOutlined />}
+          // suffix={<HistoryOutlined />}
+          title="Cooldown"
+          style={{ width: 90 }}
+          value={isNaN(ability.cooldown) ? 0 : ability.cooldown}
+          status={isNaN(ability.cooldown) ? 'error' : undefined}
+          onChange={setCooldown}
+        />
+        <InputNumber
           placeholder="Hits"
-          style={{ width: 60 }}
+          style={{ width: 90 - (editable ? 0 : 22) }}
           disabled={!editable}
-          suffix={<CompressOutlined />}
+          addonAfter={<CompressOutlined />}
+          // suffix={<CompressOutlined />}
           title="# of hits"
           value={!ability.hits ? 0 : ability.hits}
           onChange={setHits}

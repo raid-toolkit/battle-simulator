@@ -13,10 +13,16 @@ export function lookupChampionSetup(typeId: number): ChampionSetup | undefined {
       continue;
     }
 
+    // all effects are passive
+    if (skill.effects.every((eff) => eff.group === 1)) {
+      continue;
+    }
+
     const hits = skill.effects.reduce((acc, effect) => acc + (effect.kindId === 6000 ? effect.count : 0), 0);
 
     const ability: AbilitySetup = {
       index: abilities.length,
+      skillTypeId: skill.typeId,
       label: RTK.getString(skill.name),
       cooldown: skill.cooldown,
       hits,
