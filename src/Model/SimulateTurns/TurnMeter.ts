@@ -1,12 +1,25 @@
 /* eslint-disable react-hooks/rules-of-hooks */
+import { StatusEffectTypeId } from '@raid-toolkit/webclient';
 import { assert } from '../../Common';
 import { TURN_METER_RATE } from '../Constants';
 import { BattleState, ChampionState, BattleTurn } from '../Types';
 import { useAbility } from './TurnEffects';
 
+const speedAdjustments: Partial<Record<StatusEffectTypeId, number>> = {
+  [StatusEffectTypeId.DecreaseSpeed15]: -0.15,
+  [StatusEffectTypeId.DecreaseSpeed30]: -0.3,
+  [StatusEffectTypeId.IncreaseSpeed15]: 0.15,
+  [StatusEffectTypeId.IncreaseSpeed30]: 0.3,
+};
+
 export function tick(state: BattleState) {
   for (const champion of state.championStates) {
-    champion.turnMeter += champion.speed * TURN_METER_RATE;
+    const speedAdj =
+      1 +
+      champion.buffs
+        .concat(champion.debuffs)
+        .reduce((speedAdj, effect) => speedAdj + (speedAdjustments[effect.typeId] ?? 0), 0);
+    champion.turnMeter += champion.speed * TURN_METER_RATE * speedAdj;
   }
 }
 

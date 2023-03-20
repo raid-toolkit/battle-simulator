@@ -1,6 +1,7 @@
 import React from 'react';
 import { ChampionSetupView } from './ChampionSetupView';
 import { ChampionSetup } from '../Model';
+import './ChampionSetupListView.css';
 
 export interface ChampionSetupListViewProps {
   editable?: boolean;
@@ -18,6 +19,7 @@ export const ChampionSetupListView: React.FC<ChampionSetupListViewProps> = ({
 }) => {
   return (
     <div
+      className="champion-setup-list"
       style={{
         display: 'flex',
         flexDirection: 'column',

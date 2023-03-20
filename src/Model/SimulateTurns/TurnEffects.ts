@@ -7,6 +7,27 @@ export function hitChampions(state: BattleState, targets: ChampionState[]) {
   // TODO: Handle buffs
 }
 
+const statusEffectSuperiorTo: Partial<Record<StatusEffectTypeId, StatusEffectTypeId>> = {
+  [StatusEffectTypeId.BlockHeal100p]: StatusEffectTypeId.BlockHeal50p,
+  [StatusEffectTypeId.DecreaseAccuracy50]: StatusEffectTypeId.DecreaseAccuracy25,
+  [StatusEffectTypeId.DecreaseAttack50]: StatusEffectTypeId.DecreaseAttack25,
+  [StatusEffectTypeId.DecreaseDefence60]: StatusEffectTypeId.DecreaseDefence30,
+  [StatusEffectTypeId.DecreaseSpeed30]: StatusEffectTypeId.DecreaseSpeed15,
+  [StatusEffectTypeId.DecreaseCriticalChance30]: StatusEffectTypeId.DecreaseCriticalChance15,
+  [StatusEffectTypeId.DecreaseCriticalDamage25p]: StatusEffectTypeId.DecreaseCriticalDamage15p,
+  [StatusEffectTypeId.IncreaseAccuracy50]: StatusEffectTypeId.IncreaseAccuracy25,
+  [StatusEffectTypeId.IncreaseAttack50]: StatusEffectTypeId.IncreaseAttack25,
+  [StatusEffectTypeId.IncreaseCriticalChance30]: StatusEffectTypeId.IncreaseCriticalChance15,
+  [StatusEffectTypeId.IncreaseCriticalDamage30]: StatusEffectTypeId.IncreaseCriticalDamage15,
+  [StatusEffectTypeId.IncreaseDamageTaken25]: StatusEffectTypeId.IncreaseDamageTaken15,
+  [StatusEffectTypeId.IncreaseDefence60]: StatusEffectTypeId.IncreaseDefence30,
+  [StatusEffectTypeId.IncreasePoisoning50]: StatusEffectTypeId.IncreasePoisoning25,
+  [StatusEffectTypeId.IncreaseSpeed30]: StatusEffectTypeId.IncreaseSpeed15,
+  [StatusEffectTypeId.ReduceDamageTaken25]: StatusEffectTypeId.ReduceDamageTaken15,
+  [StatusEffectTypeId.ReflectDamage30]: StatusEffectTypeId.ReflectDamage15,
+  [StatusEffectTypeId.ShareDamage50]: StatusEffectTypeId.ShareDamage25,
+};
+
 function selectTargetIndexes(
   state: Readonly<BattleState>,
   ownerIndex: number,
@@ -150,7 +171,10 @@ function applyEffect(effect: EffectType, targets: ChampionState[]) {
           if (target.immuneTo?.includes(statusEffect.typeId)) {
             continue;
           }
-          const existingEffect = effectList.find((effect) => effect.typeId === statusEffect.typeId);
+          const existingEffect = effectList.find(
+            (effect) =>
+              effect.typeId === statusEffect.typeId || effect.typeId === statusEffectSuperiorTo[statusEffect.typeId]
+          );
           // can we extend an existing effect?
           if (
             existingEffect &&
@@ -163,6 +187,7 @@ function applyEffect(effect: EffectType, targets: ChampionState[]) {
             ].includes(statusEffect.typeId)
           ) {
             existingEffect.duration = Math.max(statusEffect.duration, existingEffect.duration);
+            existingEffect.typeId = statusEffect.typeId;
             continue;
           }
 

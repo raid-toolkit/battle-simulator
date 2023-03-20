@@ -2,7 +2,7 @@ import React from 'react';
 import { Badge, Button, Card, ConfigProvider, Input, Layout, theme } from 'antd';
 import { CompressOutlined, HighlightOutlined, ThunderboltOutlined } from '@ant-design/icons';
 import { ChampionSetup, validateSetup } from './Model';
-import { TeamView, TurnSimulatorView } from './Views';
+import { BossSelectionView, TeamView, TurnSimulatorView } from './Views';
 import './App.css';
 
 export interface AppProps {
@@ -11,41 +11,26 @@ export interface AppProps {
 function App({ toggleTheme }: AppProps) {
   const [championList, onChampionListUpdated] = React.useState<readonly Readonly<ChampionSetup>[]>([]);
   return (
-    <Layout>
+    <Layout className="full-height">
       <Layout.Sider
-        width={225}
+        width={332}
         style={{
           background: 'transparent',
           display: 'flex',
           flexDirection: 'column',
         }}
       >
-        <Badge.Ribbon text="Boss">
-          <Card>
-            <Input
-              addonBefore="Boss Speed"
-              defaultValue={250}
-              style={{ textAlign: 'right' }}
-              suffix={<ThunderboltOutlined />}
-            />
-            <Input
-              addonBefore="Shield Hits"
-              defaultValue={21}
-              style={{ textAlign: 'right' }}
-              suffix={<CompressOutlined />}
-            />
-          </Card>
-        </Badge.Ribbon>
+        <BossSelectionView />
       </Layout.Sider>
-      <Layout.Content>
-        <Layout>
+      <Layout.Content className="full-height">
+        <Layout className="full-height">
           <Layout.Header style={{ background: 'transparent' }}>
             <Button icon={<HighlightOutlined />} onClick={toggleTheme}>
               Change theme
             </Button>
           </Layout.Header>
-          <Layout.Content>
-            <div style={{ height: '100%', overflowY: 'auto' }}>
+          <Layout.Content className="full-height">
+            <div style={{ height: '100%', overflowY: 'auto', position: 'relative', zIndex: 1 }}>
               {championList.length && championList.every((item) => validateSetup(item).length === 0) && (
                 <TurnSimulatorView bossSpeed={250} championList={championList} shieldHits={21} speedAura={19} />
               )}

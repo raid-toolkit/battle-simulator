@@ -1,0 +1,9 @@
+.champion-setup-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-left: 40px;
+  margin-left: -40px;
+}

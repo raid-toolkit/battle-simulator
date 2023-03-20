@@ -55,7 +55,7 @@ export const TurnSimulatorView: React.FC<TurnSimulatorViewProps> = ({
   }, [turns]);
 
   const turnCards = turnGroups.map((turnGroup, index) => (
-    <Card title={`Boss Turn #${index + 1}`}>
+    <Card title={`Boss Turn #${index + 1}`} style={{ width: 250 }}>
       <List>
         {turnGroup.map((turn) => (
           <List.Item>
