@@ -2,6 +2,7 @@ import { Card, List } from 'antd';
 import React from 'react';
 import { BattleTurn, ChampionSetup } from '../Model';
 import { setupBattle, simulateTurns } from '../Model/SimulateTurns';
+import { TurnGroupCardView } from './TurnGroupCardView';
 
 export interface TurnSimulatorViewProps {
   championList: readonly Readonly<ChampionSetup>[];
@@ -55,16 +56,7 @@ export const TurnSimulatorView: React.FC<TurnSimulatorViewProps> = ({
   }, [turns]);
 
   const turnCards = turnGroups.map((turnGroup, index) => (
-    <Card title={`Boss Turn #${index + 1}`} style={{ width: 250 }}>
-      <List>
-        {turnGroup.map((turn) => (
-          <List.Item>
-            {liveState.championStates[turn.championIndex].name}:{' '}
-            {liveState.championStates[turn.championIndex].abilityState[turn.abilityIndex].ability.label}
-          </List.Item>
-        ))}
-      </List>
-    </Card>
+    <TurnGroupCardView turnSequence={index + 1} turns={turnGroup} />
   ));
 
   return <div style={{ display: 'flex', flexWrap: 'wrap', flexDirection: 'row' }}>{turnCards}</div>;

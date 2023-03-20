@@ -136,7 +136,10 @@ function applyEffect(effect: EffectType, targets: ChampionState[]) {
         if (target.shieldHitsRemaining) {
           target.shieldHitsRemaining = Math.max(0, target.shieldHitsRemaining - effect.count);
         }
-        return;
+        break;
+      }
+      case EffectKindId.TeamAttack: {
+        break;
       }
       case EffectKindId.ApplyBuff:
       case EffectKindId.ApplyDebuff: {
@@ -149,19 +152,19 @@ function applyEffect(effect: EffectType, targets: ChampionState[]) {
           if (target.debuffs.some((effect) => effect.typeId === StatusEffectTypeId.BlockBuffs)) {
             // TODO: Show this somewhere in the UI?
             console.log(`Buffs blocked by BlockBuffs :sadface:`);
-            return;
+            break;
           }
         } else if (effect.kindId === EffectKindId.ApplyDebuff) {
           effectList = target.debuffs;
           if (target.buffs.some((effect) => effect.typeId === StatusEffectTypeId.BlockDebuff)) {
             // TODO: Show this somewhere in the UI?
             console.log(`Debuffs blocked by BlockDebuffs :happyface:`);
-            return;
+            break;
           }
           if (target.shieldHitsRemaining) {
             // TODO: Show this somewhere in the UI?
             console.log(`Debuffs blocked by shield :angryface:`);
-            return;
+            break;
           }
         } else {
           assert(false, `Unexpected effect kind ${effect.kindId}`);
@@ -201,7 +204,7 @@ function applyEffect(effect: EffectType, targets: ChampionState[]) {
             typeId: statusEffect.typeId,
           });
         }
-        return;
+        break;
       }
     }
   }
@@ -211,21 +214,6 @@ export function useAbility(state: BattleState, championIndex: number, abilityInd
   const snapshot = cloneObject(state);
   const champion = state.championStates[championIndex];
   const ability = champion.abilityState[abilityIndex];
-
-  if (!champion.isBoss) {
-    const boss = state.championStates.find((targetState) => targetState.isBoss);
-    assert(boss, 'No boss found');
-
-    if (ability.ability.hits) {
-      boss.shieldHitsRemaining = Math.max(0, (boss.shieldHitsRemaining ?? 0) - ability.ability.hits);
-    }
-  } else {
-    champion.shieldHitsRemaining = state.args.shieldHits;
-    const targets = state.championStates.filter((targetState) => !targetState.isBoss);
-    hitChampions(state, targets);
-    // TODO apply new debuffs to targets
-    // TODO apply boss debuffs (e.g. poison, hp burn, brimstone)
-  }
 
   // process effects
   const skill = RTK.skillTypes[ability.ability.skillTypeId];

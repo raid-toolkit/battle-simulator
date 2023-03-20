@@ -66,6 +66,10 @@ export function simulateTurns(state: BattleState) {
 
     const champion = state.championStates[turn.championIndex];
     const ability = champion.abilityState[turn.abilityIndex];
+
+    // please punish me for this
+    champion.buffs = champion.buffs.filter((buff) => (buff.duration -= 1) > 0);
+    champion.debuffs = champion.debuffs.filter((buff) => (buff.duration -= 1) > 0);
     for (const ability of champion.abilityState) {
       ability.cooldownRemaining = Math.max(0, ability.cooldownRemaining - 1);
     }
