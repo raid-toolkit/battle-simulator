@@ -31,9 +31,9 @@ function App({ toggleTheme }: AppProps) {
           </Layout.Header>
           <Layout.Content className="full-height">
             <div style={{ height: '100%', overflowY: 'auto', position: 'relative', zIndex: 1 }}>
-              {championList.length && championList.every((item) => validateSetup(item).length === 0) && (
+              {championList.length && championList.every((item) => validateSetup(item).length === 0) ? (
                 <TurnSimulatorView bossSpeed={250} championList={championList} shieldHits={21} speedAura={19} />
-              )}
+              ) : null}
             </div>
           </Layout.Content>
         </Layout>
