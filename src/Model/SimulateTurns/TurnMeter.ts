@@ -52,9 +52,7 @@ export function takeNextTurn(state: BattleState): BattleTurn {
   if (champion.turnsTaken === 0 && starter) {
     return { state: cloneObject(state), championIndex: nextTurn, abilityIndex: starter.index };
   }
-  const nextAbility = abilities.sort((a, b) => (a.ability.priority ?? 99) - (b.ability.priority ?? 99))[
-    abilities.length - 1
-  ];
+  const nextAbility = abilities.sort((a, b) => (a.ability.priority ?? 99) - (b.ability.priority ?? 99))[0];
   assert(nextAbility, 'No ability to use');
   return { state: cloneObject(state), championIndex: nextTurn, abilityIndex: nextAbility.index };
 }
@@ -71,8 +69,8 @@ export function simulateTurns(state: BattleState) {
     // please punish me for this
     champion.buffs = champion.buffs.filter((buff) => (buff.duration -= 1) > 0);
     champion.debuffs = champion.debuffs.filter((buff) => (buff.duration -= 1) > 0);
-    for (const ability of champion.abilityState) {
-      ability.cooldownRemaining = Math.max(0, ability.cooldownRemaining - 1);
+    for (const ability2 of champion.abilityState) {
+      ability2.cooldownRemaining = Math.max(0, ability.cooldownRemaining - 1);
     }
     ability.cooldownRemaining = ability.ability.cooldown;
     champion.turnMeter = 0;
