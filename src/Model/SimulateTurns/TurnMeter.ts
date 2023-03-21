@@ -54,7 +54,9 @@ export function takeNextTurn(state: BattleState): BattleTurn {
   if (champion.turnsTaken === 0 && starter) {
     return { state: cloneObject(state), championIndex: nextTurn, abilityIndex: starter.index };
   }
-  const nextAbility = abilities.sort((a, b) => (a.ability.priority ?? 99) - (b.ability.priority ?? 99))[0];
+  const nextAbility = abilities.sort((a, b) => (b.ability.priority ?? 99) - (a.ability.priority ?? 99))[
+    abilities.length - 1
+  ];
   assert(nextAbility, 'No ability to use');
   return { state: cloneObject(state), championIndex: nextTurn, abilityIndex: nextAbility.index };
 }
