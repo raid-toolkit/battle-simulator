@@ -119,6 +119,7 @@ function selectTargetIndexes(
           EffectKindId.MultiplyDebuff,
           EffectKindId.IncreaseDebuffLifetime,
           EffectKindId.ReduceBuffLifetime,
+          EffectKindId.TeamAttack,
         ].includes(effectKind)
       ) {
         return state.championStates.filter((champion) => champion.team !== ownerTeam).slice(0, 1);
