@@ -12,7 +12,7 @@ function App({ toggleTheme }: AppProps) {
   const [championList, onChampionListUpdated] = React.useState<readonly Readonly<ChampionSetup>[]>([]);
   return (
     <Layout className="full-height">
-      <Layout.Sider
+      {/* <Layout.Sider
         width={332}
         style={{
           background: 'transparent',
@@ -21,7 +21,7 @@ function App({ toggleTheme }: AppProps) {
         }}
       >
         <BossSelectionView />
-      </Layout.Sider>
+      </Layout.Sider> */}
       <Layout.Content className="full-height">
         <Layout className="full-height">
           <Layout.Header style={{ background: 'transparent' }}>
