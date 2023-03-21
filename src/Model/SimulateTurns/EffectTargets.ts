@@ -82,6 +82,9 @@ function selectTargetChampions(
           EffectKindId.MultiplyBuff,
           EffectKindId.IncreaseBuffLifetime,
           EffectKindId.ReduceDebuffLifetime,
+          EffectKindId.IncreaseStamina,
+          EffectKindId.IncreaseShield,
+          EffectKindId.RemoveDebuff,
         ].includes(effectKind)
       ) {
         return state.championStates.filter((champion) => champion.team === ownerTeam).slice(0, 1);
@@ -94,6 +97,10 @@ function selectTargetChampions(
           EffectKindId.IncreaseDebuffLifetime,
           EffectKindId.ReduceBuffLifetime,
           EffectKindId.TeamAttack,
+          EffectKindId.IncreaseCooldown,
+          EffectKindId.IncreasePoisoning,
+          EffectKindId.IncreaseDamageTaken,
+          EffectKindId.ReduceStamina,
         ].includes(effectKind)
       ) {
         return state.championStates.filter((champion) => champion.team !== ownerTeam).slice(0, 1);

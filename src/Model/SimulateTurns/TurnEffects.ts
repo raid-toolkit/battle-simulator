@@ -143,6 +143,32 @@ function applyEffect(
         }
         break;
       }
+      case EffectKindId.RemoveDebuff: {
+        const params = effect.unapplyStatusEffectParams;
+        if (!params) {
+          console.warn('Missing unapplyStatusEffectParams', { effect });
+          target.debuffs = [];
+          break;
+        }
+        let count = params.count !== -1 ? params.count : target.debuffs.length;
+        while (count > 0 && target.debuffs.length > 0) {
+          if (params.statusEffectTypeIds?.length) {
+            const index = target.debuffs.findIndex((effect) => params.statusEffectTypeIds.includes(effect.typeId));
+            if (index !== -1) {
+              target.debuffs.splice(index, 1);
+            } else {
+              break;
+            }
+          } else {
+            // TODO: Should this be predictable or random?
+            target.debuffs.pop();
+          }
+        }
+        break;
+      }
+      default: {
+        console.warn('Unhandled effect kindId', { effect });
+      }
     }
   }
 }
@@ -164,6 +190,18 @@ export function useAbility(state: BattleState, turn: BattleTurn): void {
   try {
     const skill = RTK.skillTypes[ability.ability.skillTypeId];
     for (const effect of skill.effects) {
+      // hardcoded conditions
+      if (effect.condition) {
+        switch (effect.condition) {
+          case 'isCritical':
+            break;
+          case '!isCritical':
+            continue;
+          default:
+            console.warn('Unknown condition', { effect });
+            continue;
+        }
+      }
       for (let n = 0; n < effect.count; n++) {
         const targets = selectEffectTargets(state, turn.championIndex, effect, turnState);
         applyEffect(state, turn.championIndex, effect, targets, turnState);
