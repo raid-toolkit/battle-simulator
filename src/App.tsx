@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, ConfigProvider, Layout, theme } from 'antd';
 import { HighlightOutlined } from '@ant-design/icons';
 import { ChampionSetup, validateSetup } from './Model';
-import { BossSelectionView, TeamView, TurnSimulatorView } from './Views';
+import { TeamView, TurnSimulatorView } from './Views';
 import './App.css';
 
 export interface AppProps {
