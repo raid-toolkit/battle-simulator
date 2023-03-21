@@ -47,6 +47,9 @@ export function takeNextTurn(state: BattleState): BattleTurn {
   const nextTurn = runToNextTurn(state);
   assert(nextTurn !== -1, 'No turn to take');
   const champion = state.championStates[nextTurn];
+  for (const ability of champion.abilityState) {
+    ability.cooldownRemaining = Math.max(0, ability.cooldownRemaining - 1);
+  }
   const abilities = champion.abilityState.filter(
     (ability) => ability.cooldownRemaining === 0 && ability.ability.priority !== -1
   );
@@ -73,9 +76,6 @@ export function simulateTurns(state: BattleState) {
     // please punish me for this
     champion.buffs = champion.buffs.filter((buff) => (buff.duration -= 1) > 0);
     champion.debuffs = champion.debuffs.filter((buff) => (buff.duration -= 1) > 0);
-    for (const ability2 of champion.abilityState) {
-      ability2.cooldownRemaining = Math.max(0, ability.cooldownRemaining - 1);
-    }
     ability.cooldownRemaining = ability.ability.cooldown;
     champion.turnMeter = 0;
     ++champion.turnsTaken;
