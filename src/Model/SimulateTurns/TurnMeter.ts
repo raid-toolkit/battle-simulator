@@ -47,7 +47,9 @@ export function takeNextTurn(state: BattleState): BattleTurn {
   const nextTurn = runToNextTurn(state);
   assert(nextTurn !== -1, 'No turn to take');
   const champion = state.championStates[nextTurn];
-  const abilities = champion.abilityState.filter((ability) => ability.cooldownRemaining === 0);
+  const abilities = champion.abilityState.filter(
+    (ability) => ability.cooldownRemaining === 0 && ability.ability.priority !== -1
+  );
   const starter = abilities.find((a) => a.ability.opener);
   if (champion.turnsTaken === 0 && starter) {
     return { state: cloneObject(state), championIndex: nextTurn, abilityIndex: starter.index };

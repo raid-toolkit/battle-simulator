@@ -63,4 +63,5 @@ export interface TurnState {
   turn?: BattleTurn;
   isProcessingAllyAttack?: boolean;
   isProcessingCounterAttack?: boolean;
+  effectTargets: Record<number, number[]>;
 }

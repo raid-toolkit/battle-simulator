@@ -32,12 +32,12 @@ const BattleStateView: React.FC<BattleStateViewProps> = ({ state }) => {
           <Avatar id={RTK.heroTypes[championState.setup.typeId].avatarKey} height="2rem" style={{ marginRight: 4 }} />
           <span style={{ verticalAlign: 'middle' }}>
             {championState.buffs.map((buff) => (
-              <StatusEffectIcon height="1.5rem" typeId={buff.typeId} />
+              <StatusEffectIcon height="2rem" typeId={buff.typeId} duration={buff.duration} />
             ))}
           </span>
           <span style={{ verticalAlign: 'middle' }}>
             {championState.debuffs.map((buff) => (
-              <StatusEffectIcon height="1.5rem" typeId={buff.typeId} />
+              <StatusEffectIcon height="2rem" typeId={buff.typeId} duration={buff.duration} />
             ))}
           </span>
         </div>

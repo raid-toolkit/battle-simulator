@@ -9,10 +9,7 @@ import {
 import { assert, cloneObject, shuffle } from '../../Common';
 import { RTK } from '../../Data';
 import { BattleState, BattleTurn, ChampionState, StatusEffect, TurnState } from '../Types';
-
-export function hitChampions(state: BattleState, targets: ChampionState[]) {
-  // TODO: Handle buffs
-}
+import { selectEffectTargets } from './EffectTargets';
 
 const statusEffectSuperiorTo: Partial<Record<StatusEffectTypeId, StatusEffectTypeId>> = {
   [StatusEffectTypeId.BlockHeal100p]: StatusEffectTypeId.BlockHeal50p,
@@ -34,114 +31,6 @@ const statusEffectSuperiorTo: Partial<Record<StatusEffectTypeId, StatusEffectTyp
   [StatusEffectTypeId.ReflectDamage30]: StatusEffectTypeId.ReflectDamage15,
   [StatusEffectTypeId.ShareDamage50]: StatusEffectTypeId.ShareDamage25,
 };
-
-function selectTargetIndexes(
-  state: Readonly<BattleState>,
-  ownerIndex: number,
-  targetType: EffectTargetType,
-  effectKind: EffectKindId
-): ChampionState[] {
-  const owner = state.championStates[ownerIndex];
-  const ownerTeam = owner.team;
-  switch (targetType) {
-    case EffectTargetType.AllAllies: {
-      return state.championStates.filter((champion) => champion.team === ownerTeam);
-    }
-    case EffectTargetType.AllEnemies: {
-      return state.championStates.filter((champion) => champion.team !== ownerTeam);
-    }
-    case EffectTargetType.RandomEnemy: {
-      return shuffle(state.championStates.filter((champion) => champion.team !== ownerTeam)).slice(0, 1);
-    }
-    case EffectTargetType.RandomAlly: {
-      return shuffle(state.championStates.filter((champion) => champion.team === ownerTeam)).slice(0, 1);
-    }
-    case EffectTargetType.AllHeroes: {
-      // Seer: Karma Burn
-      return state.championStates;
-    }
-    case EffectTargetType.AllyWithHighestStamina: {
-      return [
-        state.championStates
-          .filter((champion) => champion.team === ownerTeam)
-          .sort((a, b) => b.turnMeter - a.turnMeter)[0],
-      ];
-    }
-    case EffectTargetType.AllyWithLowestStamina: {
-      return [
-        state.championStates
-          .filter((champion) => champion.team === ownerTeam)
-          .sort((a, b) => a.turnMeter - b.turnMeter)[0],
-      ];
-    }
-    case EffectTargetType.Boss: {
-      return state.championStates.filter((champion) => champion.isBoss);
-    }
-    case EffectTargetType.EnemyWithHighestStamina: {
-      return [
-        state.championStates
-          .filter((champion) => champion.team !== ownerTeam)
-          .sort((a, b) => b.turnMeter - a.turnMeter)[0],
-      ];
-    }
-    case EffectTargetType.EnemyWithLowestStamina: {
-      return [
-        state.championStates
-          .filter((champion) => champion.team !== ownerTeam)
-          .sort((a, b) => a.turnMeter - b.turnMeter)[0],
-      ];
-    }
-    case EffectTargetType.Owner: {
-      return [owner]; // e.g. when hit, heals self [whereas producer would be the enemy target]
-    }
-    case EffectTargetType.OwnerAllies: {
-      return state.championStates.filter((champion) => champion.team === ownerTeam && champion.index !== ownerIndex);
-    }
-    case EffectTargetType.Producer: {
-      return [owner]; // e.g. casts heal on self
-    }
-    case EffectTargetType.Target: {
-      if (
-        [
-          EffectKindId.ApplyBuff,
-          EffectKindId.Heal,
-          EffectKindId.MultiplyBuff,
-          EffectKindId.IncreaseBuffLifetime,
-          EffectKindId.ReduceDebuffLifetime,
-        ].includes(effectKind)
-      ) {
-        return state.championStates.filter((champion) => champion.team === ownerTeam).slice(0, 1);
-      }
-      if (
-        [
-          EffectKindId.ApplyDebuff,
-          EffectKindId.Damage,
-          EffectKindId.MultiplyDebuff,
-          EffectKindId.IncreaseDebuffLifetime,
-          EffectKindId.ReduceBuffLifetime,
-          EffectKindId.TeamAttack,
-        ].includes(effectKind)
-      ) {
-        return state.championStates.filter((champion) => champion.team !== ownerTeam).slice(0, 1);
-      }
-      console.warn(`Unknown effect type ${effectKind}`);
-      return [];
-    }
-    default: {
-      console.warn(`Unknown target type ${targetType}`);
-      return [];
-    }
-    case EffectTargetType.ActiveHero: // e.g. passive heals each ally on their own turns
-    case EffectTargetType.HeroCausedRelationUnapply:
-    case EffectTargetType.HeroThatKilledProducer:
-    case EffectTargetType.MostInjuredAlly:
-    case EffectTargetType.MostInjuredEnemy:
-    case EffectTargetType.AllDeadAllies:
-    case EffectTargetType.AllyWithLowestMaxHp: {
-      return []; // TODO
-    }
-  }
-}
 
 function selectAllyAttacks(
   state: Readonly<BattleState>,
@@ -235,7 +124,7 @@ function applyEffect(
           // can we extend an existing effect?
           if (
             existingEffect &&
-            [
+            ![
               StatusEffectTypeId.ContinuousHeal075p,
               StatusEffectTypeId.ContinuousHeal15p,
               StatusEffectTypeId.ContinuousDamage025p,
@@ -276,12 +165,13 @@ export function useAbility(state: BattleState, turn: BattleTurn): void {
     turn,
     isProcessingAllyAttack: state.turnState?.isProcessingAllyAttack,
     isProcessingCounterAttack: state.turnState?.isProcessingCounterAttack,
+    effectTargets: {},
   });
   try {
     const skill = RTK.skillTypes[ability.ability.skillTypeId];
     for (const effect of skill.effects) {
       for (let n = 0; n < effect.count; n++) {
-        const targets = selectTargetIndexes(state, turn.championIndex, effect.targetParams!.targetType, effect.kindId);
+        const targets = selectEffectTargets(state, turn.championIndex, effect, turnState);
         applyEffect(state, turn.championIndex, effect, targets, turnState);
       }
     }

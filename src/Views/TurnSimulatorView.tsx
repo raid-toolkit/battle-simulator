@@ -22,7 +22,7 @@ export const TurnSimulatorView: React.FC<TurnSimulatorViewProps> = ({
       shieldHits,
       speedAura,
       championSetups: championList as readonly Required<ChampionSetup>[],
-      stopAfter: 25,
+      stopAfter: 250,
     });
   }, [championList, bossSpeed, shieldHits, speedAura]);
 

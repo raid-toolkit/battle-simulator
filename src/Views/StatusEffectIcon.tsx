@@ -83,19 +83,50 @@ const effectKindToIcon: Record<StatusEffectTypeId, string> = {
 
 export interface StatusEffectIconProps {
   typeId: StatusEffectTypeId;
+  duration: number;
   width?: number | string;
   height?: number | string;
   style?: React.CSSProperties;
 }
 
-export const StatusEffectIcon: React.FC<StatusEffectIconProps> = ({ typeId, style, width, height }) => {
+export const StatusEffectIcon: React.FC<StatusEffectIconProps> = ({ typeId, duration, style, width, height }) => {
   const imgStyle = React.useMemo(() => ({ ...style, width, height }), [style, width, height]);
   return effectKindToIcon[typeId] ? (
-    <img
-      className="avatar"
-      style={imgStyle}
-      alt="hero avatar"
-      src={`/images/effects/${effectKindToIcon[typeId]}.png`}
-    />
+    <span
+      style={{
+        position: 'relative',
+        display: 'inline-block',
+        color: 'white',
+        lineHeight: '1rem',
+        fontSize: '1rem',
+      }}
+    >
+      <img
+        className="avatar"
+        style={imgStyle}
+        alt="hero avatar"
+        src={`/images/effects/${effectKindToIcon[typeId]}.png`}
+      />
+      <span
+        style={{
+          position: 'absolute',
+          right: 2,
+          bottom: 1,
+          WebkitTextStroke: '5px black',
+          WebkitTextFillColor: 'white',
+        }}
+      >
+        {duration}
+      </span>
+      <span
+        style={{
+          position: 'absolute',
+          right: 2,
+          bottom: 1,
+        }}
+      >
+        {duration}
+      </span>
+    </span>
   ) : null;
 };
