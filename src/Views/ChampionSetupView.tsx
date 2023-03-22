@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Card, Dropdown, Input, InputNumber, MenuProps, Space, theme } from 'antd';
+import { Button, Dropdown, InputNumber, MenuProps, Space, theme } from 'antd';
 import { DeleteOutlined, EditOutlined, HolderOutlined, ThunderboltOutlined } from '@ant-design/icons';
 import { ChampionSelectMenu } from '../Components';
 import { AbilitySetupListView } from './AbilitySetupListView';

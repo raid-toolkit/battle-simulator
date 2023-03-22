@@ -1,4 +1,4 @@
-import React, { CSSProperties } from 'react';
+import React from 'react';
 import { Button, Input, InputNumber, Select, Space, theme } from 'antd';
 import { FlagOutlined, FlagFilled, DeleteOutlined, StopOutlined, HistoryOutlined } from '@ant-design/icons';
 import { AbilitySetup } from '../Model';
