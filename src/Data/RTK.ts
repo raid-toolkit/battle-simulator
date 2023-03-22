@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import type { HeroType, SkillType, LocalizedText } from '@raid-toolkit/webclient';
 
 export class RTKStatic {
