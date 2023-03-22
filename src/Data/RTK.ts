@@ -25,7 +25,8 @@ export class RTKStatic {
         import(/* webpackChunkName: "hero-types" */ '../Static/hero-types.json').then((data: any) => data.heroTypes),
       skillTypes: () =>
         import(/* webpackChunkName: "skill-types" */ '../Static/skill-types.json').then((data: any) => data.skillTypes),
-      strings: (): Promise<any> => import(/* webpackChunkName: "strings" */ '../Static/strings.json'),
+      strings: () =>
+        import(/* webpackChunkName: "strings" */ '../Static/strings.json').then((data: any) => data.localizedStrings),
     };
     await Promise.all(Object.entries(loadMap).map(([key, load]) => this.loadData(key as keyof RTKStatic, load)));
   }
