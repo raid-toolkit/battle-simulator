@@ -9,9 +9,18 @@ export interface AppProps {
   toggleTheme: () => void;
 }
 function App({ toggleTheme }: AppProps) {
+  const { token } = theme.useToken();
   const [championList, onChampionListUpdated] = React.useState<readonly Readonly<ChampionSetup>[]>([]);
   return (
-    <Layout className="full-height">
+    <Layout
+      className="full-height"
+      style={
+        {
+          '--color-border': token.colorBorder,
+          '--color-border-hover': token.colorPrimaryHover,
+        } as React.CSSProperties
+      }
+    >
       {/* <Layout.Sider
         width={332}
         style={{

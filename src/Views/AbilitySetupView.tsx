@@ -1,15 +1,9 @@
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import { Button, Input, InputNumber, Select, Space, theme } from 'antd';
-import {
-  FlagOutlined,
-  FlagFilled,
-  DeleteOutlined,
-  StopOutlined,
-  HistoryOutlined,
-  CompressOutlined,
-} from '@ant-design/icons';
+import { FlagOutlined, FlagFilled, DeleteOutlined, StopOutlined, HistoryOutlined } from '@ant-design/icons';
 import { AbilitySetup } from '../Model';
 import { RichString } from '../Components';
+import './AbilitySetupView.css';
 
 export interface AbilitySetupViewProps {
   editable?: boolean;
@@ -47,13 +41,6 @@ export const AbilitySetupView: React.FC<AbilitySetupViewProps> = ({
     [index, ability, onUpdated]
   );
 
-  const setHits = React.useCallback<(value: number | null) => void>(
-    (value) => {
-      editable && onUpdated(index, { ...ability, hits: value ?? 0 });
-    },
-    [index, ability, onUpdated, editable]
-  );
-
   const toggleOpener = React.useCallback(() => {
     onUpdated(index, { ...ability, opener: !ability.opener });
   }, [index, ability, onUpdated]);
@@ -69,50 +56,71 @@ export const AbilitySetupView: React.FC<AbilitySetupViewProps> = ({
       ),
     [index, abilityCount]
   );
+  const { token } = theme.useToken();
 
   return (
-    <div>
+    <div className="ability-row">
       <Space.Compact block>
         <Input
+          bordered={false}
           autoComplete="off"
-          addonBefore={<AbilityPrefix>A{ability.index + 1}</AbilityPrefix>}
+          prefix={<AbilityPrefix>A{ability.index + 1}</AbilityPrefix>}
           placeholder={`A${ability.index + 1}`}
-          disabled={!editable}
-          style={{ flex: 1, borderRadius: 0 }}
+          // disabled={!editable}
+          style={{ flex: 1, pointerEvents: editable ? 'initial' : 'none' }}
           value={ability.label}
           title={ability.label}
           onChange={(value) => {
             onUpdated(index, { ...ability, label: value.target.value });
           }}
         />
-        <Select
-          allowClear
-          showArrow={editable}
-          value={ability.priority}
-          placeholder="Pri"
-          style={{ width: 60 }}
-          options={priorityOptions}
-          onClear={setPriority}
-          onChange={setPriority}
-        />
+        {ability.index === 0 ? (
+          <span
+            style={{
+              cursor: 'default',
+              width: 60,
+              textAlign: 'center',
+              fontSize: 22,
+              lineHeight: '22px',
+              alignSelf: 'center',
+              paddingBottom: 3,
+              color: token.colorTextDisabled,
+            }}
+          >
+            ∞
+          </span>
+        ) : (
+          <Select
+            allowClear
+            bordered={false}
+            value={ability.priority}
+            placeholder="Pri"
+            style={{ width: 60 }}
+            options={priorityOptions}
+            onClear={setPriority}
+            onChange={setPriority}
+          />
+        )}
         <Button
           title="Opener"
           style={{ width: 32 }}
-          type={ability.opener ? 'primary' : 'default'}
-          icon={ability.opener ? <FlagFilled /> : <FlagOutlined />}
+          type="text"
+          icon={ability.opener ? <FlagFilled style={{ color: token.colorPrimary }} /> : <FlagOutlined />}
           onClick={toggleOpener}
         />
         <InputNumber
+          className="ant-input-compact-item ant-input-compact-last-item"
+          bordered={false}
           placeholder="CD"
-          addonAfter={<HistoryOutlined />}
-          // suffix={<HistoryOutlined />}
+          // addonAfter={<HistoryOutlined />}
+          prefix={<HistoryOutlined />}
           title="Cooldown"
-          style={{ width: 90 }}
+          style={{ width: 75 }}
           value={isNaN(ability.cooldown) ? 0 : ability.cooldown}
           status={isNaN(ability.cooldown) ? 'error' : undefined}
           onChange={setCooldown}
         />
-        <InputNumber
+        {/* <InputNumber
           placeholder="Hits"
           style={{ width: 90 - (editable ? 0 : 22) }}
           disabled={!editable}
@@ -121,7 +129,7 @@ export const AbilitySetupView: React.FC<AbilitySetupViewProps> = ({
           title="# of hits"
           value={!ability.hits ? 0 : ability.hits}
           onChange={setHits}
-        />
+        /> */}
         {onDeleted && (
           <Button title="Delete" danger style={{ width: 32 }} icon={<DeleteOutlined />} onClick={deleteSelf} />
         )}

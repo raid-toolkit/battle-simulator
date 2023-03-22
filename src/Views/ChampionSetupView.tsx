@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Card, Dropdown, Input, MenuProps, Space, theme } from 'antd';
+import { Button, Card, Dropdown, Input, InputNumber, MenuProps, Space, theme } from 'antd';
 import { DeleteOutlined, EditOutlined, HolderOutlined, ThunderboltOutlined } from '@ant-design/icons';
 import { ChampionSelectMenu } from '../Components';
 import { AbilitySetupListView } from './AbilitySetupListView';
@@ -42,8 +42,10 @@ export const ChampionSetupView: React.FC<ChampionSetupViewProps> = ({
     [index, onUpdated, setup]
   );
 
-  const setSpeed = React.useCallback<React.ChangeEventHandler<HTMLInputElement>>(
-    (e) => onUpdated(index, { ...setup, speed: parseFloat(e.target.value) || 0 }),
+  const setSpeed = React.useCallback(
+    (value: number | null) => {
+      onUpdated(index, { ...setup, speed: value || 0 });
+    },
     [index, onUpdated, setup]
   );
 
@@ -73,7 +75,7 @@ export const ChampionSetupView: React.FC<ChampionSetupViewProps> = ({
   );
 
   return (
-    <Card className="champion-setup-card" bodyStyle={{ padding: 8 }} tabIndex={0}>
+    <div className="champion-setup-card" style={{ margin: '8px 0px' }} tabIndex={0}>
       <div
         style={{
           display: 'flex',
@@ -81,25 +83,33 @@ export const ChampionSetupView: React.FC<ChampionSetupViewProps> = ({
           flex: 1,
         }}
       >
-        <Space.Compact block>
-          <ChampionSelectMenu
-            status={setup.typeId ? '' : 'warning'}
-            style={{ flex: 1 }}
-            selectedValue={setup.typeId}
-            onSelect={selectTypeId}
-            onClear={selectTypeId}
-          />
-          <Input
-            status={setup.speed ? '' : 'warning'}
-            style={{ width: 135, textAlign: 'right' }}
-            value={setup.speed || undefined}
-            onChange={setSpeed}
-            addonBefore="Speed"
-            maxLength={3}
-            max={999}
-            suffix={<ThunderboltOutlined />}
-          />
-        </Space.Compact>
+        <div className="ability-row">
+          <Space.Compact block>
+            <ChampionSelectMenu
+              bordered={false}
+              status={setup.typeId ? '' : 'warning'}
+              style={{ flex: 1 }}
+              selectedValue={setup.typeId}
+              onSelect={selectTypeId}
+              onClear={selectTypeId}
+            />
+            <InputNumber
+              bordered={false}
+              className="ant-input-compact-item ant-input-compact-last-item"
+              status={setup.speed ? '' : 'warning'}
+              style={{ width: 90, textAlign: 'right' }}
+              value={setup.speed || undefined}
+              onChange={setSpeed}
+              prefix={<ThunderboltOutlined />}
+              // addonBefore="Speed"
+              min={70}
+              max={600}
+              step={1}
+              // addonAfter={<ThunderboltOutlined />}
+              // suffix={<ThunderboltOutlined />}
+            />
+          </Space.Compact>
+        </div>
         <AbilitySetupListView editable={skillsEditable} abilities={setup.abilities} onUpdated={onAbilitiesUpdated} />
       </div>
       <div
@@ -132,6 +142,6 @@ export const ChampionSetupView: React.FC<ChampionSetupViewProps> = ({
           <Button icon={<DeleteOutlined />} style={{ color: token.colorError }} onClick={() => onDeleted(index)} />
         </Space.Compact>
       </div>
-    </Card>
+    </div>
   );
 };

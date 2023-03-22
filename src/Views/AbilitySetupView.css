@@ -1,0 +1,36 @@
+.ability-row {
+  position: relative;
+  border: 1px solid var(--color-border);
+  margin: -1px 0 0 -1px;
+}
+
+.ability-row:first-of-type::after {
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+.ability-row:last-of-type::after {
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.ability-row:hover::after {
+  margin: -1px;
+  position: absolute;
+  left: 0px;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
+  border: 1px solid var(--color-border-hover);
+  z-index: 1;
+  content: '';
+  pointer-events: none;
+}
+
+.ability-row:first-of-type {
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+.ability-row:last-of-type {
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}

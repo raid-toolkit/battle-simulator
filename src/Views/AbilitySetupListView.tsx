@@ -30,7 +30,10 @@ export const AbilitySetupListView: React.FC<AbilitiyListProps> = ({ abilities, o
 
   const updateAbility = React.useCallback(
     (index: number, ability: Readonly<AbilitySetup>) => {
-      onUpdated(replaceItemAtIndex(abilities, index, ability));
+      const newList = replaceItemAtIndex(abilities, index, ability).map((other) =>
+        other !== ability && ability.opener ? { ...other, opener: false } : other
+      );
+      onUpdated(newList);
     },
     [abilities, onUpdated]
   );
@@ -42,7 +45,7 @@ export const AbilitySetupListView: React.FC<AbilitiyListProps> = ({ abilities, o
     [abilities, onUpdated]
   );
   return (
-    <div style={{ display: 'flex', flexDirection: 'column' }}>
+    <>
       {abilities.map((ability, index) => (
         <AbilitySetupView
           editable={editable}
@@ -70,6 +73,6 @@ export const AbilitySetupListView: React.FC<AbilitiyListProps> = ({ abilities, o
           Add Ability
         </Button>
       )}
-    </div>
+    </>
   );
 };

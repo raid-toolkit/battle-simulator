@@ -1,3 +1,7 @@
+.champion-setup-card {
+  position: relative;
+}
+
 .champion-setup-card:focus-within {
   border-width: 1px;
 }
