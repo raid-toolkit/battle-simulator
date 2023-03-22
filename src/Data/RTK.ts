@@ -1,18 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import {
-  useRaidToolkitApi,
-  IAccountApi,
-  IStaticDataApi,
-  HeroType,
-  SkillType,
-  LocalizedText,
-} from "@raid-toolkit/webclient";
-import { staticDataStore } from "./Forage";
+import type { HeroType, SkillType, LocalizedText } from '@raid-toolkit/webclient';
 
-export class RTKApp {
-  public readonly accountApi: IAccountApi;
-  public readonly staticApi: IStaticDataApi;
-
+export class RTKStatic {
   public readonly heroTypes: Record<number, HeroType> = {};
   public readonly skillTypes: Record<number, SkillType> = {};
   public readonly strings: Record<string, string | undefined> = {};
@@ -24,43 +13,28 @@ export class RTKApp {
   }
 
   constructor() {
-    this.accountApi = useRaidToolkitApi(IAccountApi);
-    this.staticApi = useRaidToolkitApi(IStaticDataApi);
     this._loadPromise = this.load();
   }
 
   public getString(value: LocalizedText | undefined): string {
-    return value
-      ? this.strings[value.key] || value.localizedValue || value.defaultValue
-      : "";
+    return value ? this.strings[value.key] || value.localizedValue || value.defaultValue : '';
   }
 
   public async load(): Promise<void> {
-    const loadMap: { [key in keyof RTKApp]?: () => Promise<RTKApp[key]> } = {
+    const loadMap: { [key in keyof RTKStatic]?: () => Promise<RTKStatic[key]> } = {
       heroTypes: () =>
-        RTK.staticApi.getHeroData().then((data) => data.heroTypes),
+        import(/* webpackChunkName: "hero-types" */ '../Static/hero-types.json').then((data: any) => data.heroTypes),
       skillTypes: () =>
-        RTK.staticApi.getSkillData().then((data) => data.skillTypes),
-      strings: () => RTK.staticApi.getLocalizedStrings(),
+        import(/* webpackChunkName: "skill-types" */ '../Static/skill-types.json').then((data: any) => data.skillTypes),
+      strings: (): Promise<any> => import(/* webpackChunkName: "strings" */ '../Static/strings.json'),
     };
-    await Promise.all(
-      Object.entries(loadMap).map(([key, load]) =>
-        this.loadData(key as keyof RTKApp, load)
-      )
-    );
+    await Promise.all(Object.entries(loadMap).map(([key, load]) => this.loadData(key as keyof RTKStatic, load)));
   }
 
-  private async loadData<P extends keyof RTKApp>(
-    key: P,
-    load: () => Promise<RTKApp[P]>
-  ) {
-    let data = await staticDataStore.getItem<RTKApp[P]>(key);
-    if (!data) {
-      data = await load();
-      await staticDataStore.setItem(key, data);
-    }
+  private async loadData<P extends keyof RTKStatic>(key: P, load: () => Promise<RTKStatic[P]>) {
+    const data = await load();
     Object.assign(this[key] as {}, data);
   }
 }
 
-export const RTK = new RTKApp();
+export const RTK = new RTKStatic();
