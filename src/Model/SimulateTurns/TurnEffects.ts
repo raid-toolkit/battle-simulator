@@ -165,6 +165,30 @@ export function applyEffect(
         }
         break;
       }
+      case EffectKindId.IncreaseBuffLifetime: {
+        const params = effect.changeEffectLifetimeParams;
+        if (!params) {
+          console.warn('Missing increaseBuffLifetimeParams', { effect });
+          break;
+        }
+
+        let count = params.count !== -1 ? params.count : target.buffs.length;
+        while (count > 0 && target.buffs.length > 0) {
+          if (params.effectTypeIds?.length) {
+            const buff = target.buffs.find((effect) => params.effectTypeIds.includes(effect.typeId));
+            if (buff) {
+              buff.duration += params.turns;
+            } else {
+              break;
+            }
+          } else {
+            // TODO: Should this be predictable or random?
+            target.buffs[count].duration += params.turns;
+          }
+          --count;
+        }
+        break;
+      }
       default: {
         console.warn('Unhandled effect kindId', { effect });
       }
