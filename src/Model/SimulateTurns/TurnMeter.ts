@@ -13,15 +13,19 @@ const speedAdjustments: Partial<Record<StatusEffectTypeId, number>> = {
   [StatusEffectTypeId.IncreaseSpeed30]: 0.3,
 };
 
-export function tick(state: BattleState) {
+export function tickState(state: BattleState) {
   for (const champion of state.championStates) {
-    const speedAdj =
-      1 +
-      champion.buffs
-        .concat(champion.debuffs)
-        .reduce((speedAdj, effect) => speedAdj + (speedAdjustments[effect.typeId] ?? 0), 0);
-    champion.turnMeter += champion.speed * TURN_METER_RATE * speedAdj;
+    tickChampion(champion);
   }
+}
+
+function tickChampion(champion: ChampionState) {
+  const speedAdj =
+    1 +
+    champion.buffs
+      .concat(champion.debuffs)
+      .reduce((speedAdj, effect) => speedAdj + (speedAdjustments[effect.typeId] ?? 0), 0);
+  champion.turnMeter += champion.speed * TURN_METER_RATE * speedAdj;
 }
 
 export function getNextTurn(state: BattleState) {
@@ -39,7 +43,7 @@ export function getNextTurn(state: BattleState) {
 export function runToNextTurn(state: BattleState) {
   let nextTurn: number;
   do {
-    tick(state);
+    tickState(state);
   } while ((nextTurn = getNextTurn(state)) === -1);
   return nextTurn;
 }
@@ -79,7 +83,7 @@ export function simulateTurns(state: BattleState) {
     champion.buffs = champion.buffs.filter((buff) => (buff.duration -= 1) > 0);
     champion.debuffs = champion.debuffs.filter((buff) => (buff.duration -= 1) > 0);
     ability.cooldownRemaining = ability.ability.cooldown;
-    champion.turnMeter = 0;
+    champion.turnMeter = champion.speed * TURN_METER_RATE;
     ++champion.turnsTaken;
 
     turns.push(turn);

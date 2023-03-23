@@ -1,27 +1,31 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { StatusEffectTypeId } from '@raid-toolkit/webclient';
 import { RTK } from '../../Data';
+import { TURN_METER_RATE } from '../Constants';
 import { lookupChampionSetup } from '../Setup';
 import { BattleState, ChampionState, ChampionTeam, SimulateTurnsArgs } from '../Types';
 
 export function setupBattle(args: SimulateTurnsArgs): BattleState {
   const { championSetups, bossSpeed, shieldHits, speedAura } = args;
-  const championStates = championSetups.map<ChampionState>((setup, index) => ({
-    index,
-    setup,
-    team: ChampionTeam.Friendly,
-    name: RTK.getString(RTK.heroTypes[setup.typeId!].name),
-    speed: setup.speed + (setup.baseSpeed * ((speedAura ?? 0) / 100) || 0),
-    turnMeter: 0,
-    turnsTaken: 0,
-    buffs: [],
-    debuffs: [],
-    abilityState: setup.abilities.map((ability, index) => ({
+  const championStates = championSetups.map<ChampionState>((setup, index) => {
+    const speed = setup.speed + setup.baseSpeed * ((speedAura ?? 0) / 100);
+    return {
       index,
-      ability,
-      cooldownRemaining: 0,
-    })),
-  }));
+      setup,
+      team: ChampionTeam.Friendly,
+      name: RTK.getString(RTK.heroTypes[setup.typeId!].name),
+      speed,
+      turnMeter: speed * TURN_METER_RATE * 3,
+      turnsTaken: 0,
+      buffs: [],
+      debuffs: [],
+      abilityState: setup.abilities.map((ability, index) => ({
+        index,
+        ability,
+        cooldownRemaining: 0,
+      })),
+    };
+  });
 
   const bossSetup = lookupChampionSetup(26566)!; // FK10
 
@@ -33,7 +37,7 @@ export function setupBattle(args: SimulateTurnsArgs): BattleState {
     definesPhase: true,
     name: RTK.getString(RTK.heroTypes[bossSetup.typeId!].name),
     speed: bossSpeed,
-    turnMeter: 0,
+    turnMeter: bossSpeed * TURN_METER_RATE * 3,
     turnsTaken: 0,
     abilityState: bossSetup.abilities.map((ability, index) => ({
       index,
