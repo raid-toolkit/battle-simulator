@@ -49,7 +49,7 @@ function App({ toggleTheme }: AppProps) {
       </Layout.Content>
 
       <Layout.Sider
-        width={532}
+        width={432}
         style={{
           background: 'transparent',
           display: 'flex',

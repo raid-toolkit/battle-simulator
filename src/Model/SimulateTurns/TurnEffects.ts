@@ -131,7 +131,7 @@ export function applyEffect(
           }
 
           // exceeded effect limit
-          if (effectList.length > 10 && !statusEffect.ignoreEffectsLimit) {
+          if (effectList.length >= 10 && !statusEffect.ignoreEffectsLimit) {
             // TODO: Show this in the UI somehow?
             continue;
           }

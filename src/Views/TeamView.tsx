@@ -114,38 +114,37 @@ export const TeamView: React.FC<TeamViewProps> = ({ championList, onChampionList
             gap: 8,
           }}
         >
-          <div style={{ display: 'flex' }}>
-            <Space>
-              <Input
-                addonBefore="Speed Aura"
-                suffix="%"
-                defaultValue={0}
-                value={speedAura}
-                onChange={(e) => setSpeedAura(Number(e.target.value))}
-                addonAfter={<ThunderboltOutlined />}
-                style={{ width: 200, textAlign: 'right' }}
+          <Space wrap>
+            <Input
+              addonBefore="Speed Aura"
+              suffix="%"
+              defaultValue={0}
+              value={speedAura}
+              onChange={(e) => setSpeedAura(Number(e.target.value))}
+              addonAfter={<ThunderboltOutlined />}
+              style={{ width: 200, textAlign: 'right' }}
+            />
+            <Space.Compact>
+              <Button
+                title="Add Champion"
+                disabled={championList.length >= 5}
+                icon={<UserAddOutlined />}
+                onClick={addChampion}
               />
-              <Space.Compact>
-                <Button
-                  title="Add Champion"
-                  disabled={championList.length >= 5}
-                  icon={<UserAddOutlined />}
-                  onClick={addChampion}
-                />
-              </Space.Compact>
-              <Space.Compact>
-                <Button title="Save Team" icon={<SaveOutlined />} onClick={saveTeam} />
-                {!selectedTeam?.isNew && <Button title="Load Team" icon={<FolderOpenOutlined />} onClick={loadTeam} />}
-                <SelectSavedTeam
-                  teams={teams}
-                  selectedTeam={selectedTeam?.key || ''}
-                  teamSelected={teamSelected}
-                  teamCreated={teamCreated}
-                  dirty={selectedTeam?.dirty}
-                />
-              </Space.Compact>
-            </Space>
-          </div>
+            </Space.Compact>
+            <Space.Compact>
+              <Button title="Save Team" icon={<SaveOutlined />} onClick={saveTeam} />
+              {!selectedTeam?.isNew && <Button title="Load Team" icon={<FolderOpenOutlined />} onClick={loadTeam} />}
+              <SelectSavedTeam
+                teams={teams}
+                selectedTeam={selectedTeam?.key || ''}
+                teamSelected={teamSelected}
+                teamCreated={teamCreated}
+                dirty={selectedTeam?.dirty}
+              />
+            </Space.Compact>
+          </Space>
+          <div></div>
           <ChampionSetupListView
             items={championList}
             editable={true}

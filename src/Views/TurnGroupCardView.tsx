@@ -27,15 +27,16 @@ const BattleStateView: React.FC<BattleStateViewProps> = ({ state }) => {
             textShadow: '1px 1px 3px black, 1px 1px 1px black',
             display: 'flex',
             flexDirection: 'row',
+            alignItems: 'center',
           }}
         >
           <Avatar id={RTK.heroTypes[championState.setup.typeId].avatarKey} height="2rem" style={{ marginRight: 4 }} />
-          <span style={{ verticalAlign: 'middle' }}>
+          <span>
             {championState.buffs.map((buff) => (
               <StatusEffectIcon height="2rem" typeId={buff.typeId} duration={buff.duration} />
             ))}
           </span>
-          <span style={{ verticalAlign: 'middle' }}>
+          <span>
             {championState.debuffs.map((buff) => (
               <StatusEffectIcon height="2rem" typeId={buff.typeId} duration={buff.duration} />
             ))}
@@ -48,7 +49,7 @@ const BattleStateView: React.FC<BattleStateViewProps> = ({ state }) => {
 
 export const TurnGroupCardView: React.FC<TurnGroupCardViewProps> = ({ turns, turnSequence }) => {
   return (
-    <Card title={`Boss Turn #${turnSequence}`} style={{ width: 320 }}>
+    <Card title={`Boss Turn #${turnSequence}`} style={{ width: 390 }} bodyStyle={{ padding: 8 }}>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         {turns.map((turn) => (
           <div
