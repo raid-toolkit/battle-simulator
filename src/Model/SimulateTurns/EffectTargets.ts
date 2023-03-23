@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { EffectKindId, EffectTargetType, EffectType } from '@raid-toolkit/webclient';
+import { EffectKindId, EffectTargetType, EffectType, TargetExclusion } from '@raid-toolkit/webclient';
 import { shuffle } from '../../Common';
 import { BattleState, ChampionState, TurnState } from '../Types';
 
@@ -16,10 +16,15 @@ function selectTargetChampions(
     return [];
   }
   const targetType = effectType.targetParams.targetType;
+  const exclusion = effectType.targetParams.exclusion;
   const effectKind = effectType.kindId;
   switch (targetType) {
     case EffectTargetType.AllAllies: {
-      return state.championStates.filter((champion) => champion.team === ownerTeam);
+      const allAllies = state.championStates.filter((champion) => champion.team === ownerTeam);
+      if (exclusion === TargetExclusion.Producer) {
+        return allAllies.filter((champion) => champion.index !== ownerIndex);
+      }
+      return allAllies;
     }
     case EffectTargetType.AllEnemies: {
       return state.championStates.filter((champion) => champion.team !== ownerTeam);

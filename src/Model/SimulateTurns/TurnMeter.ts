@@ -83,7 +83,7 @@ export function simulateTurns(state: BattleState) {
     champion.buffs = champion.buffs.filter((buff) => (buff.duration -= 1) > 0);
     champion.debuffs = champion.debuffs.filter((buff) => (buff.duration -= 1) > 0);
     ability.cooldownRemaining = ability.ability.cooldown;
-    champion.turnMeter = champion.speed * TURN_METER_RATE;
+    champion.turnMeter = 0; //champion.speed * TURN_METER_RATE;
     ++champion.turnsTaken;
 
     turns.push(turn);
