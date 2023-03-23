@@ -183,7 +183,7 @@ export function applyEffect(
             }
           } else {
             // TODO: Should this be predictable or random?
-            target.buffs[count].duration += params.turns;
+            target.buffs[count - 1].duration += params.turns;
           }
           --count;
         }
