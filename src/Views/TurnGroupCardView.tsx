@@ -48,7 +48,7 @@ const EndStateView: React.FC<ChampionStateViewProps> = ({ state, index, showEffe
       />
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyItems: 'flex-end' }}>
         {showTurnMeter && (
-          <TurnMeter value={championState.turnMeter / 100} winner={takingTurn} width="100%" height="1rem" />
+          <TurnMeter showLabel value={championState.turnMeter / 100} winner={takingTurn} width="100%" height="1rem" />
         )}
         {showEffects && (
           <>

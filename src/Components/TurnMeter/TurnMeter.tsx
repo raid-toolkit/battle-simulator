@@ -4,19 +4,25 @@ import './TurnMeter.css';
 
 export interface TurnMeterProps extends React.PropsWithChildren {
   value: number;
+  showLabel?: boolean;
   winner?: boolean;
   width?: number | string;
   height?: number | string;
 }
 
-export const TurnMeter: React.FC<TurnMeterProps> = ({ value, winner = false, width = 300, height = 10, children }) => {
+export const TurnMeter: React.FC<TurnMeterProps> = ({
+  value,
+  showLabel,
+  winner = false,
+  width = 300,
+  height = 10,
+  children,
+}) => {
   const hasDetails = React.Children.count(children) > 0;
+  const label = round(value * 100, 6).toString();
+  const fontSize = `calc(${typeof height === 'number' ? `${height}px` : height} + 5px)`;
   return (
-    <div
-      title={`${round(value * 100, 4)}`}
-      className={`turn-meter-container ${hasDetails ? 'has-details' : ''}`}
-      style={{ width, height }}
-    >
+    <div title={label} className={`turn-meter-container ${hasDetails ? 'has-details' : ''}`} style={{ width, height }}>
       <div
         tabIndex={hasDetails ? 0 : undefined}
         className={['turn-meter', 'shadow-small', winner ? 'winner' : ''].join(' ')}
@@ -50,6 +56,11 @@ export const TurnMeter: React.FC<TurnMeterProps> = ({ value, winner = false, wid
           <div className="cell" />
         </div>
       </div>
+      {showLabel && (
+        <div className="turn-meter-label" style={{ fontSize, lineHeight: fontSize }}>
+          <span>{label}</span>
+        </div>
+      )}
     </div>
   );
 };

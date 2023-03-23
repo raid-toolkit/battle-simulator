@@ -9,6 +9,19 @@
   cursor: pointer;
 }
 
+.turn-meter-label {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 8rem;
+  z-index: 2;
+  padding: 0px 6px;
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+}
+
 .turn-meter {
   flex: 1;
   position: relative;
