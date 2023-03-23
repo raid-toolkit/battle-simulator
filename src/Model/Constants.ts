@@ -1,1 +1,1 @@
-export const TURN_METER_RATE = 0.007;
+export const TURN_METER_RATE = 0.07;
