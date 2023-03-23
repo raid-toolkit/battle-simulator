@@ -1592,6 +1592,19 @@ index b5fc6c9..61a9606 100644
 +  SkillBonusType['CooltimeTurn'] = 'CooltimeTurn';
 +  SkillBonusType['ShieldCreation'] = 'ShieldCreation';
 +})((SkillBonusType = exports.SkillBonusType || (exports.SkillBonusType = {})));
+diff --git a/node_modules/@raid-toolkit/webclient/lib/Types/SkillType.d.ts b/node_modules/@raid-toolkit/webclient/lib/Types/SkillType.d.ts
+index 896226e..27ea4d2 100644
+--- a/node_modules/@raid-toolkit/webclient/lib/Types/SkillType.d.ts
++++ b/node_modules/@raid-toolkit/webclient/lib/Types/SkillType.d.ts
+@@ -42,7 +42,7 @@ export interface EffectRelation {
+     effectTypeId: StatusEffectTypeId;
+     effectKindIds: EffectKindId[];
+     effectKindGroups: EffectKindGroup[];
+-    phase: string;
++    phase: number[];
+     activateOnGlancingHit: boolean;
+ }
+ export interface StatusEffectParams {
 diff --git a/node_modules/@raid-toolkit/webclient/lib/Types/SkillType.js b/node_modules/@raid-toolkit/webclient/lib/Types/SkillType.js
 index 700211f..bfbfb91 100644
 --- a/node_modules/@raid-toolkit/webclient/lib/Types/SkillType.js

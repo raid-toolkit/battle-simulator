@@ -1,3 +1,5 @@
+export * from './RSL';
+
 export * from './AbilitySetup';
 export * from './BattleState';
 export * from './ChampionSetup';
