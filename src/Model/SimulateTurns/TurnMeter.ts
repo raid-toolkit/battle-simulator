@@ -38,9 +38,9 @@ export function getNextTurn(state: BattleState) {
 
 export function runToNextTurn(state: BattleState) {
   let nextTurn: number;
-  while ((nextTurn = getNextTurn(state)) === -1) {
+  do {
     tick(state);
-  }
+  } while ((nextTurn = getNextTurn(state)) === -1);
   return nextTurn;
 }
 
