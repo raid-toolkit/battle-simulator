@@ -10,13 +10,14 @@
 }
 
 .turn-meter-label {
+  margin-left: 8px;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  width: 8rem;
+  width: 5em;
   z-index: 2;
-  padding: 0px 6px;
+  padding: 0.25em;
   color: #fff;
   background-color: rgba(0, 0, 0, 0.5);
   border-radius: 8px;

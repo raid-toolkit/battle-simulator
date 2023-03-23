@@ -9,7 +9,7 @@ export default {
   argTypes: {
     winner: { control: { type: 'boolean' } },
     showLabel: { control: { type: 'boolean' } },
-    value: { control: { type: 'range', min: 0, max: 2, step: 0.00001 } },
+    value: { control: { type: 'range', min: 0, max: 2, step: 0.000001 } },
     width: { control: { type: 'number', min: 50, max: 500, step: 5 } },
     height: { control: { type: 'number', min: 10, max: 60, step: 5 } },
   },
