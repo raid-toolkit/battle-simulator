@@ -1,14 +1,12 @@
 import React from 'react';
-import { Button, ConfigProvider, Layout, theme } from 'antd';
+import { Button, ConfigProvider, Layout, theme, ThemeConfig } from 'antd';
 import { HighlightOutlined } from '@ant-design/icons';
-import { ChampionSetup, validateSetup } from './Model';
+import { ChampionSetup, useAppModel, validateSetup } from './Model';
 import { TeamView, TurnSimulatorView } from './Views';
 import './App.css';
 
-export interface AppProps {
-  toggleTheme: () => void;
-}
-function App({ toggleTheme }: AppProps) {
+function App() {
+  const { dispatch } = useAppModel();
   const { token } = theme.useToken();
   const [championList, onChampionListUpdated] = React.useState<readonly Readonly<ChampionSetup>[]>([]);
   return (
@@ -34,14 +32,14 @@ function App({ toggleTheme }: AppProps) {
       <Layout.Content className="full-height">
         <Layout className="full-height">
           <Layout.Header style={{ background: 'transparent' }}>
-            <Button icon={<HighlightOutlined />} onClick={toggleTheme}>
+            <Button icon={<HighlightOutlined />} onClick={dispatch.changeTheme}>
               Change theme
             </Button>
           </Layout.Header>
           <Layout.Content className="full-height">
             <div style={{ height: '100%', overflowY: 'auto', position: 'relative', zIndex: 1 }}>
               {championList.length && championList.every((item) => validateSetup(item).length === 0) ? (
-                <TurnSimulatorView bossSpeed={250} championList={championList} shieldHits={21} speedAura={19} />
+                <TurnSimulatorView championList={championList} />
               ) : null}
             </div>
           </Layout.Content>
@@ -63,21 +61,17 @@ function App({ toggleTheme }: AppProps) {
 }
 
 const AppHost = () => {
-  const [themeName, setThemeName] = React.useState('dark');
-  const toggleTheme = React.useCallback(() => {
-    setThemeName((current) => (current === 'dark' ? 'light' : 'dark'));
-  }, []);
-  React.useEffect(() => {
-    const htmlRoot = document.querySelector('html');
-    htmlRoot!.style.colorScheme = themeName;
-  }, [themeName]);
+  const { state } = useAppModel();
+
+  const themeConfig: ThemeConfig = React.useMemo(
+    () => ({
+      algorithm: state.theme === 'dark' ? theme.darkAlgorithm : theme.defaultAlgorithm,
+    }),
+    [state.theme]
+  );
   return (
-    <ConfigProvider
-      theme={{
-        algorithm: themeName === 'dark' ? theme.darkAlgorithm : theme.defaultAlgorithm,
-      }}
-    >
-      <App toggleTheme={toggleTheme} />
+    <ConfigProvider theme={themeConfig}>
+      <App />
     </ConfigProvider>
   );
 };

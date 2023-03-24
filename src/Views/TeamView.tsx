@@ -1,8 +1,8 @@
 import React from 'react';
 import { ChampionSetupListView } from './ChampionSetupListView';
-import { Badge, Button, Card, Input, Space } from 'antd';
+import { Badge, Button, Card, Input, InputNumber, Space } from 'antd';
 import { FolderOpenOutlined, SaveOutlined, ThunderboltOutlined, UserAddOutlined } from '@ant-design/icons';
-import { ChampionSetup, SavedTeam, SavedTeamVersion } from '../Model';
+import { ChampionSetup, SavedTeam, SavedTeamVersion, useAppModel } from '../Model';
 import { removeItemAtIndex, replaceItemAtIndex } from '../Common';
 import { teamDataStore } from '../Data/Forage';
 import { useForageCollection } from '../Components/Hooks';
@@ -22,10 +22,10 @@ export interface SelectedTeam {
 }
 
 export const TeamView: React.FC<TeamViewProps> = ({ championList, onChampionListUpdated }) => {
+  const { state, dispatch } = useAppModel();
   const { items, addOrUpdate: addOrUpdateTeam /*, remove*/ } = useForageCollection<SavedTeam>(teamDataStore);
 
   const [selectedTeam, setSelectedTeam] = React.useState<SelectedTeam>();
-  const [speedAura, setSpeedAura] = React.useState<number>(0);
 
   const teamSelected = React.useCallback(
     (key: string) => {
@@ -43,7 +43,7 @@ export const TeamView: React.FC<TeamViewProps> = ({ championList, onChampionList
     if (selectedTeam) {
       const versions: SavedTeamVersion[] = [
         {
-          speedAura,
+          speedAura: state.tuneState.speedAura,
           champions: championList,
         },
       ];
@@ -53,7 +53,7 @@ export const TeamView: React.FC<TeamViewProps> = ({ championList, onChampionList
       }));
       setSelectedTeam({ ...selectedTeam, dirty: false, isNew: false });
     }
-  }, [addOrUpdateTeam, championList, selectedTeam, speedAura]);
+  }, [addOrUpdateTeam, championList, selectedTeam, state.tuneState.speedAura]);
 
   const loadTeam = React.useCallback(() => {
     if (!selectedTeam) {
@@ -67,9 +67,9 @@ export const TeamView: React.FC<TeamViewProps> = ({ championList, onChampionList
 
     const lastVersion = existingTeam.versions[existingTeam.versions.length - 1];
     onChampionListUpdated(lastVersion.champions);
-    setSpeedAura(lastVersion.speedAura);
+    dispatch.setSpeedAura(lastVersion.speedAura);
     setSelectedTeam({ ...selectedTeam, dirty: false });
-  }, [items, onChampionListUpdated, selectedTeam]);
+  }, [items, onChampionListUpdated, selectedTeam, dispatch]);
 
   const teams = React.useMemo(() => {
     if (selectedTeam && !items[selectedTeam.key]) {
@@ -115,12 +115,12 @@ export const TeamView: React.FC<TeamViewProps> = ({ championList, onChampionList
           }}
         >
           <Space wrap>
-            <Input
+            <InputNumber
               addonBefore="Speed Aura"
-              suffix="%"
+              prefix="%"
               defaultValue={0}
-              value={speedAura}
-              onChange={(e) => setSpeedAura(Number(e.target.value))}
+              value={state.tuneState.speedAura}
+              onChange={dispatch.setSpeedAura}
               addonAfter={<ThunderboltOutlined />}
               style={{ width: 200, textAlign: 'right' }}
             />
