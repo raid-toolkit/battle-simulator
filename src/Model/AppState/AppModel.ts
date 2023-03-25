@@ -14,6 +14,7 @@ export interface AppDispatch {
   updateChampion(index: number, update: (champion: ChampionSetup) => void): void;
   setSetupTypeId(index: number, typeId: number | undefined): void;
   updateChampionSkill(index: number, skillIndex: number, update: (ability: AbilitySetup) => void): void;
+  toggleSkillOpener(index: number, skillIndex: number): void;
 }
 
 export interface AppModel {

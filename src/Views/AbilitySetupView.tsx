@@ -49,9 +49,7 @@ export const AbilitySetupView: React.FC<AbilitySetupViewProps> = ({
   );
 
   const toggleOpener = React.useCallback(() => {
-    dispatch.updateChampionSkill(ownerIndex, abilityIndex, (ability) => {
-      ability.opener = !ability.opener;
-    });
+    dispatch.toggleSkillOpener(ownerIndex, abilityIndex);
   }, [abilityIndex, ownerIndex, dispatch]);
 
   const priorityOptions = React.useMemo(
@@ -110,7 +108,9 @@ export const AbilitySetupView: React.FC<AbilitySetupViewProps> = ({
           title="Opener"
           style={{ width: 32 }}
           type="text"
-          icon={ability.opener ? <FlagFilled style={{ color: token.colorPrimary }} /> : <FlagOutlined />}
+          icon={
+            owner.skillOpener === abilityIndex ? <FlagFilled style={{ color: token.colorPrimary }} /> : <FlagOutlined />
+          }
           onClick={toggleOpener}
         />
         <InputNumber

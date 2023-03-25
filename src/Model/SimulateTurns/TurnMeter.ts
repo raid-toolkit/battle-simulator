@@ -74,10 +74,12 @@ export function simulateTurns(state: BattleState) {
   processValkyrieBuff(state);
   for (let i = 0; i < (state.args.stopAfter ?? 250); ++i) {
     const turn = takeNextTurn(state);
-    useAbility(state, turn);
 
     const champion = state.championStates[turn.championIndex];
     const ability = champion.abilityState[turn.abilityIndex];
+    champion.phantomTouchCooldown = 0;
+
+    useAbility(state, turn);
 
     // please punish me for this
     champion.buffs = champion.buffs.filter((buff) => (buff.duration -= 1) > 0);

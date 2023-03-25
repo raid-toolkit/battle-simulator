@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { EffectKindId, EffectType, StatusEffectTypeId, TeamAttackParams } from '@raid-toolkit/webclient';
 import { assert, cloneObject, shuffle } from '../../Common';
-import { BattleState, ChampionState, StatusEffect, TurnState } from '../Types';
+import { BattleState, BlessingTypeId, ChampionState, StatusEffect, TurnState } from '../Types';
 import { useAbility } from './ProcessAbility';
 
 const statusEffectSuperiorTo: Partial<Record<StatusEffectTypeId, StatusEffectTypeId>> = {
@@ -50,11 +50,16 @@ export function applyEffect(
   targets: ChampionState[],
   turnState: TurnState
 ) {
+  const owner = state.championStates[ownerIndex];
   for (const target of targets) {
     switch (effect.kindId) {
       case EffectKindId.Damage: {
         if (target.shieldHitsRemaining) {
           target.shieldHitsRemaining = Math.max(0, target.shieldHitsRemaining - 1);
+          if (owner.phantomTouchCooldown === 0 && owner.setup.blessing === BlessingTypeId.MagicOrb) {
+            owner.phantomTouchCooldown = 1;
+            target.shieldHitsRemaining = Math.max(0, target.shieldHitsRemaining - 1);
+          }
         }
         turnState.hitsToPostProcess.push(target.index);
         break;

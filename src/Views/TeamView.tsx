@@ -62,6 +62,9 @@ export const TeamView: React.FC<TeamViewProps> = () => {
     }
 
     const lastVersion = existingTeam.versions[existingTeam.versions.length - 1];
+    lastVersion.champions.forEach(
+      (champion) => (champion.skillOpener = champion.abilities.findIndex((ability) => ability.opener))
+    );
     dispatch.temp_setChampionsList(lastVersion.champions);
     dispatch.setSpeedAura(lastVersion.speedAura);
     setSelectedTeam({ ...selectedTeam, dirty: false });
