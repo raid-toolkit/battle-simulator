@@ -3,8 +3,9 @@ import { Button, Dropdown, InputNumber, MenuProps, Space, theme } from 'antd';
 import { DeleteOutlined, HolderOutlined, ThunderboltOutlined } from '@ant-design/icons';
 import { ChampionSelectMenu } from '../Components';
 import { AbilitySetupListView } from './AbilitySetupListView';
-import { useAppModel } from '../Model';
+import { BlessingTypeId, useAppModel } from '../Model';
 import './ChampionSetupView.css';
+import { PhantomTouchIcon } from './PhantomTouch';
 
 export interface ChampionSetupViewProps {
   index: number;
@@ -31,6 +32,12 @@ export const ChampionSetupView: React.FC<ChampionSetupViewProps> = ({ index }) =
     },
     [index, dispatch]
   );
+
+  const togglePhantomTouch = React.useCallback(() => {
+    dispatch.updateChampion(index, (setup) => {
+      setup.blessing = setup.blessing ? null : BlessingTypeId.MagicOrb;
+    });
+  }, [index, dispatch]);
 
   const menu = React.useMemo<MenuProps>(
     () => ({
@@ -65,6 +72,16 @@ export const ChampionSetupView: React.FC<ChampionSetupViewProps> = ({ index }) =
               selectedValue={setup.typeId}
               onSelect={selectTypeId}
               onClear={selectTypeId}
+            />
+            <Button
+              type="text"
+              icon={<PhantomTouchIcon />}
+              onClick={togglePhantomTouch}
+              title="Phantom Touch"
+              style={{
+                borderBottomRightRadius: 0,
+                color: setup.blessing === BlessingTypeId.MagicOrb ? token.colorPrimary : token.colorText,
+              }}
             />
             <InputNumber
               bordered={false}

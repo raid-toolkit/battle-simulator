@@ -49,6 +49,8 @@ export function setupBattle(args: SimulateTurnsArgs): BattleState {
       typeId: 26566, // FK10
       speed: bossSpeed,
       baseSpeed: bossSpeed,
+      blessing: null,
+      skillOpener: -1,
       abilities: bossSetup.abilities,
     },
     buffs: [],

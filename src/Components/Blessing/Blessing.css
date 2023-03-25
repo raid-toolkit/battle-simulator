@@ -1,0 +1,26 @@
+img.blessing {
+  object-fit: cover;
+}
+
+.blessing-border {
+  display: inline-block;
+}
+
+@supports (clip-path: polygon(50% 0, 0 15%, 0 85%, 50% 100%, 100% 85%, 100% 15%)) {
+  .blessing-border {
+    background-color: var(--border-color, white);
+    display: inline-block;
+    padding: var(--border-size, 3px);
+    clip-path: polygon(50% 0, 0 15%, 0 85%, 50% 100%, 100% 85%, 100% 15%);
+  }
+  .blessing {
+    clip-path: polygon(50% 0, 0 15%, 0 85%, 50% 100%, 100% 85%, 100% 15%);
+  }
+}
+
+@supports not (clip-path: polygon(50% 0, 0 15%, 0 85%, 50% 100%, 100% 85%, 100% 15%)) {
+  img.blessing {
+    border-radius: 33%;
+    border: var(--border-size, 3px) solid var(--border-color, white);
+  }
+}

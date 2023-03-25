@@ -32,6 +32,7 @@ export interface ChampionState {
   isBoss?: boolean;
   definesPhase?: boolean;
   shieldHitsRemaining?: number;
+  phantomTouchCooldown?: number;
 
   index: number;
   name: string;

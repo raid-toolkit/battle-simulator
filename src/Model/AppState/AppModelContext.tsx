@@ -113,8 +113,15 @@ function useAppModelInternal(): AppModel {
           setState((state) => update(state.tuneState.championList[index]));
         }
 
-        updateChampionSkill(index: number, skillIndex: number, update: (ability: AbilitySetup) => void): void {
-          setState((state) => update(state.tuneState.championList[index].abilities[skillIndex]));
+        updateChampionSkill(ownerIndex: number, skillIndex: number, update: (ability: AbilitySetup) => void): void {
+          setState((state) => update(state.tuneState.championList[ownerIndex].abilities[skillIndex]));
+        }
+
+        toggleSkillOpener(ownerIndex: number, skillIndex: number): void {
+          setState((state) => {
+            const champion = state.tuneState.championList[ownerIndex];
+            champion.skillOpener = champion.skillOpener === skillIndex ? -1 : skillIndex;
+          });
         }
 
         setSetupTypeId(index: number, typeId: number | undefined): void {
