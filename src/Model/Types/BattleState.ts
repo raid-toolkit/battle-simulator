@@ -1,6 +1,7 @@
 import { StatusEffectTypeId } from '@raid-toolkit/webclient';
 import type { AbilitySetup } from './AbilitySetup';
 import type { ChampionSetup } from './ChampionSetup';
+import { ExpressionVars } from './RSL';
 
 export enum ChampionTeam {
   Friendly,
@@ -49,7 +50,10 @@ export interface ChampionState {
 export interface BattleState {
   args: SimulateTurnsArgs;
   championStates: ChampionState[];
+  turnQueue: number[];
 
+  currentTurnOwner?: number;
+  turnVariables: ExpressionVars;
   turnState?: TurnState;
 }
 
@@ -64,5 +68,6 @@ export interface TurnState {
   turn?: BattleTurn;
   isProcessingAllyAttack?: boolean;
   isProcessingCounterAttack?: boolean;
+  abilityVariables: ExpressionVars;
   effectTargets: Record<number, number[]>;
 }

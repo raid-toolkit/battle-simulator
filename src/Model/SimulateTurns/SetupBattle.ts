@@ -70,5 +70,7 @@ export function setupBattle(args: SimulateTurnsArgs): BattleState {
   return {
     args,
     championStates,
+    turnVariables: {},
+    turnQueue: [],
   };
 }

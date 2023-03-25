@@ -1,11 +1,14 @@
-import { ExpressionBuilderVariable } from '../Types';
+import { BattleState, ExpressionBuilderVariable, ExpressionVars } from '../Types';
 
-const constantVars: Partial<Record<ExpressionBuilderVariable, number>> = {
+const constantVars: ExpressionVars = {
   [ExpressionBuilderVariable.MAX_STAMINA]: 100,
+  [ExpressionBuilderVariable.canUniqueApplyForBaseEffect]: 1,
+  [ExpressionBuilderVariable.isOwnersTurn]: 1, // TODO
+  [ExpressionBuilderVariable.effectProducerIsSkillProducer]: 1, // ?
 };
 
-export function evalExpression(expression: string, vars: Partial<Record<ExpressionBuilderVariable, number>>): number {
-  const allVars = { ...constantVars, ...vars };
+export function evalExpression(state: BattleState, expression: string, vars: ExpressionVars = {}): number {
+  const allVars = { ...constantVars, ...state.turnVariables, ...vars };
   for (const [key, value] of Object.entries(allVars)) {
     expression = expression.replace(ExpressionBuilderVariable[key as any], value.toString());
   }
