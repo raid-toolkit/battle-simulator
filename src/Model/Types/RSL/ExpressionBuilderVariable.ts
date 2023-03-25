@@ -366,3 +366,5 @@ export enum ExpressionBuilderVariable {
   targetDoubleAscendLevel = 187,
   targetBuffCountExcludeAppliedOnRoundStarted = 188,
 }
+
+export type ExpressionVars = Partial<Record<ExpressionBuilderVariable, number>>;

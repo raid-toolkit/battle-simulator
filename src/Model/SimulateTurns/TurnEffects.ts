@@ -1,7 +1,15 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { EffectKindId, EffectType, StatusEffectTypeId, TeamAttackParams } from '@raid-toolkit/webclient';
 import { assert, cloneObject, shuffle } from '../../Common';
-import { BattleState, BlessingTypeId, ChampionState, StatusEffect, TurnState } from '../Types';
+import {
+  BattleState,
+  BlessingTypeId,
+  ChampionState,
+  ExpressionBuilderVariable,
+  StatusEffect,
+  TurnState,
+} from '../Types';
+import { evalExpression } from './Expression';
 import { useAbility } from './ProcessAbility';
 
 const statusEffectSuperiorTo: Partial<Record<StatusEffectTypeId, StatusEffectTypeId>> = {
@@ -192,6 +200,30 @@ export function applyEffect(
           }
           --count;
         }
+        break;
+      }
+      case EffectKindId.IncreaseStamina: {
+        const tmIncrease = evalExpression(state, effect.multiplier, {});
+        target.turnMeter += tmIncrease;
+        break;
+      }
+      case EffectKindId.ExtraTurn: {
+        if (effect.chance !== 1 && effect.chance !== null) {
+          // don't count non-guaranteed turns
+          break;
+        }
+        if (
+          effect.condition &&
+          !evalExpression(state, effect.condition, {
+            [ExpressionBuilderVariable.isOwnersTurn]: target.index === state.currentTurnOwner ? 1 : 0,
+          })
+        ) {
+          // can't proc extra turn
+          // TODO: Add debug logging?
+          break;
+        }
+        state.turnVariables[ExpressionBuilderVariable.targetIsAlreadyHasExtraTurn] = 1;
+        state.turnQueue.push(target.index);
         break;
       }
       default: {

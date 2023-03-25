@@ -48,47 +48,55 @@ export function runToNextTurn(state: BattleState) {
   return nextTurn;
 }
 
-export function takeNextTurn(state: BattleState): BattleTurn {
-  const nextTurn = runToNextTurn(state);
-  assert(nextTurn !== -1, 'No turn to take');
-  const champion = state.championStates[nextTurn];
+export function selectAbility(state: BattleState, championIndex: number): number {
+  const champion = state.championStates[championIndex];
   for (const ability of champion.abilityState) {
     ability.cooldownRemaining = Math.max(0, ability.cooldownRemaining - 1);
   }
   const abilities = champion.abilityState.filter(
     (ability) => ability.cooldownRemaining === 0 && ability.ability.priority !== -1
   );
-  const starter = abilities.find((a) => a.ability.opener);
+  const starter = abilities[champion.setup.skillOpener];
   if (champion.turnsTaken === 0 && starter) {
-    return { state: cloneObject(state), championIndex: nextTurn, abilityIndex: starter.index };
+    return starter.index;
   }
   const nextAbility = abilities.sort((a, b) => (b.ability.priority ?? 99) - (a.ability.priority ?? 99))[
     abilities.length - 1
   ];
   assert(nextAbility, 'No ability to use');
-  return { state: cloneObject(state), championIndex: nextTurn, abilityIndex: nextAbility.index };
+  return nextAbility.index;
 }
 
 export function simulateTurns(state: BattleState) {
   const turns: BattleTurn[] = [];
   processValkyrieBuff(state);
   for (let i = 0; i < (state.args.stopAfter ?? 250); ++i) {
-    const turn = takeNextTurn(state);
+    const nextTurn = runToNextTurn(state);
+    assert(nextTurn !== -1, 'No turn to take');
+    state.turnQueue.push(nextTurn);
 
-    const champion = state.championStates[turn.championIndex];
-    const ability = champion.abilityState[turn.abilityIndex];
-    champion.phantomTouchCooldown = 0;
+    let championIndex: number | undefined;
+    while ((championIndex = state.turnQueue.pop()) !== undefined) {
+      state.turnVariables = {};
+      state.currentTurnOwner = championIndex;
+      const abilityIndex = selectAbility(state, championIndex);
+      const turn: BattleTurn = { state: cloneObject(state), championIndex, abilityIndex };
 
-    useAbility(state, turn);
+      const champion = state.championStates[championIndex];
+      const ability = champion.abilityState[abilityIndex];
+      champion.phantomTouchCooldown = 0;
 
-    // please punish me for this
-    champion.buffs = champion.buffs.filter((buff) => (buff.duration -= 1) > 0);
-    champion.debuffs = champion.debuffs.filter((buff) => (buff.duration -= 1) > 0);
-    ability.cooldownRemaining = ability.ability.cooldown;
-    champion.turnMeter = 0; //champion.speed * TURN_METER_RATE;
-    ++champion.turnsTaken;
+      // please punish me for this
+      champion.buffs = champion.buffs.filter((buff) => (buff.duration -= 1) > 0);
+      champion.debuffs = champion.debuffs.filter((buff) => (buff.duration -= 1) > 0);
+      champion.turnMeter = 0; //champion.speed * TURN_METER_RATE;
 
-    turns.push(turn);
+      useAbility(state, turn);
+
+      ability.cooldownRemaining = ability.ability.cooldown;
+      ++champion.turnsTaken;
+      turns.push(turn);
+    }
   }
   return turns;
 }

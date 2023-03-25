@@ -17,6 +17,7 @@ export function useAbility(state: BattleState, turn: BattleTurn): void {
     turn,
     isProcessingAllyAttack: state.turnState?.isProcessingAllyAttack,
     isProcessingCounterAttack: state.turnState?.isProcessingCounterAttack,
+    abilityVariables: state.turnState?.abilityVariables || {},
     effectTargets: {},
   });
   try {
