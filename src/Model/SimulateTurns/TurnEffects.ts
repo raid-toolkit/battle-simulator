@@ -87,19 +87,19 @@ export function applyEffect(
           effectList = target.buffs;
           if (target.debuffs.some((effect) => effect.typeId === StatusEffectTypeId.BlockBuffs)) {
             // TODO: Show this somewhere in the UI?
-            console.log(`Buffs blocked by BlockBuffs :sadface:`);
+            // console.log(`Buffs blocked by BlockBuffs :sadface:`);
             break;
           }
         } else if (effect.kindId === EffectKindId.ApplyDebuff) {
           effectList = target.debuffs;
           if (target.buffs.some((effect) => effect.typeId === StatusEffectTypeId.BlockDebuff)) {
             // TODO: Show this somewhere in the UI?
-            console.log(`Debuffs blocked by BlockDebuffs :happyface:`);
+            // console.log(`Debuffs blocked by BlockDebuffs :happyface:`);
             break;
           }
           if (target.shieldHitsRemaining) {
             // TODO: Show this somewhere in the UI?
-            console.log(`Debuffs blocked by shield :angryface:`);
+            // console.log(`Debuffs blocked by shield :angryface:`);
             break;
           }
         } else {
@@ -190,7 +190,7 @@ export function applyEffect(
         break;
       }
       default: {
-        console.warn('Unhandled effect kindId', { effect });
+        // console.warn('Unhandled effect kindId', { effect });
       }
     }
   }

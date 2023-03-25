@@ -53,13 +53,13 @@ const EndStateView: React.FC<ChampionStateViewProps> = ({ state, index, showEffe
         {showEffects && (
           <>
             <span>
-              {championState.buffs.map((buff) => (
-                <StatusEffectIcon height="2rem" typeId={buff.typeId} duration={buff.duration} />
+              {championState.buffs.map((buff, idx) => (
+                <StatusEffectIcon key={`buff${idx}`} height="2rem" typeId={buff.typeId} duration={buff.duration} />
               ))}
             </span>
             <span>
-              {championState.debuffs.map((buff) => (
-                <StatusEffectIcon height="2rem" typeId={buff.typeId} duration={buff.duration} />
+              {championState.debuffs.map((buff, idx) => (
+                <StatusEffectIcon key={`debuff${idx}`} height="2rem" typeId={buff.typeId} duration={buff.duration} />
               ))}
             </span>
           </>
@@ -90,8 +90,9 @@ export const TurnGroupCardView: React.FC<TurnGroupCardViewProps> = ({ turns, tur
   return (
     <Card title={`Boss Turn #${turnSequence}`} style={{ width: 390 }} bodyStyle={{ padding: 8 }}>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
-        {turns.map((turn) => (
+        {turns.map((turn, idx) => (
           <Tooltip
+            key={`turn_${idx}`}
             placement="right"
             trigger={['click']}
             overlayInnerStyle={{ width: 422 }}

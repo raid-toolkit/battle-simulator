@@ -110,7 +110,7 @@ function selectTargetChampions(
       ) {
         return state.championStates.filter((champion) => champion.team !== ownerTeam).slice(0, 1);
       }
-      console.warn(`Unknown effect type ${effectKind}`);
+      // console.warn(`Unknown effect type ${effectKind}`);
       return [];
     }
     case EffectTargetType.RelationTarget: {
@@ -126,7 +126,7 @@ function selectTargetChampions(
       return relationTargets.map((index) => state.championStates[index]);
     }
     default: {
-      console.warn(`Unknown target type ${targetType}`);
+      // console.warn(`Unknown target type ${targetType}`);
       return [];
     }
     case EffectTargetType.ActiveHero: // e.g. passive heals each ally on their own turns
