@@ -2,6 +2,7 @@
 import { EffectKindId, EffectType, StatusEffectTypeId, TeamAttackParams } from '@raid-toolkit/webclient';
 import { assert, cloneObject, shuffle } from '../../Common';
 import { BattleState, BlessingTypeId, ChampionState, StatusEffect, TurnState } from '../Types';
+import { evalExpression } from './Expression';
 import { useAbility } from './ProcessAbility';
 
 const statusEffectSuperiorTo: Partial<Record<StatusEffectTypeId, StatusEffectTypeId>> = {
@@ -192,6 +193,11 @@ export function applyEffect(
           }
           --count;
         }
+        break;
+      }
+      case EffectKindId.IncreaseStamina: {
+        const tmIncrease = evalExpression(effect.multiplier, {});
+        target.turnMeter += tmIncrease;
         break;
       }
       default: {
