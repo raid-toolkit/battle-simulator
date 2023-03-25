@@ -1,11 +1,11 @@
 import React from 'react';
-import { Button, ConfigProvider, Layout, theme, ThemeConfig } from 'antd';
+import { Button, Layout, theme } from 'antd';
 import { HighlightOutlined } from '@ant-design/icons';
 import { useAppModel, validateSetup } from './Model';
 import { TeamView, TurnSimulatorView } from './Views';
 import './App.css';
 
-function App() {
+export const App: React.FC = () => {
   const {
     state: {
       tuneState: { championList },
@@ -52,22 +52,4 @@ function App() {
       </Layout.Sider>
     </Layout>
   );
-}
-
-const AppHost = () => {
-  const { state } = useAppModel();
-
-  const themeConfig: ThemeConfig = React.useMemo(
-    () => ({
-      algorithm: state.theme === 'dark' ? theme.darkAlgorithm : theme.defaultAlgorithm,
-    }),
-    [state.theme]
-  );
-  return (
-    <ConfigProvider theme={themeConfig}>
-      <App />
-    </ConfigProvider>
-  );
 };
-
-export default AppHost;
