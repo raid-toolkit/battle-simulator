@@ -1,40 +1,19 @@
 import React from 'react';
-import { BattleTurn, ChampionSetup, useAppModel } from '../Model';
-import { setupBattle, simulateTurns } from '../Model/SimulateTurns';
+import { BattleTurn, useAppModel } from '../Model';
 import { TurnGroupCardView } from './TurnGroupCardView';
 
 export interface TurnSimulatorViewProps {}
 
 export const TurnSimulatorView: React.FC<TurnSimulatorViewProps> = () => {
   const {
-    state: {
-      tuneState: { boss, speedAura, championList },
-    },
+    state: { turnSimulation },
   } = useAppModel();
-  const liveState = React.useMemo(() => {
-    return setupBattle({
-      bossSpeed: boss.speed,
-      shieldHits: boss.shieldHits,
-      speedAura,
-      championSetups: championList as readonly Required<ChampionSetup>[],
-      stopAfter: 100,
-    });
-  }, [championList, boss, speedAura]);
-
-  const turns = React.useMemo(() => {
-    try {
-      return simulateTurns(liveState);
-    } catch (e) {
-      console.error(e);
-      return [];
-    }
-  }, [liveState]);
 
   const turnGroups = React.useMemo(() => {
     const turnGroups: BattleTurn[][] = [];
     let currentTurnGroup: BattleTurn[] = [];
     try {
-      for (const turn of turns) {
+      for (const turn of turnSimulation) {
         currentTurnGroup.push(turn);
         if (turn.state.championStates[turn.championIndex].definesPhase) {
           turnGroups.push(currentTurnGroup);
@@ -47,7 +26,7 @@ export const TurnSimulatorView: React.FC<TurnSimulatorViewProps> = () => {
     return turnGroups;
     // last group may be incomplete
     // turnGroups.push(currentTurnGroup);
-  }, [turns]);
+  }, [turnSimulation]);
 
   const turnCards = turnGroups.map((turnGroup, index) => (
     <TurnGroupCardView key={`group_${index}`} turnSequence={index + 1} turns={turnGroup} />

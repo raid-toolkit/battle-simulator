@@ -30,7 +30,7 @@ export function useAbility(state: BattleState, turn: BattleTurn): void {
           case '!isCritical':
             continue;
           default:
-            console.warn('Unknown condition', { effect });
+            // console.warn('Unknown condition', { effect });
             continue;
         }
       }

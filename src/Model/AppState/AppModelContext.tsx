@@ -1,8 +1,10 @@
+import { Draft } from 'immer';
 import React from 'react';
 import { useImmer } from 'use-immer';
-import { assert } from '../../Common';
-import { lookupChampionSetup } from '../Setup';
-import { AbilitySetup, ChampionSetup } from '../Types';
+import { assert, PendingResult } from '../../Common';
+import { BackgroundService, TurnSimulationResponse } from '../../Service';
+import { lookupChampionSetup, validateSetup } from '../Setup';
+import { AbilitySetup, BattleTurn, ChampionSetup } from '../Types';
 import { AppModel, AppDispatch } from './AppModel';
 import { AppState } from './AppState';
 
@@ -32,6 +34,44 @@ function useAppModelInternal(): AppModel {
     const htmlRoot = document.querySelector('html');
     htmlRoot!.style.colorScheme = state.theme;
   }, [state.theme]);
+
+  // TODO: Do some shit with this
+  const [, setError] = React.useState<unknown | undefined>(undefined);
+
+  React.useEffect(() => {
+    const championList = state.tuneState.championList;
+    if (championList.length && championList.every((item) => validateSetup(item).length === 0)) {
+      let request: PendingResult<TurnSimulationResponse> | undefined = BackgroundService.requestTurnSimulation({
+        bossSpeed: state.tuneState.boss.speed,
+        shieldHits: state.tuneState.boss.shieldHits,
+        championSetups: championList as Required<ChampionSetup>[],
+        speedAura: state.tuneState.speedAura,
+        stopAfter: 75,
+      });
+
+      request
+        .then((response) => {
+          setState((state) => {
+            state.turnSimulation = response.turns as Draft<BattleTurn>[];
+          });
+        })
+        .catch((e) => {
+          if (request) {
+            setError(e);
+          }
+          request = undefined;
+        });
+
+      return () => {
+        request?.cancel();
+        request = undefined;
+      };
+    } else {
+      setState((state) => {
+        state.turnSimulation = [];
+      });
+    }
+  }, [state.tuneState, setState]);
 
   const dispatch = React.useMemo<AppDispatch>(
     () =>

@@ -1,17 +1,12 @@
 import React from 'react';
 import { Button, Layout, theme } from 'antd';
 import { HighlightOutlined } from '@ant-design/icons';
-import { useAppModel, validateSetup } from './Model';
+import { useAppModel } from './Model';
 import { TeamView, TurnSimulatorView } from './Views';
 import './App.css';
 
 export const App: React.FC = () => {
-  const {
-    state: {
-      tuneState: { championList },
-    },
-    dispatch,
-  } = useAppModel();
+  const { dispatch } = useAppModel();
   const { token } = theme.useToken();
   return (
     <Layout
@@ -32,9 +27,7 @@ export const App: React.FC = () => {
           </Layout.Header>
           <Layout.Content className="full-height">
             <div style={{ height: '100%', overflowY: 'auto', position: 'relative', zIndex: 1 }}>
-              {championList.length && championList.every((item) => validateSetup(item).length === 0) ? (
-                <TurnSimulatorView />
-              ) : null}
+              <TurnSimulatorView />
             </div>
           </Layout.Content>
         </Layout>
