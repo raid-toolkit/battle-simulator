@@ -1,62 +1,35 @@
 import React from 'react';
 import { Button, Dropdown, InputNumber, MenuProps, Space, theme } from 'antd';
-import { DeleteOutlined, EditOutlined, HolderOutlined, ThunderboltOutlined } from '@ant-design/icons';
+import { DeleteOutlined, HolderOutlined, ThunderboltOutlined } from '@ant-design/icons';
 import { ChampionSelectMenu } from '../Components';
 import { AbilitySetupListView } from './AbilitySetupListView';
-import { ChampionSetup, AbilitySetup, lookupChampionSetup } from '../Model';
-import { useToggle } from '../Components/Hooks';
+import { useAppModel } from '../Model';
 import './ChampionSetupView.css';
 
 export interface ChampionSetupViewProps {
   index: number;
-  setup: Readonly<ChampionSetup>;
-  editable?: boolean;
-  onUpdated: (index: number, value: Readonly<ChampionSetup>) => void;
-  onDeleted: (index: number) => void;
 }
 
-export const ChampionSetupView: React.FC<ChampionSetupViewProps> = ({
-  index,
-  setup,
-  onUpdated,
-  onDeleted,
-  editable,
-}) => {
-  const [skillsEditable, toggleSkillsEditable] = useToggle();
-
+export const ChampionSetupView: React.FC<ChampionSetupViewProps> = ({ index }) => {
   const { token } = theme.useToken();
+  const { state, dispatch } = useAppModel();
+  const setup = state.tuneState.championList[index];
+
+  const deleteSetup = React.useCallback(() => dispatch.removeChampion(index), [dispatch, index]);
   const selectTypeId = React.useCallback(
     (typeId?: number) => {
-      if (typeId === undefined) {
-        // reset the whole thing
-        onUpdated(index, { abilities: [] });
-      } else if (setup.typeId !== typeId) {
-        const lookup = lookupChampionSetup(typeId);
-        if (lookup) {
-          onUpdated(index, lookup);
-          return;
-        }
-        onUpdated(index, { ...setup, typeId });
-      }
+      dispatch.setSetupTypeId(index, typeId);
     },
-    [index, onUpdated, setup]
+    [index, dispatch]
   );
 
   const setSpeed = React.useCallback(
     (value: number | null) => {
-      onUpdated(index, { ...setup, speed: value || 0 });
-    },
-    [index, onUpdated, setup]
-  );
-
-  const onAbilitiesUpdated = React.useCallback(
-    (abilities: readonly Readonly<AbilitySetup>[]) => {
-      onUpdated(index, {
-        ...setup,
-        abilities,
+      dispatch.updateChampion(index, (setup) => {
+        setup.speed = value || undefined;
       });
     },
-    [index, onUpdated, setup]
+    [index, dispatch]
   );
 
   const menu = React.useMemo<MenuProps>(
@@ -67,11 +40,11 @@ export const ChampionSetupView: React.FC<ChampionSetupViewProps> = ({
           label: 'Delete',
           icon: <DeleteOutlined />,
           danger: true,
-          onClick: () => onDeleted(index),
+          onClick: deleteSetup,
         },
       ],
     }),
-    [index, onDeleted]
+    [deleteSetup]
   );
 
   return (
@@ -110,7 +83,7 @@ export const ChampionSetupView: React.FC<ChampionSetupViewProps> = ({
             />
           </Space.Compact>
         </div>
-        <AbilitySetupListView editable={skillsEditable} abilities={setup.abilities} onUpdated={onAbilitiesUpdated} />
+        <AbilitySetupListView ownerIndex={index} />
       </div>
       <div
         className="champion-setup-card-actions"
@@ -133,13 +106,7 @@ export const ChampionSetupView: React.FC<ChampionSetupViewProps> = ({
           <Dropdown arrow placement="topLeft" trigger={['click']} menu={menu}>
             <Button icon={<HolderOutlined />} />
           </Dropdown>
-          <Button
-            title="Edit skills"
-            icon={<EditOutlined />}
-            type={skillsEditable ? 'primary' : 'default'}
-            onClick={toggleSkillsEditable}
-          />
-          <Button icon={<DeleteOutlined />} style={{ color: token.colorError }} onClick={() => onDeleted(index)} />
+          <Button icon={<DeleteOutlined />} style={{ color: token.colorError }} onClick={deleteSetup} />
         </Space.Compact>
       </div>
     </div>

@@ -1,22 +1,12 @@
 import React from 'react';
 import { ChampionSetupView } from './ChampionSetupView';
-import { ChampionSetup } from '../Model';
+import { useAppModel } from '../Model';
 import './ChampionSetupListView.css';
 
-export interface ChampionSetupListViewProps {
-  editable?: boolean;
-  items: readonly Readonly<ChampionSetup>[];
-  addChampion: (champion: Readonly<ChampionSetup>) => void;
-  deleteChampion: (index: number) => void;
-  updateChampion: (index: number, champion: Readonly<ChampionSetup>) => void;
-}
+export interface ChampionSetupListViewProps {}
 
-export const ChampionSetupListView: React.FC<ChampionSetupListViewProps> = ({
-  editable,
-  items,
-  deleteChampion,
-  updateChampion,
-}) => {
+export const ChampionSetupListView: React.FC<ChampionSetupListViewProps> = () => {
+  const { state } = useAppModel();
   return (
     <div
       className="champion-setup-list"
@@ -30,15 +20,8 @@ export const ChampionSetupListView: React.FC<ChampionSetupListViewProps> = ({
         marginLeft: -40,
       }}
     >
-      {items.map((setup, index) => (
-        <ChampionSetupView
-          key={`setup_${index}`}
-          editable={editable}
-          index={index}
-          setup={setup}
-          onUpdated={updateChampion}
-          onDeleted={deleteChampion}
-        />
+      {state.tuneState.championList.map((_setup, index) => (
+        <ChampionSetupView key={`setup_${index}`} index={index} />
       ))}
     </div>
   );

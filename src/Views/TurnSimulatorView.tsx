@@ -3,14 +3,12 @@ import { BattleTurn, ChampionSetup, useAppModel } from '../Model';
 import { setupBattle, simulateTurns } from '../Model/SimulateTurns';
 import { TurnGroupCardView } from './TurnGroupCardView';
 
-export interface TurnSimulatorViewProps {
-  championList: readonly Readonly<ChampionSetup>[];
-}
+export interface TurnSimulatorViewProps {}
 
-export const TurnSimulatorView: React.FC<TurnSimulatorViewProps> = ({ championList }) => {
+export const TurnSimulatorView: React.FC<TurnSimulatorViewProps> = () => {
   const {
     state: {
-      tuneState: { boss, speedAura },
+      tuneState: { boss, speedAura, championList },
     },
   } = useAppModel();
   const liveState = React.useMemo(() => {

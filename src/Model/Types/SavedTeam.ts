@@ -2,10 +2,10 @@ import { ChampionSetup } from './ChampionSetup';
 
 export interface SavedTeamVersion {
   speedAura: number;
-  champions: readonly Readonly<ChampionSetup>[];
+  champions: ChampionSetup[];
 }
 
 export interface SavedTeam {
   name: string;
-  versions: readonly Readonly<SavedTeamVersion>[];
+  versions: SavedTeamVersion[];
 }

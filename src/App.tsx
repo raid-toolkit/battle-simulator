@@ -1,14 +1,18 @@
 import React from 'react';
 import { Button, ConfigProvider, Layout, theme, ThemeConfig } from 'antd';
 import { HighlightOutlined } from '@ant-design/icons';
-import { ChampionSetup, useAppModel, validateSetup } from './Model';
+import { useAppModel, validateSetup } from './Model';
 import { TeamView, TurnSimulatorView } from './Views';
 import './App.css';
 
 function App() {
-  const { dispatch } = useAppModel();
+  const {
+    state: {
+      tuneState: { championList },
+    },
+    dispatch,
+  } = useAppModel();
   const { token } = theme.useToken();
-  const [championList, onChampionListUpdated] = React.useState<readonly Readonly<ChampionSetup>[]>([]);
   return (
     <Layout
       className="full-height"
@@ -19,16 +23,6 @@ function App() {
         } as React.CSSProperties
       }
     >
-      {/* <Layout.Sider
-        width={332}
-        style={{
-          background: 'transparent',
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
-        <BossSelectionView />
-      </Layout.Sider> */}
       <Layout.Content className="full-height">
         <Layout className="full-height">
           <Layout.Header style={{ background: 'transparent' }}>
@@ -39,7 +33,7 @@ function App() {
           <Layout.Content className="full-height">
             <div style={{ height: '100%', overflowY: 'auto', position: 'relative', zIndex: 1 }}>
               {championList.length && championList.every((item) => validateSetup(item).length === 0) ? (
-                <TurnSimulatorView championList={championList} />
+                <TurnSimulatorView />
               ) : null}
             </div>
           </Layout.Content>
@@ -54,7 +48,7 @@ function App() {
           flexDirection: 'column',
         }}
       >
-        <TeamView championList={championList} onChampionListUpdated={onChampionListUpdated} />
+        <TeamView />
       </Layout.Sider>
     </Layout>
   );

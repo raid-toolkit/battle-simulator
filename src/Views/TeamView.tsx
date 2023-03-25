@@ -1,18 +1,14 @@
 import React from 'react';
 import { ChampionSetupListView } from './ChampionSetupListView';
-import { Badge, Button, Card, Input, InputNumber, Space } from 'antd';
+import { Badge, Button, Card, InputNumber, Space } from 'antd';
 import { FolderOpenOutlined, SaveOutlined, ThunderboltOutlined, UserAddOutlined } from '@ant-design/icons';
-import { ChampionSetup, SavedTeam, SavedTeamVersion, useAppModel } from '../Model';
-import { removeItemAtIndex, replaceItemAtIndex } from '../Common';
+import { SavedTeam, SavedTeamVersion, useAppModel } from '../Model';
 import { teamDataStore } from '../Data/Forage';
 import { useForageCollection } from '../Components/Hooks';
 import { SelectSavedTeam } from './SelectSavedTeam';
 import { v4 } from 'uuid';
 
-export interface TeamViewProps {
-  readonly championList: readonly Readonly<ChampionSetup>[];
-  onChampionListUpdated: (championList: readonly Readonly<ChampionSetup>[]) => void;
-}
+export interface TeamViewProps {}
 
 export interface SelectedTeam {
   key: string;
@@ -21,7 +17,7 @@ export interface SelectedTeam {
   dirty?: boolean;
 }
 
-export const TeamView: React.FC<TeamViewProps> = ({ championList, onChampionListUpdated }) => {
+export const TeamView: React.FC<TeamViewProps> = () => {
   const { state, dispatch } = useAppModel();
   const { items, addOrUpdate: addOrUpdateTeam /*, remove*/ } = useForageCollection<SavedTeam>(teamDataStore);
 
@@ -44,7 +40,7 @@ export const TeamView: React.FC<TeamViewProps> = ({ championList, onChampionList
       const versions: SavedTeamVersion[] = [
         {
           speedAura: state.tuneState.speedAura,
-          champions: championList,
+          champions: state.tuneState.championList,
         },
       ];
       addOrUpdateTeam(selectedTeam.key, { name: selectedTeam.name, versions }, (savedTeam) => ({
@@ -53,7 +49,7 @@ export const TeamView: React.FC<TeamViewProps> = ({ championList, onChampionList
       }));
       setSelectedTeam({ ...selectedTeam, dirty: false, isNew: false });
     }
-  }, [addOrUpdateTeam, championList, selectedTeam, state.tuneState.speedAura]);
+  }, [addOrUpdateTeam, selectedTeam, state.tuneState.championList, state.tuneState.speedAura]);
 
   const loadTeam = React.useCallback(() => {
     if (!selectedTeam) {
@@ -66,10 +62,10 @@ export const TeamView: React.FC<TeamViewProps> = ({ championList, onChampionList
     }
 
     const lastVersion = existingTeam.versions[existingTeam.versions.length - 1];
-    onChampionListUpdated(lastVersion.champions);
+    dispatch.temp_setChampionsList(lastVersion.champions);
     dispatch.setSpeedAura(lastVersion.speedAura);
     setSelectedTeam({ ...selectedTeam, dirty: false });
-  }, [items, onChampionListUpdated, selectedTeam, dispatch]);
+  }, [items, selectedTeam, dispatch]);
 
   const teams = React.useMemo(() => {
     if (selectedTeam && !items[selectedTeam.key]) {
@@ -79,24 +75,6 @@ export const TeamView: React.FC<TeamViewProps> = ({ championList, onChampionList
     }
     return items;
   }, [items, selectedTeam]);
-
-  const updateChampion = React.useCallback(
-    (index: number, value: ChampionSetup) => {
-      onChampionListUpdated(replaceItemAtIndex(championList, index, value));
-    },
-    [championList, onChampionListUpdated]
-  );
-
-  const addChampion = React.useCallback(() => {
-    onChampionListUpdated([...championList, { abilities: [] }]);
-  }, [championList, onChampionListUpdated]);
-
-  const deleteChampion = React.useCallback(
-    (index: number) => {
-      onChampionListUpdated(removeItemAtIndex(championList, index));
-    },
-    [championList, onChampionListUpdated]
-  );
 
   return (
     <Badge.Ribbon text="Team" placement="start">
@@ -127,9 +105,9 @@ export const TeamView: React.FC<TeamViewProps> = ({ championList, onChampionList
             <Space.Compact>
               <Button
                 title="Add Champion"
-                disabled={championList.length >= 5}
+                disabled={state.tuneState.championList.length >= 5}
                 icon={<UserAddOutlined />}
-                onClick={addChampion}
+                onClick={dispatch.addChampionDraft}
               />
             </Space.Compact>
             <Space.Compact>
@@ -144,14 +122,7 @@ export const TeamView: React.FC<TeamViewProps> = ({ championList, onChampionList
               />
             </Space.Compact>
           </Space>
-          <div></div>
-          <ChampionSetupListView
-            items={championList}
-            editable={true}
-            addChampion={addChampion}
-            deleteChampion={deleteChampion}
-            updateChampion={updateChampion}
-          />
+          <ChampionSetupListView />
         </div>
       </Card>
     </Badge.Ribbon>

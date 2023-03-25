@@ -5,5 +5,5 @@ export interface ChampionSetup {
   speed?: number;
   /** @deprecated */
   baseSpeed?: number;
-  abilities: readonly Readonly<AbilitySetup>[];
+  abilities: AbilitySetup[];
 }

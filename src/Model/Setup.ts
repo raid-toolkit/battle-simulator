@@ -18,14 +18,11 @@ export function lookupChampionSetup(typeId: number): ChampionSetup | undefined {
       continue;
     }
 
-    const hits = skill.effects.reduce((acc, effect) => acc + (effect.kindId === 6000 ? effect.count : 0), 0);
-
     const ability: AbilitySetup = {
       index: abilities.length,
       skillTypeId: skill.typeId,
-      label: RTK.getString(skill.name),
       cooldown: skill.cooldown,
-      hits,
+      label: RTK.getString(skill.name),
       description: RTK.getString(skill.description),
     };
 
@@ -43,9 +40,6 @@ export function validateSetup(setup: Readonly<ChampionSetup>): string[] {
   }
   if (!setup.speed) {
     errors.push('Speed is required');
-  }
-  if (setup.abilities.length === 0) {
-    errors.push('At least one ability is required');
   }
   return errors;
 }
