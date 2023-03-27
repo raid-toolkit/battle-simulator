@@ -4,8 +4,8 @@ import { DeleteOutlined, HolderOutlined, ThunderboltOutlined } from '@ant-design
 import { ChampionSelectMenu } from '../Components';
 import { AbilitySetupListView } from './AbilitySetupListView';
 import { BlessingTypeId, TourStep, useAppModel } from '../Model';
+import { PhantomTouchIcon } from './PhantomTouchIcon';
 import './ChampionSetupView.css';
-import { PhantomTouchIcon } from './PhantomTouch';
 
 export interface ChampionSetupViewProps {
   index: number;

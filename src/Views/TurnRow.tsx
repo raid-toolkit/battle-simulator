@@ -1,5 +1,6 @@
 import React from 'react';
-import { Tooltip } from 'antd';
+import { theme, Tooltip } from 'antd';
+import { CompressOutlined } from '@ant-design/icons';
 import { BattleTurn, ChampionTeam } from '../Model';
 import { Avatar } from '../Components';
 import { RTK } from '../Data';
@@ -8,11 +9,13 @@ import { BattleStateView } from './BattleStateView';
 import './TurnRow.css';
 
 export const TurnRow: React.FC<{ turn: BattleTurn }> = ({ turn }) => {
+  const { token } = theme.useToken();
   const championState = turn.state.championStates[turn.championIndex];
   const championType = RTK.heroTypes[championState.setup.typeId];
   const skillType = RTK.skillTypes[championState.setup.abilities[turn.abilityIndex].skillTypeId];
   const championName = RTK.getString(championType.name);
   const skillName = RTK.getString(skillType.name);
+  const hitsRemaining = turn.state.championStates.find((ch) => ch.isBoss)?.shieldHitsRemaining;
   return (
     <Tooltip
       placement="right"
@@ -30,7 +33,8 @@ export const TurnRow: React.FC<{ turn: BattleTurn }> = ({ turn }) => {
         <span style={{ flex: 1 }}>
           {championName}: {skillName}
         </span>
-        <span>({turn.state.championStates.find((ch) => ch.isBoss)?.shieldHitsRemaining})</span>
+        <span style={{ marginRight: 4 }}>{hitsRemaining}</span>
+        <CompressOutlined style={{ filter: 'drop-shadow(1px 1px 3px black, 1px 1px 1px black)' }} />
       </div>
     </Tooltip>
   );
