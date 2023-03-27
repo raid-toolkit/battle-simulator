@@ -1,10 +1,13 @@
 import type { HeroType, SkillType, LocalizedText } from '@raid-toolkit/webclient';
+import { EventEmitter } from 'events';
 
 export class RTKStatic {
   public readonly heroTypes: Record<number, HeroType> = {};
   public readonly skillTypes: Record<number, SkillType> = {};
   public readonly strings: Record<string, string | undefined> = {};
   private readonly _loadPromise: Promise<void>;
+
+  public readonly loadEvents = new EventEmitter();
 
   public async wait(): Promise<this> {
     await this._loadPromise;
@@ -28,7 +31,10 @@ export class RTKStatic {
       strings: () =>
         import(/* webpackChunkName: "strings" */ '../Static/strings.json').then((data: any) => data.localizedStrings),
     };
-    await Promise.all(Object.entries(loadMap).map(([key, load]) => this.loadData(key as keyof RTKStatic, load)));
+    const allRequests = Object.entries(loadMap).map(([key, load]) => this.loadData(key as keyof RTKStatic, load));
+    let loaded = 0;
+    allRequests.map((req) => req.then(() => this.loadEvents.emit('progress', ++loaded, allRequests.length)));
+    await Promise.all(allRequests);
   }
 
   private async loadData<P extends keyof RTKStatic>(key: P, load: () => Promise<RTKStatic[P]>) {

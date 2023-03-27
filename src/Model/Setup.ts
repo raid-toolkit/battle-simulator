@@ -22,8 +22,6 @@ export function lookupChampionSetup(typeId: number): ChampionSetup | undefined {
       index: abilities.length,
       skillTypeId: skill.typeId,
       cooldown: skill.cooldown,
-      label: RTK.getString(skill.name),
-      description: RTK.getString(skill.description),
     };
 
     abilities.push(ability);

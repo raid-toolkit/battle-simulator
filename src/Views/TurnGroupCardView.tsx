@@ -86,41 +86,48 @@ const BattleStateView: React.FC<BattleStateViewProps> = ({ state, showEffects, s
   );
 };
 
+export const TurnRow: React.FC<{ turn: BattleTurn }> = ({ turn }) => {
+  const championType = RTK.heroTypes[turn.state.championStates[turn.championIndex].setup.typeId];
+  const skillType =
+    RTK.skillTypes[turn.state.championStates[turn.championIndex].setup.abilities[turn.abilityIndex].skillTypeId];
+  const championName = RTK.getString(championType.name);
+  const skillName = RTK.getString(skillType.name);
+  return (
+    <Tooltip
+      placement="right"
+      trigger={['click']}
+      overlayInnerStyle={{ width: 422 }}
+      title={() => <BattleStateView state={turn.state} turnIndex={turn.championIndex} showEffects showTurnMeter />}
+    >
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          height: '2rem',
+          backgroundColor: colors[turn.championIndex * 2],
+          textShadow: '1px 1px 3px black, 1px 1px 1px black',
+        }}
+      >
+        <Avatar
+          id={RTK.heroTypes[turn.state.championStates[turn.championIndex].setup.typeId].avatarKey}
+          height="2rem"
+          style={{ marginRight: 4 }}
+        />
+        <span style={{ verticalAlign: 'middle', flex: 1 }}>
+          {championName}: {skillName}
+        </span>
+        <span>({turn.state.championStates.find((ch) => ch.isBoss)?.shieldHitsRemaining})</span>
+      </div>
+    </Tooltip>
+  );
+};
+
 export const TurnGroupCardView: React.FC<TurnGroupCardViewProps> = ({ turns, turnSequence }) => {
   return (
     <Card title={`Boss Turn #${turnSequence}`} style={{ width: 390 }} bodyStyle={{ padding: 8 }}>
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         {turns.map((turn, idx) => (
-          <Tooltip
-            key={`turn_${idx}`}
-            placement="right"
-            trigger={['click']}
-            overlayInnerStyle={{ width: 422 }}
-            title={() => (
-              <BattleStateView state={turn.state} turnIndex={turn.championIndex} showEffects showTurnMeter />
-            )}
-          >
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                height: '2rem',
-                backgroundColor: colors[turn.championIndex * 2],
-                textShadow: '1px 1px 3px black, 1px 1px 1px black',
-              }}
-            >
-              <Avatar
-                id={RTK.heroTypes[turn.state.championStates[turn.championIndex].setup.typeId].avatarKey}
-                height="2rem"
-                style={{ marginRight: 4 }}
-              />
-              <span style={{ verticalAlign: 'middle', flex: 1 }}>
-                {turn.state.championStates[turn.championIndex].name}:{' '}
-                {turn.state.championStates[turn.championIndex].abilityState[turn.abilityIndex].ability.label}
-              </span>
-              <span>({turn.state.championStates.find((ch) => ch.isBoss)?.shieldHitsRemaining})</span>
-            </div>
-          </Tooltip>
+          <TurnRow key={`turn_${idx}`} turn={turn} />
         ))}
       </div>
       <BattleStateView state={turns[turns.length - 1].state} showEffects turnIndex={-1} />

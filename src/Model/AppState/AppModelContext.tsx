@@ -6,7 +6,7 @@ import { BackgroundService, TurnSimulationResponse } from '../../Service';
 import { lookupChampionSetup, validateSetup } from '../Setup';
 import { AbilitySetup, BattleTurn, ChampionSetup } from '../Types';
 import { AppModel, AppDispatch } from './AppModel';
-import { AppState } from './AppState';
+import { AppState, TuneState } from './AppState';
 
 const AppModelContext = React.createContext<AppModel | null>(null);
 
@@ -86,6 +86,16 @@ function useAppModelInternal(): AppModel {
         setSpeedAura(speedAura: number | null) {
           setState((state) => {
             state.tuneState.speedAura = speedAura || 0;
+          });
+        }
+
+        importTune(tuneState: string | TuneState): void {
+          setState((state) => {
+            if (typeof tuneState === 'string') {
+              state.tuneState = JSON.parse(atob(tuneState));
+            } else {
+              state.tuneState = tuneState;
+            }
           });
         }
 

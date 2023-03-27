@@ -1,13 +1,16 @@
 import React from 'react';
 import { Button, Layout, Space, theme } from 'antd';
-import { HighlightOutlined } from '@ant-design/icons';
+import { HighlightOutlined, LoginOutlined } from '@ant-design/icons';
 import { useAppModel } from './Model';
 import { TeamView, TurnSimulatorView } from './Views';
 import './App.css';
+import { SignedIn, SignedOut, useClerk, UserButton } from '@clerk/clerk-react';
+import { DevOnly } from './Components';
 
 export const App: React.FC = () => {
   const { dispatch } = useAppModel();
   const { token } = theme.useToken();
+  const { openSignIn } = useClerk();
   return (
     <Layout
       className="full-height"
@@ -15,13 +18,22 @@ export const App: React.FC = () => {
         {
           '--color-border': token.colorBorder,
           '--color-border-hover': token.colorPrimaryHover,
+          '--success': token.colorSuccess,
+          '--success-active': token.colorSuccessActive,
         } as React.CSSProperties
       }
     >
       <Layout.Content className="full-height">
         <Layout className="full-height">
           <Layout.Header
-            style={{ background: 'transparent', display: 'flex', flexDirection: 'row', alignItems: 'center' }}
+            style={{
+              background: 'transparent',
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+              gap: 10,
+              padding: '0px 16px',
+            }}
           >
             <div style={{ flex: 1 }} />
             <Space.Compact>
@@ -44,6 +56,14 @@ export const App: React.FC = () => {
                 Change theme
               </Button>
             </Space.Compact>
+            <DevOnly>
+              <SignedIn>
+                <UserButton />
+              </SignedIn>
+              <SignedOut>
+                <Button title="Sign in" icon={<LoginOutlined />} onClick={() => openSignIn()} />
+              </SignedOut>
+            </DevOnly>
           </Layout.Header>
           <Layout.Content className="full-height">
             <div style={{ height: '100%', overflowY: 'auto', position: 'relative', zIndex: 1 }}>

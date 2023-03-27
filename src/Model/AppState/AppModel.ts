@@ -1,11 +1,12 @@
 import { AbilitySetup, ChampionSetup } from '../Types';
-import { AppState } from './AppState';
+import { AppState, TuneState } from './AppState';
 
 export interface AppDispatch {
   changeTheme(): void;
   changeTheme(theme: 'light' | 'dark'): void;
   setSpeedAura(speedAura: number | null): void;
 
+  importTune(tuneState: string | TuneState): void;
   /** @deprecated replace with more narrow method */
   temp_setChampionsList(championList: ChampionSetup[]): void;
   addChampionDraft(): void;

@@ -2,11 +2,13 @@ import React from 'react';
 import { ChampionSetupListView } from './ChampionSetupListView';
 import { Badge, Button, Card, InputNumber, Space } from 'antd';
 import { FolderOpenOutlined, SaveOutlined, ThunderboltOutlined, UserAddOutlined } from '@ant-design/icons';
-import { SavedTeam, SavedTeamVersion, useAppModel } from '../Model';
+import { SavedTeam, SavedTeamVersion, TuneState, useAppModel } from '../Model';
 import { teamDataStore } from '../Data/Forage';
 import { useForageCollection } from '../Components/Hooks';
 import { SelectSavedTeam } from './SelectSavedTeam';
 import { v4 } from 'uuid';
+import { CopyLink } from '../Components';
+import { pack, unpack } from 'jsonpack';
 
 export interface TeamViewProps {}
 
@@ -22,6 +24,24 @@ export const TeamView: React.FC<TeamViewProps> = () => {
   const { items, addOrUpdate: addOrUpdateTeam /*, remove*/ } = useForageCollection<SavedTeam>(teamDataStore);
 
   const [selectedTeam, setSelectedTeam] = React.useState<SelectedTeam>();
+
+  const getLink = React.useCallback(() => {
+    const packed = pack(state.tuneState);
+    const link = btoa(packed);
+    window.history.replaceState(null, '', `?ts=${link}`);
+    return window.location.href;
+  }, [state.tuneState]);
+
+  React.useEffect(() => {
+    try {
+      const queryString = new URLSearchParams(document.location.search);
+      const savedState = queryString.get('ts');
+      if (savedState) {
+        const unpacked = unpack<TuneState>(atob(savedState));
+        dispatch.importTune(unpacked);
+      }
+    } catch {}
+  }, [dispatch]);
 
   const teamSelected = React.useCallback(
     (key: string) => {
@@ -113,6 +133,7 @@ export const TeamView: React.FC<TeamViewProps> = () => {
                 onClick={dispatch.addChampionDraft}
               />
             </Space.Compact>
+            <CopyLink getLink={getLink} />
             <Space.Compact>
               <Button title="Save Team" icon={<SaveOutlined />} onClick={saveTeam} />
               {!selectedTeam?.isNew && <Button title="Load Team" icon={<FolderOpenOutlined />} onClick={loadTeam} />}

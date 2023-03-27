@@ -4,9 +4,4 @@ export interface AbilitySetup {
   priority?: number;
   cooldown: number;
   opener?: boolean;
-
-  /** @deprecated */
-  label: string;
-  /** @deprecated */
-  description?: string;
 }

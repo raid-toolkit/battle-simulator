@@ -38,4 +38,4 @@ export class RTKClient {
   }
 }
 
-export const RTK = new RTKClient();
+// export const RTK = new RTKClient();
