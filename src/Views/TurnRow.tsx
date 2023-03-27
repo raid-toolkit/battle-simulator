@@ -1,5 +1,5 @@
 import React from 'react';
-import { theme, Tooltip } from 'antd';
+import { Tooltip } from 'antd';
 import { CompressOutlined } from '@ant-design/icons';
 import { BattleTurn, ChampionTeam } from '../Model';
 import { Avatar } from '../Components';
@@ -9,7 +9,6 @@ import { BattleStateView } from './BattleStateView';
 import './TurnRow.css';
 
 export const TurnRow: React.FC<{ turn: BattleTurn }> = ({ turn }) => {
-  const { token } = theme.useToken();
   const championState = turn.state.championStates[turn.championIndex];
   const championType = RTK.heroTypes[championState.setup.typeId];
   const skillType = RTK.skillTypes[championState.setup.abilities[turn.abilityIndex].skillTypeId];
