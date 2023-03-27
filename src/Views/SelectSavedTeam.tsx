@@ -72,6 +72,7 @@ export const SelectSavedTeam: React.FC<SelectSavedTeamProps> = ({
   return (
     <Select
       showSearch
+      placeholder="Save or load a new team"
       status={dirty ? 'warning' : ''}
       style={{ minWidth: 150 }}
       filterOption={filterOption}

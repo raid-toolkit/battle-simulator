@@ -1,10 +1,13 @@
-import { AbilitySetup, ChampionSetup } from '../Types';
+import { AbilitySetup, ChampionSetup, TourStep } from '../Types';
 import { AppState, TuneState } from './AppState';
 
 export interface AppDispatch {
   changeTheme(): void;
   changeTheme(theme: 'light' | 'dark'): void;
   setSpeedAura(speedAura: number | null): void;
+
+  setTourStep(step: TourStep | undefined): void;
+  completeTourStep(step: TourStep): void;
 
   importTune(tuneState: string | TuneState): void;
   /** @deprecated replace with more narrow method */

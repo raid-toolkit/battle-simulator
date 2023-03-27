@@ -6,7 +6,5 @@ export interface ChampionSetup {
   speed?: number;
   skillOpener?: number | undefined;
   blessing?: BlessingTypeId | null;
-  /** @deprecated */
-  baseSpeed?: number;
   abilities: AbilitySetup[];
 }

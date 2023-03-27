@@ -1,0 +1,27 @@
+.turn-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 2rem;
+  color: white;
+  text-shadow: 1px 1px 3px black, 1px 1px 1px black;
+  padding-right: 8px;
+}
+
+.turn-row:first-of-type {
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.turn-row:first-of-type img.avatar {
+  border-top-left-radius: 8px;
+}
+
+.turn-row:last-of-type {
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+.turn-row:last-of-type img.avatar {
+  border-bottom-left-radius: 8px;
+}

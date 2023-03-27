@@ -1,130 +1,25 @@
 import React from 'react';
-import { Card, Tooltip } from 'antd';
-import { BattleState, BattleTurn } from '../Model';
+import { Card } from 'antd';
+import { BattleTurn } from '../Model';
 import { presetDarkPalettes } from '@ant-design/colors';
-import { Avatar, TurnMeter } from '../Components';
-import { RTK } from '../Data';
-import { StatusEffectIcon } from './StatusEffectIcon';
+import { TurnRow } from './TurnRow';
+import { BattleStateView } from './BattleStateView';
 
-const colors = Object.entries(presetDarkPalettes).map(([key, value]) => value[5]);
+export const colors = Object.entries(presetDarkPalettes).map(([key, value]) => value[5]);
 
 export interface TurnGroupCardViewProps {
   turnSequence: number;
   turns: BattleTurn[];
 }
 
-export interface BattleStateViewProps {
-  state: BattleState;
-  turnIndex: number;
-  showEffects?: boolean;
-  showTurnMeter?: boolean;
-}
-
-export interface ChampionStateViewProps {
-  state: BattleState;
-  index: number;
-  takingTurn?: boolean;
-  showEffects?: boolean;
-  showTurnMeter?: boolean;
-}
-
-const EndStateView: React.FC<ChampionStateViewProps> = ({ state, index, showEffects, showTurnMeter, takingTurn }) => {
-  const height = Math.max(2, 0 + (showEffects ? 2 : 0) + (showTurnMeter ? 1 : 0));
-  const championState = state.championStates[index];
-  return (
-    <div
-      style={{
-        padding: '4px 8px',
-        textShadow: '1px 1px 3px black, 1px 1px 1px black',
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-      }}
-    >
-      <Avatar
-        id={RTK.heroTypes[championState.setup.typeId].avatarKey}
-        height={`${height}rem`}
-        style={{ marginRight: 4 }}
-      />
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyItems: 'flex-end' }}>
-        {showTurnMeter && (
-          <TurnMeter showLabel value={championState.turnMeter / 100} winner={takingTurn} width="100%" height="1rem" />
-        )}
-        {showEffects && (
-          <>
-            <span>
-              {championState.buffs.map((buff, idx) => (
-                <StatusEffectIcon key={`buff${idx}`} height="2rem" typeId={buff.typeId} duration={buff.duration} />
-              ))}
-            </span>
-            <span>
-              {championState.debuffs.map((buff, idx) => (
-                <StatusEffectIcon key={`debuff${idx}`} height="2rem" typeId={buff.typeId} duration={buff.duration} />
-              ))}
-            </span>
-          </>
-        )}
-      </div>
-    </div>
-  );
-};
-
-const BattleStateView: React.FC<BattleStateViewProps> = ({ state, showEffects, showTurnMeter, turnIndex }) => {
-  return (
-    <div style={{ display: 'flex', flexDirection: 'column' }}>
-      {state.championStates.map((championState, index) => (
-        <EndStateView
-          key={`endstate_${index}`}
-          state={state}
-          index={championState.index}
-          takingTurn={championState.index === turnIndex}
-          showEffects={showEffects}
-          showTurnMeter={showTurnMeter}
-        />
-      ))}
-    </div>
-  );
-};
-
-export const TurnRow: React.FC<{ turn: BattleTurn }> = ({ turn }) => {
-  const championType = RTK.heroTypes[turn.state.championStates[turn.championIndex].setup.typeId];
-  const skillType =
-    RTK.skillTypes[turn.state.championStates[turn.championIndex].setup.abilities[turn.abilityIndex].skillTypeId];
-  const championName = RTK.getString(championType.name);
-  const skillName = RTK.getString(skillType.name);
-  return (
-    <Tooltip
-      placement="right"
-      trigger={['click']}
-      overlayInnerStyle={{ width: 422 }}
-      title={() => <BattleStateView state={turn.state} turnIndex={turn.championIndex} showEffects showTurnMeter />}
-    >
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          height: '2rem',
-          backgroundColor: colors[turn.championIndex * 2],
-          textShadow: '1px 1px 3px black, 1px 1px 1px black',
-        }}
-      >
-        <Avatar
-          id={RTK.heroTypes[turn.state.championStates[turn.championIndex].setup.typeId].avatarKey}
-          height="2rem"
-          style={{ marginRight: 4 }}
-        />
-        <span style={{ verticalAlign: 'middle', flex: 1 }}>
-          {championName}: {skillName}
-        </span>
-        <span>({turn.state.championStates.find((ch) => ch.isBoss)?.shieldHitsRemaining})</span>
-      </div>
-    </Tooltip>
-  );
-};
-
 export const TurnGroupCardView: React.FC<TurnGroupCardViewProps> = ({ turns, turnSequence }) => {
   return (
-    <Card title={`Boss Turn #${turnSequence}`} style={{ width: 390 }} bodyStyle={{ padding: 8 }}>
+    <Card
+      className="boss-turn-card"
+      title={`Boss Turn #${turnSequence}`}
+      style={{ width: 390 }}
+      bodyStyle={{ padding: 8 }}
+    >
       <div style={{ display: 'flex', flexDirection: 'column' }}>
         {turns.map((turn, idx) => (
           <TurnRow key={`turn_${idx}`} turn={turn} />

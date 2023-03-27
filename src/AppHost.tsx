@@ -1,9 +1,9 @@
 import React from 'react';
 import { ConfigProvider, Progress, theme, ThemeConfig, Typography } from 'antd';
-import { useAppModel } from './Model';
-import { App } from './App';
 import { ClerkProvider } from '@clerk/clerk-react';
 import * as ClerkThemes from '@clerk/themes';
+import { useAppModel } from './Model';
+import { App } from './App';
 import { RTK } from './Data';
 
 const clerkPubKey = process.env.REACT_APP_CLERK_PUBLISHABLE_KEY;
@@ -34,10 +34,8 @@ export const AppHost: React.FC = () => {
         const duration = Date.now() - startTime;
         if (duration < 250) {
           finish();
-          console.log('fast', { duration });
         } else {
           const delay = Math.max(0, 1000 - duration);
-          console.log('slow', { duration, delay });
           setTimeout(finish, delay);
         }
       })

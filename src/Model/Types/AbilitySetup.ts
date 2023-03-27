@@ -3,5 +3,6 @@ export interface AbilitySetup {
   skillTypeId: number;
   priority?: number;
   cooldown: number;
+  /** @deprecated */
   opener?: boolean;
 }

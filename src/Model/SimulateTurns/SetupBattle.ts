@@ -8,7 +8,8 @@ import { BattleState, ChampionState, ChampionTeam, SimulateTurnsArgs } from '../
 export function setupBattle(args: SimulateTurnsArgs): BattleState {
   const { championSetups, bossSpeed, shieldHits, speedAura } = args;
   const championStates = championSetups.map<ChampionState>((setup, index) => {
-    const speed = setup.speed + setup.baseSpeed * ((speedAura ?? 0) / 100);
+    const baseSpeed = RTK.heroTypes[setup.typeId!].unscaledStats.Speed;
+    const speed = setup.speed + baseSpeed * ((speedAura ?? 0) / 100);
     return {
       index,
       setup,
@@ -48,7 +49,6 @@ export function setupBattle(args: SimulateTurnsArgs): BattleState {
     setup: {
       typeId: 26566, // FK10
       speed: bossSpeed,
-      baseSpeed: bossSpeed,
       blessing: null,
       skillOpener: -1,
       abilities: bossSetup.abilities,

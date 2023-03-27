@@ -4,9 +4,10 @@ import { useImmer } from 'use-immer';
 import { assert, PendingResult } from '../../Common';
 import { BackgroundService, TurnSimulationResponse } from '../../Service';
 import { lookupChampionSetup, validateSetup } from '../Setup';
-import { AbilitySetup, BattleTurn, ChampionSetup } from '../Types';
+import { AbilitySetup, BattleTurn, ChampionSetup, TourStep } from '../Types';
 import { AppModel, AppDispatch } from './AppModel';
 import { AppState, TuneState } from './AppState';
+import { sanitizeChampionSetup, sanitizeTuneState } from './Helpers';
 
 const AppModelContext = React.createContext<AppModel | null>(null);
 
@@ -92,21 +93,36 @@ function useAppModelInternal(): AppModel {
         importTune(tuneState: string | TuneState): void {
           setState((state) => {
             if (typeof tuneState === 'string') {
-              state.tuneState = JSON.parse(atob(tuneState));
+              state.tuneState = sanitizeTuneState(JSON.parse(atob(tuneState)));
             } else {
-              state.tuneState = tuneState;
+              state.tuneState = sanitizeTuneState(tuneState);
+            }
+          });
+        }
+
+        setTourStep(step: TourStep | undefined): void {
+          setState((state) => {
+            state.tourStep = step;
+          });
+        }
+
+        completeTourStep(step: TourStep): void {
+          setState((state) => {
+            if (state.tourStep === step) {
+              ++state.tourStep;
             }
           });
         }
 
         temp_setChampionsList(championList: ChampionSetup[]) {
           setState((state) => {
-            state.tuneState.championList = championList;
+            state.tuneState.championList = championList.map(sanitizeChampionSetup);
           });
         }
 
         addChampionDraft(): void {
           setState((state) => {
+            if (state.tuneState.championList.length >= 5) return;
             state.tuneState.championList.push({
               abilities: [],
             });

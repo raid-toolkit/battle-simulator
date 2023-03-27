@@ -1,4 +1,4 @@
-import { BattleTurn, ChampionSetup } from '../Types';
+import { BattleTurn, ChampionSetup, TourStep } from '../Types';
 
 export interface SavedTune {
   saveKey: string;
@@ -26,6 +26,7 @@ export interface TuneState {
 
 export interface AppState {
   theme: 'light' | 'dark';
+  tourStep?: TourStep;
   saveState: SaveState;
   tuneState: TuneState;
   turnSimulation: BattleTurn[];

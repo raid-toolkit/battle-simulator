@@ -3,7 +3,7 @@ import { Button, Dropdown, InputNumber, MenuProps, Space, theme } from 'antd';
 import { DeleteOutlined, HolderOutlined, ThunderboltOutlined } from '@ant-design/icons';
 import { ChampionSelectMenu } from '../Components';
 import { AbilitySetupListView } from './AbilitySetupListView';
-import { BlessingTypeId, useAppModel } from '../Model';
+import { BlessingTypeId, TourStep, useAppModel } from '../Model';
 import './ChampionSetupView.css';
 import { PhantomTouchIcon } from './PhantomTouch';
 
@@ -20,12 +20,14 @@ export const ChampionSetupView: React.FC<ChampionSetupViewProps> = ({ index }) =
   const selectTypeId = React.useCallback(
     (typeId?: number) => {
       dispatch.setSetupTypeId(index, typeId);
+      dispatch.completeTourStep(TourStep.SelectChampion);
     },
     [index, dispatch]
   );
 
   const setSpeed = React.useCallback(
     (value: number | null) => {
+      dispatch.completeTourStep(TourStep.SetChampionSpeed);
       dispatch.updateChampion(index, (setup) => {
         setup.speed = value || undefined;
       });

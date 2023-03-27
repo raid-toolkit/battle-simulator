@@ -1,14 +1,15 @@
 import React from 'react';
 import { Button, Layout, Space, theme } from 'antd';
-import { HighlightOutlined, LoginOutlined } from '@ant-design/icons';
-import { useAppModel } from './Model';
-import { TeamView, TurnSimulatorView } from './Views';
-import './App.css';
+import { HighlightOutlined, LoginOutlined, SearchOutlined } from '@ant-design/icons';
 import { SignedIn, SignedOut, useClerk, UserButton } from '@clerk/clerk-react';
+import { useAppModel } from './Model';
+import { AppTour, TeamView, TurnSimulatorView } from './Views';
 import { DevOnly } from './Components';
+import './App.css';
+import { SavedTeamsView } from './Views/SavedTeamsView';
 
 export const App: React.FC = () => {
-  const { dispatch } = useAppModel();
+  const { state, dispatch } = useAppModel();
   const { token } = theme.useToken();
   const { openSignIn } = useClerk();
   return (
@@ -35,6 +36,7 @@ export const App: React.FC = () => {
               padding: '0px 16px',
             }}
           >
+            <SavedTeamsView />
             <div style={{ flex: 1 }} />
             <Space.Compact>
               <Button
@@ -54,6 +56,9 @@ export const App: React.FC = () => {
               </Button>
               <Button icon={<HighlightOutlined />} onClick={dispatch.changeTheme}>
                 Change theme
+              </Button>
+              <Button icon={<SearchOutlined />} onClick={() => state.tourStep === undefined && dispatch.setTourStep(0)}>
+                Take the tour
               </Button>
             </Space.Compact>
             <DevOnly>
@@ -83,6 +88,7 @@ export const App: React.FC = () => {
       >
         <TeamView />
       </Layout.Sider>
+      <AppTour />
     </Layout>
   );
 };
