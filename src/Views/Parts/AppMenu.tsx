@@ -1,5 +1,6 @@
 import { SearchOutlined, HighlightOutlined } from '@ant-design/icons';
 import { Space, Button } from 'antd';
+import isMobile from 'is-mobile';
 import { useAppModel } from '../../Model';
 import { SaveTeamButton } from './SaveTeamButton';
 
@@ -12,9 +13,11 @@ export const AppMenu: React.FC = () => {
       </Space.Compact>
       <Space.Compact className="desktop-only">
         <SaveTeamButton />
-        <Button icon={<SearchOutlined />} onClick={() => state.tourStep === undefined && dispatch.setTourStep(0)}>
-          Take the tour
-        </Button>
+        {!isMobile() && (
+          <Button icon={<SearchOutlined />} onClick={() => state.tourStep === undefined && dispatch.setTourStep(0)}>
+            Take the tour
+          </Button>
+        )}
         <Button icon={<HighlightOutlined />} onClick={dispatch.changeTheme}>
           Change theme
         </Button>

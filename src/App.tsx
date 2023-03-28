@@ -8,6 +8,7 @@ import { SavedTeamsView } from './Views/SavedTeamsView';
 import { themeClassName } from './Styles/Variables';
 import { AppMenu, ViewMenu } from './Views/Parts';
 import { useAppModel } from './Model';
+import { isMobile } from 'is-mobile';
 import './App.css';
 
 export const App: React.FC = () => {
@@ -40,7 +41,7 @@ export const App: React.FC = () => {
           <TeamView />
         </aside>
       </section>
-      <AppTour />
+      {!isMobile() && <AppTour />}
     </section>
   );
 };
