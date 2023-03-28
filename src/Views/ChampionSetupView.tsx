@@ -59,7 +59,7 @@ export const ChampionSetupView: React.FC<ChampionSetupViewProps> = ({ index }) =
   }, [deleteSetup]);
 
   return (
-    <div className="champion-setup-card" style={{ margin: '8px 0px' }} tabIndex={0}>
+    <div className="champion-setup-card" style={{ margin: '1px 0px' }} tabIndex={0}>
       <div
         style={{
           display: 'flex',
