@@ -34,6 +34,7 @@ function useAppModelInternal(): AppModel {
   React.useEffect(() => {
     const htmlRoot = document.querySelector('html');
     htmlRoot!.style.colorScheme = state.theme;
+    htmlRoot?.setAttribute('data-theme', state.theme);
   }, [state.theme]);
 
   // TODO: Do some shit with this

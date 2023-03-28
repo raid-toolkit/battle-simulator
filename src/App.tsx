@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Layout, Space, theme } from 'antd';
+import { Button, Layout, Space } from 'antd';
 import { HighlightOutlined, LoginOutlined, SearchOutlined } from '@ant-design/icons';
 import { SignedIn, SignedOut, useClerk, UserButton } from '@clerk/clerk-react';
 import { useAppModel } from './Model';
@@ -7,23 +7,16 @@ import { AppTour, TeamView, TurnSimulatorView } from './Views';
 import { DevOnly } from './Components';
 import './App.css';
 import { SavedTeamsView } from './Views/SavedTeamsView';
+import { CssVariable, useThemeStyleVariables } from './Styles/Variables';
+
+console.log({ CssVariable });
 
 export const App: React.FC = () => {
   const { state, dispatch } = useAppModel();
-  const { token } = theme.useToken();
   const { openSignIn } = useClerk();
+  const themeClassName = useThemeStyleVariables();
   return (
-    <Layout
-      className="full-height"
-      style={
-        {
-          '--color-border': token.colorBorder,
-          '--color-border-hover': token.colorPrimaryHover,
-          '--success': token.colorSuccess,
-          '--success-active': token.colorSuccessActive,
-        } as React.CSSProperties
-      }
-    >
+    <Layout className={['full-height', themeClassName].join(' ')}>
       <Layout.Content className="full-height">
         <Layout className="full-height">
           <Layout.Header

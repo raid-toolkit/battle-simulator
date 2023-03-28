@@ -21,6 +21,7 @@
     "react-dom": "^18.2.0",
     "react-test-renderer": "^18.2.0",
     "safe-localstorage": "^1.0.1",
+    "sass": "^1.60.0",
     "ts-deferred": "^1.0.4",
     "ts-jest": "^29.0.5",
     "use-immer": "^0.8.1",
