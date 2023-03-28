@@ -36,7 +36,7 @@ export const AppHost: React.FC = () => {
         if (duration < 250) {
           finish();
         } else {
-          const delay = Math.max(0, 2500 - duration);
+          const delay = Math.max(0, 1250 - duration);
           setTimeout(finish, delay);
         }
       })
