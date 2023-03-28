@@ -30,6 +30,7 @@ function useAppModelInternal(): AppModel {
       speedAura: 0,
       championList: [],
     },
+    turnSimulationErrors: [],
     turnSimulation: [],
   });
 
@@ -44,7 +45,8 @@ function useAppModelInternal(): AppModel {
 
   React.useEffect(() => {
     const championList = state.tuneState.championList;
-    if (championList.length && championList.every((item) => validateSetup(item).length === 0)) {
+    const errors = new Set(championList.flatMap(validateSetup));
+    if (championList.length && errors.size === 0) {
       let request: PendingResult<TurnSimulationResponse> | undefined = BackgroundService.requestTurnSimulation({
         bossSpeed: state.tuneState.boss.speed,
         shieldHits: state.tuneState.boss.shieldHits,
@@ -56,11 +58,15 @@ function useAppModelInternal(): AppModel {
       request
         .then((response) => {
           setState((state) => {
+            state.turnSimulationErrors = [];
             state.turnSimulation = response.turns as Draft<BattleTurn>[];
           });
         })
         .catch((e) => {
           if (request) {
+            setState((state) => {
+              state.turnSimulationErrors = [e];
+            });
             setError(e);
           }
           request = undefined;
@@ -72,6 +78,7 @@ function useAppModelInternal(): AppModel {
       };
     } else {
       setState((state) => {
+        state.turnSimulationErrors = [...errors.values()];
         state.turnSimulation = [];
       });
     }

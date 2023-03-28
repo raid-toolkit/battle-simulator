@@ -34,10 +34,10 @@ export function lookupChampionSetup(typeId: number): ChampionSetup | undefined {
 export function validateSetup(setup: Readonly<ChampionSetup>): string[] {
   const errors: string[] = [];
   if (!setup.typeId) {
-    errors.push('Champion is required');
+    errors.push('Champion selection empty');
   }
   if (!setup.speed) {
-    errors.push('Speed is required');
+    errors.push('Speed value empty');
   }
   return errors;
 }

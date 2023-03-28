@@ -30,5 +30,6 @@ export interface AppState {
   tourStep?: TourStep;
   saveState: SaveState;
   tuneState: TuneState;
+  turnSimulationErrors: (string | Error)[];
   turnSimulation: BattleTurn[];
 }
