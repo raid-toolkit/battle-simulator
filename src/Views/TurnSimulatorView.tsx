@@ -1,5 +1,5 @@
 import { CloseCircleOutlined, FireOutlined } from '@ant-design/icons';
-import { Badge, Result, Typography } from 'antd';
+import { Result, Typography } from 'antd';
 import React from 'react';
 import { BattleTurn, useAppModel } from '../Model';
 import { TurnGroupCardView } from './TurnGroupCardView';
