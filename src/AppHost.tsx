@@ -36,7 +36,7 @@ export const AppHost: React.FC = () => {
         if (duration < 250) {
           finish();
         } else {
-          const delay = Math.max(0, 1000 - duration);
+          const delay = Math.max(0, 2500 - duration);
           setTimeout(finish, delay);
         }
       })
@@ -65,6 +65,11 @@ export const AppHost: React.FC = () => {
                 justifyContent: 'center',
               }}
             >
+              <img
+                src="/images/loading-logo.png"
+                alt="Cardiel using a calculator with sexy armor."
+                style={{ borderRadius: '100%', objectFit: 'fill', margin: 32 }}
+              />
               <Progress
                 type="circle"
                 percent={progress}
