@@ -2,9 +2,7 @@ import React from 'react';
 import { ChampionSetupListView } from './ChampionSetupListView';
 import { Button, Card, InputNumber, Space } from 'antd';
 import { UserAddOutlined } from '@ant-design/icons';
-import { TourStep, TuneState, useAppModel } from '../Model';
-import { CopyLink } from '../Components';
-import { pack, unpack } from 'jsonpack';
+import { TourStep, useAppModel } from '../Model';
 
 export interface TeamViewProps {}
 

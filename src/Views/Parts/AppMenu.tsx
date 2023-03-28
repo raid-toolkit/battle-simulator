@@ -1,4 +1,4 @@
-import { SearchOutlined, HighlightOutlined, MenuOutlined } from '@ant-design/icons';
+import { SearchOutlined, HighlightOutlined } from '@ant-design/icons';
 import { Space, Button } from 'antd';
 import { useAppModel } from '../../Model';
 import { SaveTeamButton } from './SaveTeamButton';
