@@ -1,6 +1,7 @@
 import React from 'react';
 import { Tooltip } from 'antd';
 import { CompressOutlined } from '@ant-design/icons';
+import isMobile from 'is-mobile';
 import { BattleTurn, ChampionTeam } from '../Model';
 import { Avatar } from '../Components';
 import { RTK } from '../Data';
@@ -17,9 +18,9 @@ export const TurnRow: React.FC<{ turn: BattleTurn }> = ({ turn }) => {
   const hitsRemaining = turn.state.championStates.find((ch) => ch.isBoss)?.shieldHitsRemaining;
   return (
     <Tooltip
-      placement="right"
+      placement={isMobile() ? 'bottom' : 'right'}
       trigger={['click']}
-      overlayInnerStyle={{ width: 422 }}
+      overlayInnerStyle={{ width: 422, zoom: isMobile() ? 0.8 : undefined }}
       title={() => <BattleStateView state={turn.state} turnIndex={turn.championIndex} showEffects showTurnMeter />}
     >
       <div
