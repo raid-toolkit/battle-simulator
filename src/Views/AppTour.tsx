@@ -10,6 +10,7 @@ export const AppTour: React.FC = () => {
     () => ({
       title: 'Add a Champion',
       description: 'Click here to add a champion to your team',
+      placement: 'bottomRight',
       target: () => document.querySelector('#addChampionButton') as HTMLElement,
       onNext: () => {
         if (state.tuneState.championList.length === 0) {

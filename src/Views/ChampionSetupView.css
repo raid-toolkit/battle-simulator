@@ -5,30 +5,3 @@
 .champion-setup-card:focus-within {
   border-width: 1px;
 }
-
-.champion-setup-card .champion-setup-card-actions {
-  display: none;
-  opacity: 0;
-  transition: opacity 0.2s ease-in-out;
-  pointer-events: none;
-  position: absolute;
-  left: 0px;
-  width: 0px;
-  top: 0px;
-  bottom: 0px;
-}
-
-.champion-setup-card:focus-within .champion-setup-card-actions,
-.champion-setup-card:hover .champion-setup-card-actions {
-  display: flex;
-  opacity: 1;
-  display: inherit;
-  pointer-events: initial;
-  left: -40px;
-  width: 40px;
-}
-
-.champion-setup-card:focus-within .champion-setup-card-actions > div,
-.champion-setup-card:hover .champion-setup-card-actions > div {
-  z-index: 2;
-}

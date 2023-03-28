@@ -4,11 +4,13 @@ import { AppState, TuneState } from './AppState';
 export interface AppDispatch {
   changeTheme(): void;
   changeTheme(theme: 'light' | 'dark'): void;
-  setSpeedAura(speedAura: number | null): void;
+
+  setSelectedPanel(panel: 'team' | 'battle'): void;
 
   setTourStep(step: TourStep | undefined): void;
   completeTourStep(step: TourStep): void;
 
+  setSpeedAura(speedAura: number | null): void;
   importTune(tuneState: string | TuneState): void;
   /** @deprecated replace with more narrow method */
   temp_setChampionsList(championList: ChampionSetup[]): void;

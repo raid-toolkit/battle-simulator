@@ -1,6 +1,6 @@
 import React from 'react';
-import { Button, Dropdown, InputNumber, MenuProps, Space, theme } from 'antd';
-import { DeleteOutlined, HolderOutlined, ThunderboltOutlined } from '@ant-design/icons';
+import { Button, InputNumber, Popover, Space, theme } from 'antd';
+import { DeleteOutlined, MenuOutlined, ThunderboltOutlined } from '@ant-design/icons';
 import { ChampionSelectMenu } from '../Components';
 import { AbilitySetupListView } from './AbilitySetupListView';
 import { BlessingTypeId, TourStep, useAppModel } from '../Model';
@@ -41,20 +41,22 @@ export const ChampionSetupView: React.FC<ChampionSetupViewProps> = ({ index }) =
     });
   }, [index, dispatch]);
 
-  const menu = React.useMemo<MenuProps>(
-    () => ({
-      items: [
-        {
-          key: 'delete',
-          label: 'Delete',
-          icon: <DeleteOutlined />,
-          danger: true,
-          onClick: deleteSetup,
-        },
-      ],
-    }),
-    [deleteSetup]
-  );
+  const renderMenu = React.useCallback(() => {
+    return (
+      <Space.Compact direction="vertical">
+        <Button
+          style={{ borderBottomLeftRadius: 8, borderBottomRightRadius: 8 }}
+          size="large"
+          danger
+          icon={<DeleteOutlined />}
+          type="text"
+          onClick={deleteSetup}
+        >
+          Delete
+        </Button>
+      </Space.Compact>
+    );
+  }, [deleteSetup]);
 
   return (
     <div className="champion-setup-card" style={{ margin: '8px 0px' }} tabIndex={0}>
@@ -67,6 +69,21 @@ export const ChampionSetupView: React.FC<ChampionSetupViewProps> = ({ index }) =
       >
         <div className="ability-row">
           <Space.Compact block>
+            <Popover
+              arrow
+              placement="leftTop"
+              overlayInnerStyle={{ padding: 2 }}
+              trigger={['click']}
+              content={renderMenu}
+            >
+              <Button
+                icon={<MenuOutlined />}
+                type="text"
+                style={{
+                  borderBottomLeftRadius: 0,
+                }}
+              />
+            </Popover>
             <ChampionSelectMenu
               bordered={false}
               status={setup.typeId ? '' : 'warning'}
@@ -103,30 +120,6 @@ export const ChampionSetupView: React.FC<ChampionSetupViewProps> = ({ index }) =
           </Space.Compact>
         </div>
         <AbilitySetupListView ownerIndex={index} />
-      </div>
-      <div
-        className="champion-setup-card-actions"
-        style={{
-          position: 'absolute',
-          left: -40,
-          width: 40,
-          top: 0,
-          bottom: 0,
-        }}
-      >
-        <Space.Compact
-          direction="vertical"
-          style={{
-            position: 'absolute',
-            marginTop: 'auto',
-            marginBottom: 'auto',
-          }}
-        >
-          <Dropdown arrow placement="topLeft" trigger={['click']} menu={menu}>
-            <Button icon={<HolderOutlined />} />
-          </Dropdown>
-          <Button icon={<DeleteOutlined />} style={{ color: token.colorError }} onClick={deleteSetup} />
-        </Space.Compact>
       </div>
     </div>
   );

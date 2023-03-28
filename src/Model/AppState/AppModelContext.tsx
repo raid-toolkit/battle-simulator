@@ -1,4 +1,5 @@
 import { Draft } from 'immer';
+import { unpack } from 'jsonpack';
 import React from 'react';
 import { useImmer } from 'use-immer';
 import { assert, PendingResult } from '../../Common';
@@ -14,6 +15,7 @@ const AppModelContext = React.createContext<AppModel | null>(null);
 function useAppModelInternal(): AppModel {
   const [state, setState] = useImmer<AppState>({
     theme: 'dark',
+    visiblePanel: 'team',
     saveState: {
       savedTunes: [],
       dirty: false,
@@ -82,6 +84,12 @@ function useAppModelInternal(): AppModel {
           setState((state) => {
             state.theme =
               theme && ['dark', 'light'].includes(theme) ? theme : state.theme === 'light' ? 'dark' : 'light';
+          });
+        }
+
+        setSelectedPanel(panel: 'team' | 'battle'): void {
+          setState((state) => {
+            state.visiblePanel = panel;
           });
         }
 
@@ -165,6 +173,18 @@ function useAppModelInternal(): AppModel {
       })(),
     [setState]
   );
+
+  React.useEffect(() => {
+    try {
+      const queryString = new URLSearchParams(document.location.search);
+      const savedState = queryString.get('ts');
+      if (savedState) {
+        const unpacked = unpack<TuneState>(atob(savedState));
+        dispatch.importTune(unpacked);
+      }
+    } catch {}
+  }, [dispatch]);
+
   return React.useMemo(() => ({ state, dispatch }), [state, dispatch]);
 }
 

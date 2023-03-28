@@ -15,20 +15,25 @@ export const CssVariable: Record<ThemeToken, string> = Object.fromEntries(
 
 const styleRules = new Map<string, boolean>();
 
-const themeRuleName = 'app-theme';
+export const themeClassName = 'app-theme';
 
-export function useThemeStyleVariables(): string {
+function useThemeStyleVariables(): string {
   const { token } = theme.useToken();
   const {
     state: { theme: themeName },
   } = useAppModel();
   if (!styleRules.get(themeName)) {
     const style = document.createElement('style');
-    style.innerHTML = `html[data-theme="${themeName}"] .${themeRuleName} {\n${Object.entries(token)
+    style.innerHTML = `html[data-theme="${themeName}"] .${themeClassName} {\n${Object.entries(token)
       .map(([key, value]) => `  ${keyToCssVariable(key)}: ${value};\n`)
       .join('')}};`;
     document.getElementsByTagName('head')[0].appendChild(style);
     styleRules.set(themeName, true);
   }
-  return themeRuleName;
+  return themeClassName;
 }
+
+export const ThemeStyleCssContext: React.FC<React.PropsWithChildren> = ({ children }) => {
+  useThemeStyleVariables();
+  return <>{children}</>;
+};

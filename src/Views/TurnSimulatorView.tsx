@@ -1,6 +1,7 @@
 import React from 'react';
 import { BattleTurn, useAppModel } from '../Model';
 import { TurnGroupCardView } from './TurnGroupCardView';
+import './TurnSimulatorView.css';
 
 export interface TurnSimulatorViewProps {}
 
@@ -32,5 +33,5 @@ export const TurnSimulatorView: React.FC<TurnSimulatorViewProps> = () => {
     <TurnGroupCardView key={`group_${index}`} turnSequence={index + 1} turns={turnGroup} />
   ));
 
-  return <div style={{ display: 'flex', flexWrap: 'wrap', flexDirection: 'row' }}>{turnCards}</div>;
+  return <div className="turn-simulator-view">{turnCards}</div>;
 };

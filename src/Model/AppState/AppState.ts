@@ -26,6 +26,7 @@ export interface TuneState {
 
 export interface AppState {
   theme: 'light' | 'dark';
+  visiblePanel: 'team' | 'battle';
   tourStep?: TourStep;
   saveState: SaveState;
   tuneState: TuneState;

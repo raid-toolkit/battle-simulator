@@ -27,11 +27,11 @@ export const CopyLink: React.FC<CopyLinkProps> = ({ link, getLink }) => {
     <Button
       icon={copied ? <CheckOutlined /> : <LinkOutlined />}
       onClick={onClick}
-      style={{ width: 115 }}
+      style={{ width: 120 }}
       color={token.colorSuccess}
       type={copied ? 'primary' : 'default'}
     >
-      {copied ? 'Copied!' : 'Copy Link'}
+      {copied ? 'Copied!' : 'Copy team'}
     </Button>
   );
 };
