@@ -24,6 +24,7 @@
 
 .site-main {
   height: 100%;
+  flex: 1;
 }
 
 .site-sidebar {
