@@ -21,16 +21,19 @@ export const App: React.FC = () => {
         <div className="mobile-only">
           <ViewMenu />
         </div>
+        <div style={{ flex: 1 }} className="desktop-only" />
         <div className="desktop-only">
           <SavedTeamsView />
         </div>
         <DevOnly>
-          <SignedIn>
-            <UserButton />
-          </SignedIn>
-          <SignedOut>
-            <Button title="Sign in" icon={<LoginOutlined />} onClick={() => openSignIn()} />
-          </SignedOut>
+          <div style={{ justifySelf: 'flex-end' }}>
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
+            <SignedOut>
+              <Button title="Sign in" shape="circle" icon={<LoginOutlined />} onClick={() => openSignIn()} />
+            </SignedOut>
+          </div>
         </DevOnly>
       </section>
       <section className="site-content">
