@@ -100,6 +100,12 @@ function useAppModelInternal(): AppModel {
           });
         }
 
+        setHighlight(championIndex?: number, skillIndex?: number): void {
+          setState((state) => {
+            state.highlight = championIndex === undefined ? undefined : [championIndex, skillIndex];
+          });
+        }
+
         setSpeedAura(speedAura: number | null) {
           setState((state) => {
             state.tuneState.speedAura = speedAura || 0;
@@ -148,6 +154,13 @@ function useAppModelInternal(): AppModel {
         removeChampion(index: number): void {
           setState((state) => {
             state.tuneState.championList.splice(index, 1);
+          });
+        }
+
+        moveChampion(fromIndex: number, toIndex: number): void {
+          setState((state) => {
+            const [champion] = state.tuneState.championList.splice(fromIndex, 1);
+            state.tuneState.championList.splice(toIndex, 0, champion);
           });
         }
 

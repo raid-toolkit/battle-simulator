@@ -25,3 +25,8 @@
 .turn-row:last-of-type img.avatar {
   border-bottom-left-radius: 8px;
 }
+
+.turn-row-highlight {
+  box-shadow: 0 0 2px 8px var(--magenta);
+  z-index: 1;
+}

@@ -3,6 +3,7 @@ import { ChampionSetupListView } from './ChampionSetupListView';
 import { Button, Card, InputNumber, Space } from 'antd';
 import { UserAddOutlined } from '@ant-design/icons';
 import { TourStep, useAppModel } from '../Model';
+import './TeamView.css';
 
 export interface TeamViewProps {}
 
@@ -22,7 +23,7 @@ export const TeamView: React.FC<TeamViewProps> = () => {
   }, [dispatch]);
 
   return (
-    <Card style={{ height: '100%' }} bodyStyle={{ height: '100%', padding: '8px 0 0 0' }} type="inner">
+    <Card className="team-view-card" type="inner">
       <div
         style={{
           height: '100%',

@@ -36,6 +36,7 @@ body,
 .site-sidebar {
   height: 100%;
   min-width: 400px;
+  max-width: 400px;
   background: transparent;
   display: flex;
   flex-direction: column;
@@ -46,6 +47,10 @@ body,
 }
 
 @media only screen and (max-width: 800px) {
+  .site-sidebar {
+    min-width: unset;
+    max-width: unset;
+  }
   .site-panel {
     display: none;
   }

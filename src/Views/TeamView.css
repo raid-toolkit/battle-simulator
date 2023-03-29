@@ -1,0 +1,11 @@
+.team-view-card {
+  height: 100%;
+}
+
+.team-view-card > .ant-card-body {
+  height: 100%;
+  padding: 8px 0 0 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}

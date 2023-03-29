@@ -1,6 +1,12 @@
 import React from 'react';
 import { Button, InputNumber, Popover, Space, theme } from 'antd';
-import { DeleteOutlined, MenuOutlined, ThunderboltOutlined } from '@ant-design/icons';
+import {
+  ArrowDownOutlined,
+  ArrowUpOutlined,
+  DeleteOutlined,
+  MenuOutlined,
+  ThunderboltOutlined,
+} from '@ant-design/icons';
 import { ChampionSelectMenu } from '../Components';
 import { AbilitySetupListView } from './AbilitySetupListView';
 import { BlessingTypeId, TourStep, useAppModel } from '../Model';
@@ -41,22 +47,43 @@ export const ChampionSetupView: React.FC<ChampionSetupViewProps> = ({ index }) =
     });
   }, [index, dispatch]);
 
+  const [showMenu, setShowMenu] = React.useState(false);
+
   const renderMenu = React.useCallback(() => {
     return (
       <Space.Compact direction="vertical">
-        <Button
-          style={{ borderBottomLeftRadius: 8, borderBottomRightRadius: 8 }}
-          size="large"
-          danger
-          icon={<DeleteOutlined />}
-          type="text"
-          onClick={deleteSetup}
-        >
+        <Button size="large" danger icon={<DeleteOutlined />} type="text" onClick={deleteSetup}>
           Delete
         </Button>
+        {index > 0 && (
+          <Button
+            type="text"
+            size="large"
+            icon={<ArrowUpOutlined />}
+            onClick={() => {
+              setShowMenu(false);
+              dispatch.moveChampion(index, index - 1);
+            }}
+          >
+            Move up
+          </Button>
+        )}
+        {index < state.tuneState.championList.length - 1 && (
+          <Button
+            type="text"
+            size="large"
+            icon={<ArrowDownOutlined />}
+            onClick={() => {
+              setShowMenu(false);
+              dispatch.moveChampion(index, index + 1);
+            }}
+          >
+            Move down
+          </Button>
+        )}
       </Space.Compact>
     );
-  }, [deleteSetup]);
+  }, [deleteSetup, index, state.tuneState.championList.length, dispatch]);
 
   return (
     <div className="champion-setup-card" style={{ margin: '1px 0px' }} tabIndex={0}>
@@ -72,6 +99,8 @@ export const ChampionSetupView: React.FC<ChampionSetupViewProps> = ({ index }) =
             <Popover
               arrow
               placement="leftTop"
+              open={showMenu}
+              onOpenChange={setShowMenu}
               overlayInnerStyle={{ padding: 2 }}
               trigger={['click']}
               content={renderMenu}

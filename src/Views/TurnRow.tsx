@@ -2,7 +2,7 @@ import React from 'react';
 import { Tooltip } from 'antd';
 import { CompressOutlined } from '@ant-design/icons';
 import isMobile from 'is-mobile';
-import { BattleTurn, ChampionTeam } from '../Model';
+import { BattleTurn, ChampionTeam, useAppModel } from '../Model';
 import { Avatar } from '../Components';
 import { RTK } from '../Data';
 import { colors } from './TurnGroupCardView';
@@ -10,12 +10,15 @@ import { BattleStateView } from './BattleStateView';
 import './TurnRow.css';
 
 export const TurnRow: React.FC<{ turn: BattleTurn }> = ({ turn }) => {
+  const { state } = useAppModel();
   const championState = turn.state.championStates[turn.championIndex];
   const championType = RTK.heroTypes[championState.setup.typeId];
   const skillType = RTK.skillTypes[championState.setup.abilities[turn.abilityIndex].skillTypeId];
   const championName = RTK.getString(championType.name);
   const skillName = RTK.getString(skillType.name);
   const hitsRemaining = turn.state.championStates.find((ch) => ch.isBoss)?.shieldHitsRemaining;
+  const shouldHighlight =
+    state.highlight && state.highlight[0] === turn.championIndex && state.highlight[1] === turn.abilityIndex;
   return (
     <Tooltip
       placement={isMobile() ? 'bottom' : 'right'}
@@ -24,7 +27,9 @@ export const TurnRow: React.FC<{ turn: BattleTurn }> = ({ turn }) => {
       title={() => <BattleStateView state={turn.state} turnIndex={turn.championIndex} showEffects showTurnMeter />}
     >
       <div
-        className={`turn-row turn-row-${championState.team === ChampionTeam.Friendly ? 'friendly' : 'enemy'}`}
+        className={`turn-row turn-row-${championState.team === ChampionTeam.Friendly ? 'friendly' : 'enemy'} ${
+          shouldHighlight ? 'turn-row-highlight' : ''
+        }`}
         style={{
           backgroundColor: colors[turn.championIndex * 2],
         }}
@@ -34,7 +39,7 @@ export const TurnRow: React.FC<{ turn: BattleTurn }> = ({ turn }) => {
           {championName}: {skillName}
         </span>
         <span style={{ marginRight: 4 }}>{hitsRemaining}</span>
-        <CompressOutlined style={{ filter: 'drop-shadow(1px 1px 3px black, 1px 1px 1px black)' }} />
+        <CompressOutlined />
       </div>
     </Tooltip>
   );

@@ -4,11 +4,10 @@ import { AbilitySetupView } from './AbilitySetupView';
 import { useAppModel } from '../Model';
 
 export interface AbilitiyListProps {
-  editable?: boolean;
   ownerIndex: number;
 }
 
-export const AbilitySetupListView: React.FC<AbilitiyListProps> = ({ ownerIndex, editable }) => {
+export const AbilitySetupListView: React.FC<AbilitiyListProps> = ({ ownerIndex }) => {
   const { token } = theme.useToken();
   const { state } = useAppModel();
   const abilities = state.tuneState.championList[ownerIndex].abilities;
@@ -17,7 +16,6 @@ export const AbilitySetupListView: React.FC<AbilitiyListProps> = ({ ownerIndex, 
     <>
       {abilities.map((ability, index) => (
         <AbilitySetupView
-          editable={editable}
           key={`ability_${index}`}
           ownerIndex={ownerIndex}
           abilityIndex={index}

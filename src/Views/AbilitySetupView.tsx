@@ -8,27 +8,31 @@ import { RTK } from '../Data';
 
 export interface AbilitySetupViewProps {
   skillTypeId: number;
-  editable?: boolean;
   ownerIndex: number;
   abilityIndex: number;
 }
 
-const AbilityPrefix: React.FC<React.PropsWithChildren> = ({ children }) => {
-  const { token } = theme.useToken();
-  return <span style={{ color: token.colorTextSecondary }}>{children}</span>;
-};
-
-export const AbilitySetupView: React.FC<AbilitySetupViewProps> = ({
-  skillTypeId,
-  editable,
-  ownerIndex,
-  abilityIndex,
-}) => {
+export const AbilitySetupView: React.FC<AbilitySetupViewProps> = ({ skillTypeId, ownerIndex, abilityIndex }) => {
   const { state, dispatch } = useAppModel();
+  const { token } = theme.useToken();
   const owner = state.tuneState.championList[ownerIndex];
   const abilityCount = owner.abilities.length;
   const ability = owner.abilities[abilityIndex];
   const staticAbility = RTK.skillTypes[skillTypeId];
+
+  const isHighlighted = state.highlight && state.highlight[0] === ownerIndex && state.highlight[1] === abilityIndex;
+  const toggleHighlight = React.useCallback(
+    (e: React.MouseEvent) => {
+      if (isHighlighted) {
+        dispatch.setHighlight();
+      } else {
+        dispatch.setHighlight(ownerIndex, abilityIndex);
+      }
+      e.stopPropagation();
+      e.preventDefault();
+    },
+    [dispatch, isHighlighted, ownerIndex, abilityIndex]
+  );
 
   const setPriority = React.useCallback(
     (value?: number) => {
@@ -61,22 +65,20 @@ export const AbilitySetupView: React.FC<AbilitySetupViewProps> = ({
       ),
     [abilityIndex, abilityCount]
   );
-  const { token } = theme.useToken();
+
+  const [showDescription, setShowDescription] = React.useState(false);
 
   const displayName = RTK.getString(staticAbility.name);
   const description = RTK.getString(staticAbility.description);
   return (
     <div className="ability-row">
       <Space.Compact block>
-        <Input
-          bordered={false}
-          autoComplete="off"
-          prefix={<AbilityPrefix>A{ability.index + 1}</AbilityPrefix>}
-          placeholder={`A${ability.index + 1}`}
-          style={{ flex: 1, pointerEvents: editable ? 'initial' : 'none' }}
-          value={displayName}
-          title={displayName}
-        />
+        <span onClick={() => setShowDescription((value) => !value)} className="ability-title">
+          <span className={`ability-slot ${isHighlighted ? 'ability-slot-highlight' : ''}`} onClick={toggleHighlight}>
+            A{ability.index + 1}
+          </span>
+          <span>{displayName}</span>
+        </span>
         {ability.index === 0 ? (
           <span
             style={{
@@ -123,12 +125,14 @@ export const AbilitySetupView: React.FC<AbilitySetupViewProps> = ({
           style={{ width: 75 }}
           value={isNaN(ability.cooldown) ? 0 : ability.cooldown}
           status={isNaN(ability.cooldown) ? 'error' : undefined}
-          onChange={setCooldown}
+          onChange={abilityIndex > 0 ? setCooldown : undefined}
         />
       </Space.Compact>
-      {editable && description && (
-        <div style={{ padding: 8, marginBottom: 16 }}>
-          <RichString>{description}</RichString>
+      {showDescription && description && (
+        <div className="skill-description-box">
+          <div className="skill-description">
+            <RichString>{description}</RichString>
+          </div>
         </div>
       )}
     </div>

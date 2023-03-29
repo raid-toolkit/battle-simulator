@@ -7,6 +7,9 @@ export interface AppDispatch {
 
   setSelectedPanel(panel: 'team' | 'battle'): void;
 
+  setHighlight(): void;
+  setHighlight(championIndex: number, skillIndex?: number): void;
+
   setTourStep(step: TourStep | undefined): void;
   completeTourStep(step: TourStep): void;
 
@@ -16,6 +19,7 @@ export interface AppDispatch {
   temp_setChampionsList(championList: ChampionSetup[]): void;
   addChampionDraft(): void;
   removeChampion(index: number): void;
+  moveChampion(fromIndex: number, toIndex: number): void;
   /** @deprecated replace with more narrow method */
   updateChampion(index: number, update: (champion: ChampionSetup) => void): void;
   setSetupTypeId(index: number, typeId: number | undefined): void;
