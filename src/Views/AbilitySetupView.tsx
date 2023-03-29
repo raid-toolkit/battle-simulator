@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Input, InputNumber, Select, Space, theme } from 'antd';
+import { Button, InputNumber, Select, Space, theme } from 'antd';
 import { FlagOutlined, FlagFilled, StopOutlined, HistoryOutlined } from '@ant-design/icons';
 import { useAppModel } from '../Model';
 import { RichString } from '../Components';
