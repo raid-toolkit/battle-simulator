@@ -1,11 +1,12 @@
 import React from 'react';
 import { CheckOutlined, LinkOutlined } from '@ant-design/icons';
 import { theme, Button } from 'antd';
+import { useAppModel } from '../../Model';
 
 export type CopyLinkProps =
   | {
       link?: never;
-      getLink: () => string;
+      getLink: () => Promise<string>;
     }
   | {
       link: string;
@@ -14,9 +15,10 @@ export type CopyLinkProps =
 
 export const CopyLink: React.FC<CopyLinkProps> = ({ link, getLink }) => {
   const { token } = theme.useToken();
+  const { state } = useAppModel();
   const [copied, setCopied] = React.useState(false);
-  const onClick = React.useCallback(() => {
-    const linkToCopy = link ?? getLink?.();
+  const onClick = React.useCallback(async () => {
+    const linkToCopy = await (link ?? getLink?.());
     if (linkToCopy) {
       navigator.clipboard.writeText(linkToCopy);
       setCopied(true);
@@ -30,8 +32,9 @@ export const CopyLink: React.FC<CopyLinkProps> = ({ link, getLink }) => {
       style={{ width: 120 }}
       color={token.colorSuccess}
       type={copied ? 'primary' : 'default'}
+      disabled={state.tuneState.championList.length < 3}
     >
-      {copied ? 'Copied!' : 'Copy team'}
+      {copied ? 'Copied link!' : 'Share team'}
     </Button>
   );
 };
