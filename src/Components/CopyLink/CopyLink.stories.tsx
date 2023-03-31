@@ -28,7 +28,7 @@ Default.args = {
 
 export const GetLink = Template.bind({});
 Default.args = {
-  getLink() {
+  async getLink() {
     return 'https://www.google.com';
   },
 };

@@ -14,17 +14,17 @@
     "@types/jsonpack": "^1.1.2",
     "antd": "^5.3.0",
     "cookie": "^0.5.0",
+    "dotenv": "^16.0.3",
+    "faunadb": "^4.8.0",
     "immer": "^9.0.21",
     "is-mobile": "^4.0.0",
     "jsonpack": "^1.1.5",
     "localforage": "^1.10.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-test-renderer": "^18.2.0",
     "safe-localstorage": "^1.0.1",
     "sass": "^1.60.0",
     "ts-deferred": "^1.0.4",
-    "ts-jest": "^29.0.5",
     "use-immer": "^0.8.1",
     "uuid": "^9.0.0",
     "web-vitals": "^2.1.0"
@@ -37,7 +37,9 @@
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "extract-images": "node ./scripts/getImages.mjs --verbose"
+    "extract-images": "node ./scripts/images/getImages.mjs --verbose",
+    "db:setup": "ts-node --project ./tsconfig.scripts.json ./scripts/Fauna/Setup.ts",
+    "db:destroy": "ts-node --project ./tsconfig.scripts.json ./scripts/Fauna/Destroy.ts"
   },
   "eslintConfig": {
     "extends": [
@@ -90,6 +92,7 @@
     "@types/uuid": "^9.0.1",
     "babel-jest": "^29.5.0",
     "babel-plugin-named-exports-order": "^0.0.2",
+    "envfile": "^6.18.0",
     "execa": "^6.1.0",
     "jest": "^29.5.0",
     "jest-environment-jsdom": "^29.5.0",
@@ -98,6 +101,10 @@
     "postinstall-postinstall": "^2.1.0",
     "prop-types": "^15.8.1",
     "react-scripts": "5.0.1",
+    "react-test-renderer": "^18.2.0",
+    "readline-promise": "^1.0.5",
+    "ts-jest": "^29.0.5",
+    "ts-node": "^10.9.1",
     "typescript": "^4.4.2",
     "webpack": "^5.76.1"
   }
