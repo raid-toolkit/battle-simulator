@@ -10,15 +10,14 @@ export function useAccountModel(): AccountModel {
   const { dispatch } = useAppModel();
   const hasLoadedOnce = React.useRef(false);
 
-  const getTeam = React.useCallback(
-    async function getTeam(id: string): Promise<SavedTeamDocument> {
-      const secret = (await getToken({ template: 'fauna' }))!;
-      const client = new faunadb.Client({ secret, keepAlive: false });
-      const result = await client.query<SavedTeamDocument>(q.Call(q.Function('get_team'), id));
-      return result;
-    },
-    [getToken]
-  );
+  const getTeam = React.useCallback(async function getTeam(id: string): Promise<SavedTeamDocument> {
+    const client = new faunadb.Client({
+      secret: process.env.REACT_APP_LOCAL___BOOTSTRAP_FAUNADB_KEY!,
+      keepAlive: false,
+    });
+    const result = await client.query<SavedTeamDocument>(q.Call(q.Function('get_team'), id));
+    return result;
+  }, []);
 
   const createTeam = React.useCallback(
     async function createTeam(name: string, savedTeam: TuneState): Promise<string> {
