@@ -12,7 +12,7 @@ export function useAccountModel(): AccountModel {
 
   const getTeam = React.useCallback(async function getTeam(id: string): Promise<SavedTeamDocument> {
     const client = new faunadb.Client({
-      secret: process.env.REACT_APP_LOCAL___BOOTSTRAP_FAUNADB_KEY!,
+      secret: process.env.REACT_APP_BOOTSTRAP_FAUNADB_KEY!,
       keepAlive: false,
     });
     const result = await client.query<SavedTeamDocument>(q.Call(q.Function('get_team'), id));

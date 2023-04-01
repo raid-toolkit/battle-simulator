@@ -37,7 +37,7 @@ At the end of the script a key with limited privileges will be returned that sho
 Enter your key:`;
 
 const main = async () => {
-  let serverKey = process.env.REACT_APP_LOCAL___ADMIN;
+  let serverKey = process.env.FAUNA_ADMIN;
   if (!serverKey) {
     const interactiveSession = readline.createInterface({
       input: process.stdin,
@@ -57,7 +57,7 @@ const deleteAll = async (client) => {
   // that the above admin key belongs to. This is useful to destroy/recreate a database
   // easily without having to wait for cache invalidation of collection/index names.
   // In this case, we can just nuke the database completely.
-  const childDbName = process.env.REACT_APP_LOCAL___CHILD_DB_NAME;
+  const childDbName = process.env.FAUNA_CHILD_DB_NAME;
   if (typeof childDbName !== 'undefined' && childDbName !== '') {
     // clean keys that are linked to this database
     await handleSetupError(

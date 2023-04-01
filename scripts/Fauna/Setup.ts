@@ -23,7 +23,7 @@ You can get one on https://dashboard.fauna.com/ on the Security tab of the datab
 
 An admin key is powerful, it should only be used for the setup script, not to run your application!
 At the end of the script a key with limited privileges will be returned that should be used to run your application
-Enter your key or set it .env.local as 'REACT_APP_LOCAL___ADMIN' (do not push this to git):`;
+Enter your key or set it .env.local as 'FAUNA_ADMIN' (do not push this to git):`;
 
 const explanation = `
 Thanks!
@@ -37,12 +37,12 @@ This script will (Do not worry! It will all do this for you):
 
 const main = async () => {
   // In order to set up a database, we need a admin key
-  let adminKey = process.env.REACT_APP_LOCAL___ADMIN;
+  let adminKey = process.env.FAUNA_ADMIN;
 
   // If this option is provided, the db will be created as a child db of the database
   // that the above admin key belongs to. This is useful to destroy/recreate a database
   // easily without having to wait for cache invalidation of collection/index names.
-  const childDbName = process.env.REACT_APP_LOCAL___CHILD_DB_NAME;
+  const childDbName = process.env.FAUNA_CHILD_DB_NAME;
 
   // Ask the user for a key if it's not provided in the environment variables yet.
   if (!adminKey) {
@@ -83,7 +83,7 @@ const main = async () => {
       console.log(
         '\x1b[32m',
         `The client token to bootstrap your application. 
-will be automatically installed in  the .env.local with the key REACT_APP_LOCAL___BOOTSTRAP_FAUNADB_KEY, react will load the .env vars
+will be automatically installed in  the .env.local with the key REACT_APP_BOOTSTRAP_FAUNADB_KEY, react will load the .env vars
 Don't forget to restart your frontend!`
       );
       let json: any = null;
@@ -92,7 +92,7 @@ Don't forget to restart your frontend!`
       } catch (err) {
         json = envfile.parse(fs.readFileSync(sourcePathExample, 'utf8'));
       }
-      json.REACT_APP_LOCAL___BOOTSTRAP_FAUNADB_KEY = clientKey.secret;
+      json.REACT_APP_BOOTSTRAP_FAUNADB_KEY = clientKey.secret;
       fs.writeFileSync(sourcePath, envfile.stringify(json));
       console.log('\x1b[33m%s\x1b[0m', clientKey.secret);
     }
