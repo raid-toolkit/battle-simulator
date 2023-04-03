@@ -1,0 +1,21 @@
+.thanks-to {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 1em;
+}
+
+.thanks-to .ant-avatar {
+  min-width: 40px;
+}
+
+.thanks-to-name {
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 18px;
+}
+
+.thanks-to-reason {
+  color: var(--color-text-tertiary);
+}
