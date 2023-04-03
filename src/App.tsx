@@ -2,7 +2,7 @@ import React from 'react';
 import { Button } from 'antd';
 import { LoginOutlined } from '@ant-design/icons';
 import { SignedIn, SignedOut, useClerk, UserButton } from '@clerk/clerk-react';
-import { AppTour, TeamView, TurnSimulatorView } from './Views';
+import { AppTour, TeamView, TurnSimulatorView, WelcomeDialog } from './Views';
 import { themeClassName } from './Styles/Variables';
 import { AppMenu, ViewMenu } from './Views/Parts';
 import { useAppModel } from './Model';
@@ -38,6 +38,7 @@ export const App: React.FC = () => {
         </aside>
       </section>
       {!isMobile() && <AppTour />}
+      <WelcomeDialog />
     </section>
   );
 };

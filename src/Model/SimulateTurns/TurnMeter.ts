@@ -53,13 +53,13 @@ export function selectAbility(state: BattleState, championIndex: number): number
   for (const ability of champion.abilityState) {
     ability.cooldownRemaining = Math.max(0, ability.cooldownRemaining - 1);
   }
-  const abilities = champion.abilityState.filter(
-    (ability) => ability.cooldownRemaining === 0 && ability.ability.priority !== -1
-  );
-  const starter = abilities[champion.setup.skillOpener];
+  const starter = champion.setup.skillOpener !== undefined && champion.abilityState[champion.setup.skillOpener];
   if (champion.turnsTaken === 0 && starter) {
     return starter.index;
   }
+  const abilities = champion.abilityState.filter(
+    (ability) => ability.cooldownRemaining === 0 && ability.ability.priority !== -1
+  );
   const nextAbility = abilities.sort((a, b) => (b.ability.priority ?? 99) - (a.ability.priority ?? 99))[
     abilities.length - 1
   ];

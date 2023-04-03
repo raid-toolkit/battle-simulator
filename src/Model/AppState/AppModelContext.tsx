@@ -8,6 +8,7 @@ import { AbilitySetup, BattleTurn, ChampionSetup, TourStep } from '../Types';
 import { AppModel, AppDispatch } from './AppModel';
 import { AppState, TuneState } from './AppState';
 import { sanitizeChampionSetup, sanitizeTuneState } from './Helpers';
+import { themeClassName } from '../../Styles/Variables';
 
 const AppModelContext = React.createContext<AppModel | null>(null);
 
@@ -36,7 +37,8 @@ function useAppModelInternal(): AppModel {
   React.useEffect(() => {
     const htmlRoot = document.querySelector('html');
     htmlRoot!.style.colorScheme = state.theme;
-    htmlRoot?.setAttribute('data-theme', state.theme);
+    htmlRoot!.setAttribute('data-theme', state.theme);
+    document.body.className = themeClassName;
   }, [state.theme]);
 
   // TODO: Do some shit with this
