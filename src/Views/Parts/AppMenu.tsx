@@ -85,11 +85,7 @@ export const AppMenu: React.FC = () => {
         </Typography.Paragraph>
         <Typography.Paragraph>Special thanks to the following folks who made this tool possible:</Typography.Paragraph>
         <div className="thanks-to">
-          <Avatar
-            size="large"
-            style={{ backgroundColor: 'var(--blue)' }}
-            // src="/images/thanks/pavo.png"
-          >
+          <Avatar size="large" src="/images/thanks/pavo.png">
             P
           </Avatar>
           <div>
@@ -101,11 +97,7 @@ export const AppMenu: React.FC = () => {
           </div>
         </div>
         <div className="thanks-to">
-          <Avatar
-            size="large"
-            style={{ backgroundColor: 'var(--orange)' }}
-            // src="/images/thanks/sent.png"
-          >
+          <Avatar size="large" src="/images/thanks/sent.png">
             S
           </Avatar>
           <div>
@@ -128,11 +120,7 @@ export const AppMenu: React.FC = () => {
           </div>
         </div>
         <div className="thanks-to">
-          <Avatar
-            size="large"
-            style={{ backgroundColor: 'var(--pink)' }}
-            // src="/images/thanks/spliitzy.png"
-          >
+          <Avatar size="large" src="/images/thanks/spliitzy.png">
             S
           </Avatar>
           <div>
