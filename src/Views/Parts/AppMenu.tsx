@@ -85,9 +85,7 @@ export const AppMenu: React.FC = () => {
         </Typography.Paragraph>
         <Typography.Paragraph>Special thanks to the following folks who made this tool possible:</Typography.Paragraph>
         <div className="thanks-to">
-          <Avatar size="large" src="/images/thanks/pavo.png">
-            P
-          </Avatar>
+          <Avatar size="large" src="/images/thanks/pavo.png" />
           <div>
             <div className="thanks-to-name">Pavo</div>
             <div className="thanks-to-reason">
@@ -97,9 +95,7 @@ export const AppMenu: React.FC = () => {
           </div>
         </div>
         <div className="thanks-to">
-          <Avatar size="large" src="/images/thanks/sent.png">
-            S
-          </Avatar>
+          <Avatar size="large" src="/images/thanks/sent.png" />
           <div>
             <div className="thanks-to-name">Sent</div>
             <div className="thanks-to-reason">
@@ -109,9 +105,7 @@ export const AppMenu: React.FC = () => {
           </div>
         </div>
         <div className="thanks-to">
-          <Avatar size="large" src="/images/thanks/nonrg.png">
-            NE
-          </Avatar>
+          <Avatar size="large" src="/images/thanks/nonrg.png" />
           <div>
             <div className="thanks-to-name">NoEnergy</div>
             <div className="thanks-to-reason">
@@ -120,9 +114,7 @@ export const AppMenu: React.FC = () => {
           </div>
         </div>
         <div className="thanks-to">
-          <Avatar size="large" src="/images/thanks/spliitzy.png">
-            S
-          </Avatar>
+          <Avatar size="large" src="/images/thanks/spliitzy.png" />
           <div>
             <div className="thanks-to-name">Spliitzy</div>
             <div className="thanks-to-reason">Theory crafting and resident eye candy.</div>
