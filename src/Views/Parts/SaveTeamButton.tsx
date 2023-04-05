@@ -2,8 +2,8 @@ import React from 'react';
 import { CopyLink } from '../../Components';
 import { useAccountModel, useAppModel, validateSetup } from '../../Model';
 import { Alert, Input, Modal, Typography } from 'antd';
-import { pack } from 'jsonpack';
 import { DeferredResult } from '../../Common';
+import { serializeTeam } from '../../Model/SerializedTeam';
 
 export const SaveTeamButton: React.FC = () => {
   const { state } = useAppModel();
@@ -36,14 +36,13 @@ export const SaveTeamButton: React.FC = () => {
       qs.set('id', id);
     } catch (e) {
       setError('An error occurred saving the team');
-      const packed = pack(state.tuneState);
-      qs.set('ts', btoa(packed));
+      qs.set('ts', serializeTeam(state.tuneState));
     }
     url.hash = '';
     url.search = qs.toString();
     setOpen(false);
     setConfirmLoading(false);
-    window.history.replaceState(undefined, '', url.toString());
+    window.history.pushState(undefined, '', url.toString());
     return url.toString();
   }, [state.tuneState]);
 

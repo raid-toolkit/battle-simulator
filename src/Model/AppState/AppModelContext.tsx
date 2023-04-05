@@ -4,32 +4,32 @@ import { useImmer } from 'use-immer';
 import { assert, PendingResult } from '../../Common';
 import { BackgroundService, TurnSimulationResponse } from '../../Service';
 import { lookupChampionSetup, validateSetup } from '../Setup';
-import { AbilitySetup, BattleTurn, ChampionSetup, TourStep } from '../Types';
+import { AbilitySetup, AreaId, BattleTurn, ChampionSetup, StatKind, TourStep } from '../Types';
 import { AppModel, AppDispatch } from './AppModel';
-import { AppState, TuneState } from './AppState';
-import { sanitizeChampionSetup, sanitizeTuneState } from './Helpers';
+import { AppState, CompatibleTuneState, TuneState } from './AppState';
+import { isAuraApplicable, sanitizeChampionSetup, sanitizeTuneState } from './Helpers';
 import { themeClassName } from '../../Styles/Variables';
+import { getSerializedTeamUrl } from '../SerializedTeam';
+import { BossSetupByStage } from '../StageInfo';
+import { RTK } from '../../Data';
 
 const AppModelContext = React.createContext<AppModel | null>(null);
+
+const defaultTune: TuneState = {
+  stage: 10,
+  championList: [],
+};
 
 function useAppModelInternal(): AppModel {
   const [state, setState] = useImmer<AppState>({
     theme: 'dark',
     visiblePanel: 'team',
+    initializedTune: false,
     saveState: {
       savedTunes: [],
       dirty: false,
     },
-    tuneState: {
-      boss: {
-        // hardcoded for now
-        speed: 250,
-        typeId: 26566,
-        shieldHits: 21,
-      },
-      speedAura: 0,
-      championList: [],
-    },
+    tuneState: defaultTune,
     turnSimulationErrors: [],
     turnSimulation: [],
   });
@@ -45,14 +45,26 @@ function useAppModelInternal(): AppModel {
   const [, setError] = React.useState<unknown | undefined>(undefined);
 
   React.useEffect(() => {
+    if (state.initializedTune) {
+      const currentTeamUrl = getSerializedTeamUrl(state.tuneState);
+      if (document.location.href !== currentTeamUrl) {
+        window.history.replaceState(undefined, '', currentTeamUrl);
+      }
+    }
     const championList = state.tuneState.championList;
     const errors = new Set(championList.flatMap(validateSetup));
     if (championList.length && errors.size === 0) {
+      const bossSetup = BossSetupByStage[state.tuneState.stage];
+      const leaderSkill = RTK.heroTypes[championList[0].typeId!].leaderSkill;
+      const speedAura =
+        isAuraApplicable(leaderSkill, AreaId.dungeon) && leaderSkill.kind?.toLocaleLowerCase() === StatKind.speed
+          ? leaderSkill.value * 100
+          : 0;
       let request: PendingResult<TurnSimulationResponse> | undefined = BackgroundService.requestTurnSimulation({
-        bossSpeed: state.tuneState.boss.speed,
-        shieldHits: state.tuneState.boss.shieldHits,
+        bossSpeed: bossSetup.speed,
+        shieldHits: bossSetup.shieldHits,
         championSetups: championList as Required<ChampionSetup>[],
-        speedAura: state.tuneState.speedAura,
+        speedAura,
         stopAfter: 75,
       });
 
@@ -83,7 +95,7 @@ function useAppModelInternal(): AppModel {
         state.turnSimulation = [];
       });
     }
-  }, [state.tuneState, setState]);
+  }, [state.tuneState, state.initializedTune, setState]);
 
   const dispatch = React.useMemo<AppDispatch>(
     () =>
@@ -108,18 +120,28 @@ function useAppModelInternal(): AppModel {
         }
 
         setSpeedAura(speedAura: number | null) {
+          // setState((state) => {
+          //   state.tuneState.speedAura = speedAura || 0;
+          // });
+        }
+
+        importTune(tuneState: CompatibleTuneState): void {
           setState((state) => {
-            state.tuneState.speedAura = speedAura || 0;
+            state.tuneState = sanitizeTuneState(tuneState);
+            state.initializedTune = true;
           });
         }
 
-        importTune(tuneState: string | TuneState): void {
+        loadDefaultTune(): void {
           setState((state) => {
-            if (typeof tuneState === 'string') {
-              state.tuneState = sanitizeTuneState(JSON.parse(atob(tuneState)));
-            } else {
-              state.tuneState = sanitizeTuneState(tuneState);
-            }
+            state.tuneState = defaultTune;
+            state.initializedTune = true;
+          });
+        }
+
+        setStage(stage: number): void {
+          setState((state) => {
+            state.tuneState.stage = stage;
           });
         }
 

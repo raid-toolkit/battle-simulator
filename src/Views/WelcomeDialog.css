@@ -41,6 +41,8 @@
   position: absolute;
   top: 0;
   bottom: 0;
+  display: block;
+  padding-top: 4px;
   left: calc(-1em - 8px);
   color: var(--color-success-text);
 }

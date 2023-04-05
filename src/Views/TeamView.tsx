@@ -1,9 +1,11 @@
 import React from 'react';
 import { ChampionSetupListView } from './ChampionSetupListView';
-import { Button, Card, InputNumber, Space } from 'antd';
-import { UserAddOutlined } from '@ant-design/icons';
-import { TourStep, useAppModel } from '../Model';
+import { Button, Card, Space } from 'antd';
+import { ClearOutlined, UserAddOutlined } from '@ant-design/icons';
+import { AreaId, StatKind, TourStep, isAuraApplicable, useAppModel } from '../Model';
 import './TeamView.css';
+import { StageSelectionView } from './StageSelectionView';
+import { RTK } from '../Data';
 
 export interface TeamViewProps {}
 
@@ -22,6 +24,13 @@ export const TeamView: React.FC<TeamViewProps> = () => {
     dispatch.completeTourStep(TourStep.AddChampion);
   }, [dispatch]);
 
+  const leaderType = state.tuneState.championList[0]?.typeId;
+  const leaderSkill = leaderType ? RTK.heroTypes[leaderType]?.leaderSkill : undefined;
+  const speedAura =
+    isAuraApplicable(leaderSkill, AreaId.dungeon) && leaderSkill?.kind?.toLocaleLowerCase() === StatKind.speed
+      ? leaderSkill.value * 100
+      : 0;
+
   return (
     <Card className="team-view-card" type="inner">
       <div
@@ -33,22 +42,26 @@ export const TeamView: React.FC<TeamViewProps> = () => {
         }}
       >
         <Space style={{ padding: '0 8px' }}>
-          <InputNumber
-            addonBefore="Speed Aura %"
-            defaultValue={0}
-            value={state.tuneState.speedAura}
-            onChange={dispatch.setSpeedAura}
-            style={{ width: 165, textAlign: 'right' }}
+          <div className="input-box" style={{ color: speedAura > 0 ? 'var(--cyan)' : undefined }}>
+            <img style={{ height: '2em' }} className="avatar" src="/images/aura/Speed.png" alt="speed aura" />{' '}
+            {speedAura}%
+          </div>
+          <StageSelectionView style={{ width: 100 }} />
+          <Button
+            id="addChampionButton"
+            title="Add Champion"
+            disabled={state.tuneState.championList.length >= 5}
+            icon={<UserAddOutlined />}
+            onClick={addChampion}
           />
-          <Space.Compact>
-            <Button
-              id="addChampionButton"
-              title="Add Champion"
-              disabled={state.tuneState.championList.length >= 5}
-              icon={<UserAddOutlined />}
-              onClick={addChampion}
-            />
-          </Space.Compact>
+          <Button
+            title="Reset"
+            disabled={state.tuneState.championList.length === 0}
+            icon={<ClearOutlined />}
+            onClick={dispatch.loadDefaultTune}
+          >
+            Reset
+          </Button>
         </Space>
         <ChampionSetupListView />
       </div>

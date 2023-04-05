@@ -14,7 +14,9 @@ export interface AppDispatch {
   completeTourStep(step: TourStep): void;
 
   setSpeedAura(speedAura: number | null): void;
-  importTune(tuneState: string | TuneState): void;
+  importTune(tuneState: TuneState): void;
+  loadDefaultTune(): void;
+  setStage(stage: number): void;
   /** @deprecated replace with more narrow method */
   temp_setChampionsList(championList: ChampionSetup[]): void;
   addChampionDraft(): void;

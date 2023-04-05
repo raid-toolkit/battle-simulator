@@ -9,21 +9,21 @@
 }
 
 .turn-row:first-of-type {
-  border-top-left-radius: 8px;
-  border-top-right-radius: 8px;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
 }
 
 .turn-row:first-of-type img.avatar {
-  border-top-left-radius: 8px;
+  border-top-left-radius: 6px;
 }
 
 .turn-row:last-of-type {
-  border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 8px;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
 }
 
 .turn-row:last-of-type img.avatar {
-  border-bottom-left-radius: 8px;
+  border-bottom-left-radius: 6px;
 }
 
 .turn-row-highlight {

@@ -10,6 +10,9 @@ import {
   ThunderboltOutlined,
   PlusSquareOutlined,
   FlagFilled,
+  FieldNumberOutlined,
+  MobileOutlined,
+  ClearOutlined,
 } from '@ant-design/icons';
 import { PhantomTouchIcon } from './PhantomTouchIcon';
 
@@ -75,6 +78,30 @@ const changeLog: [version: [number, number, number], render: () => JSX.Element][
       </ul>
     ),
   ],
+  [
+    [0, 9, 1],
+    () => (
+      <ul>
+        <li className="version-heading">Feature updates</li>
+        <li>
+          <ThunderboltOutlined />
+          Speed aura is now automatically set based on first team slot
+        </li>
+        <li>
+          <FieldNumberOutlined />
+          Boss stage can now be set to 1-10! <aside>Time to git gud!</aside>
+        </li>
+        <li>
+          <MobileOutlined />
+          Current setup is now kept in the URL. <aside>Reload without fear!</aside>
+        </li>
+        <li>
+          <ClearOutlined />
+          Reset button added to clear the current setup.
+        </li>
+      </ul>
+    ),
+  ],
 ];
 
 function numericVersion(version: [number, number, number]) {
@@ -82,7 +109,7 @@ function numericVersion(version: [number, number, number]) {
 }
 
 function parseVersion(version: string): [number, number, number] {
-  return version.split('.').map((v) => parseInt(v, 10)) as [number, number, number];
+  return version.split(',').map((v) => parseInt(v, 10)) as [number, number, number];
 }
 
 const [lastChange] = changeLog[changeLog.length - 1];
@@ -101,7 +128,7 @@ export const WelcomeDialog = () => {
     setOpen(false);
     setFirstRun(false);
     safeLocalStorage.setItem(LocalStorageKeys.SeenWelcomeDialog, 'true');
-    safeLocalStorage.setItem(LocalStorageKeys.LastChangeSeen, `${lastChange}`);
+    safeLocalStorage.setItem(LocalStorageKeys.LastChangeSeen, `${lastChange.join(',')}`);
   }, []);
 
   React.useEffect(() => {

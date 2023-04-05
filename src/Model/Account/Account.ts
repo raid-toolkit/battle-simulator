@@ -1,9 +1,9 @@
 import React from 'react';
 import { useAuth } from '@clerk/clerk-react';
 import faunadb, { query as q } from 'faunadb';
-import { unpack } from 'jsonpack';
 import { AccountModel, SavedTeamDocument } from '../Types';
 import { TuneState, useAppModel } from '../AppState';
+import { deserializeTeam } from '../SerializedTeam';
 
 export function useAccountModel(): AccountModel {
   const { userId, getToken } = useAuth();
@@ -37,7 +37,7 @@ export function useAccountModel(): AccountModel {
       const queryString = new URLSearchParams(document.location.search);
       const savedState = queryString.get('ts');
       if (savedState) {
-        const unpacked = unpack<TuneState>(atob(savedState));
+        const unpacked = deserializeTeam(savedState);
         dispatch.importTune(unpacked);
         return;
       }
@@ -46,8 +46,12 @@ export function useAccountModel(): AccountModel {
         getTeam(tuneId).then((tune) => {
           dispatch.importTune(tune.savedTeam);
         });
+        return;
       }
-    } catch {}
+      dispatch.loadDefaultTune();
+    } catch {
+      dispatch.loadDefaultTune();
+    }
   }, [dispatch, getTeam]);
 
   if (!userId) {

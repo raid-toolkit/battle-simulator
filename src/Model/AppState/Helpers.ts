@@ -1,5 +1,8 @@
-import { AbilitySetup, ChampionSetup } from '../Types';
-import { TuneState } from './AppState';
+import { LeaderStatBonus } from '@raid-toolkit/webclient';
+import { assert } from '../../Common';
+import { BossSetupByStage } from '../StageInfo';
+import { AbilitySetup, AreaId, ChampionSetup } from '../Types';
+import { CompatibleTuneState, TuneState } from './AppState';
 
 export function sanitizeAbilitySetup(abilitySetup: AbilitySetup): AbilitySetup {
   const { cooldown, index, skillTypeId, opener, priority } = abilitySetup;
@@ -11,11 +14,25 @@ export function sanitizeChampionSetup(championSetup: ChampionSetup): ChampionSet
   return { abilities: abilities.map(sanitizeAbilitySetup), blessing, skillOpener, speed, typeId };
 }
 
-export function sanitizeTuneState(tuneState: TuneState): TuneState {
-  const {
-    boss: { shieldHits, speed, typeId },
-    championList,
-    speedAura,
-  } = tuneState;
-  return { boss: { shieldHits, speed, typeId }, championList: championList.map(sanitizeChampionSetup), speedAura };
+export function sanitizeTuneState(tuneState: CompatibleTuneState): TuneState {
+  const { boss, championList } = tuneState;
+  const stage =
+    tuneState.stage ??
+    (boss
+      ? Number(Object.entries(BossSetupByStage).find(([, bossSetup]) => bossSetup.speed === boss!.speed)?.[0])
+      : 10);
+  assert(typeof stage === 'number');
+  return { stage, championList: championList.map(sanitizeChampionSetup) };
+}
+
+declare module '@raid-toolkit/webclient' {
+  export interface LeaderStatBonus {
+    /** @deprecated */
+    areaTypeId: string;
+    area: AreaId;
+  }
+}
+
+export function isAuraApplicable(leaderSkill: LeaderStatBonus | undefined, areaId: AreaId) {
+  return leaderSkill && (!leaderSkill.area || leaderSkill.area?.toLocaleLowerCase() === areaId);
 }

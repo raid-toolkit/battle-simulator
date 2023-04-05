@@ -19,8 +19,16 @@ export interface BossSetup {
 }
 
 export interface TuneState {
-  boss: BossSetup;
-  speedAura: number;
+  stage: number;
+  championList: ChampionSetup[];
+}
+
+export interface CompatibleTuneState {
+  /** @deprecated */
+  boss?: BossSetup;
+  stage?: number;
+  /** @deprecated */
+  speedAura?: number;
   championList: ChampionSetup[];
 }
 
@@ -28,6 +36,7 @@ export interface AppState {
   theme: 'light' | 'dark';
   visiblePanel: 'team' | 'battle';
   highlight?: [championIndex: number, skillIndex?: number];
+  initializedTune: boolean;
   tourStep?: TourStep;
   saveState: SaveState;
   tuneState: TuneState;

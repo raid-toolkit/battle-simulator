@@ -15,7 +15,7 @@ function exec(exe, options) {
     `--${key}`,
     values instanceof Array ? values.join(',') : values,
   ]);
-  return execa(exe, args, { cwd: path.resolve(__dirname, '..') });
+  return execa(exe, args, { cwd: path.resolve(__dirname, '../..') });
 }
 
 const colors = [1, 2, 3, 4, 5];
@@ -103,6 +103,12 @@ Promise.all([
     assetDir: ['resources', '*/Raid_Data/StreamingAssets/AssetBundles'],
     bundleFiles: '*Artifacts*',
   }),
+  // extractImages({
+  //   rootDir,
+  //   outputDir: './public/images/aura',
+  //   assetDir: ['resources', '*/Raid_Data/StreamingAssets/AssetBundles'],
+  //   bundleFiles: '*LeaderSkillIcons*',
+  // }),
 ]).catch((err) => {
   console.error(err);
 });
