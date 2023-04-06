@@ -2,6 +2,7 @@ import { BattleState, ExpressionBuilderFunction, ExpressionBuilderVariable, Expr
 
 const constantVars: ExpressionVars = {
   [ExpressionBuilderVariable.MAX_STAMINA]: 100,
+  [ExpressionBuilderVariable.isCritical]: 1,
   [ExpressionBuilderVariable.canUniqueApplyForBaseEffect]: 1,
   [ExpressionBuilderVariable.isOwnersTurn]: 1, // TODO
   [ExpressionBuilderVariable.effectProducerIsSkillProducer]: 1, // ?
