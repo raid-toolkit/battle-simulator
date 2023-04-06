@@ -1,17 +1,31 @@
 import React from 'react';
-import { Button } from 'antd';
-import { LoginOutlined } from '@ant-design/icons';
+import { Button, message } from 'antd';
+import { LoginOutlined, SettingOutlined } from '@ant-design/icons';
 import { SignedIn, SignedOut, useClerk, UserButton } from '@clerk/clerk-react';
 import { AppTour, TeamView, TurnSimulatorView, WelcomeDialog } from './Views';
 import { themeClassName } from './Styles/Variables';
-import { AppMenu, ViewMenu } from './Views/Parts';
+import { AppMenu, SettingsButton, ViewMenu } from './Views/Parts';
 import { useAppModel } from './Model';
 import { isMobile } from 'is-mobile';
 import './App.css';
+import { round } from './Common';
 
 export const App: React.FC = () => {
+  const [messageApi, contextHolder] = message.useMessage({ maxCount: 1 });
   const { state } = useAppModel();
   const { openSignIn } = useClerk();
+
+  React.useEffect(() => {
+    // finished
+    if (state.turnWorkerState === 'idle') {
+      messageApi.success(`Turn simulation took ${round(state.turnWorkerDuration, 1)}ms`, 2.5);
+    }
+    if (state.turnWorkerState === 'running') {
+      messageApi.loading(`Running simulation`, 0);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state.turnWorkerState]);
+
   return (
     <section className={`root-section ${themeClassName}`}>
       <section className="site-header">
@@ -28,6 +42,9 @@ export const App: React.FC = () => {
             <Button title="Sign in" shape="circle" icon={<LoginOutlined />} onClick={() => openSignIn()} />
           </SignedOut>
         </div>
+        <div style={{ justifySelf: 'flex-end' }}>
+          <SettingsButton />
+        </div>
       </section>
       <section className="site-content">
         <main className={`site-panel site-main ${state.visiblePanel === 'battle' ? 'panel-visible' : ''}`}>
@@ -37,6 +54,7 @@ export const App: React.FC = () => {
           <TeamView />
         </aside>
       </section>
+      {contextHolder}
       {!isMobile() && <AppTour />}
       <WelcomeDialog />
     </section>

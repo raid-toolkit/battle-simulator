@@ -23,18 +23,6 @@ export function useAbility(state: BattleState, turn: BattleTurn): void {
   try {
     const skill = RTK.skillTypes[ability.ability.skillTypeId];
     for (const effect of skill.effects) {
-      // hardcoded conditions
-      if (effect.condition) {
-        switch (effect.condition) {
-          case 'isCritical':
-            break;
-          case '!isCritical':
-            continue;
-          default:
-            // console.warn('Unknown condition', { effect });
-            continue;
-        }
-      }
       for (let n = 0; n < effect.count; n++) {
         const targets = selectEffectTargets(state, turn.championIndex, effect, turnState);
         applyEffect(state, turn.championIndex, effect, targets, turnState);

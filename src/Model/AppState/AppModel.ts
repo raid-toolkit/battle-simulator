@@ -4,6 +4,7 @@ import { AppState, TuneState } from './AppState';
 export interface AppDispatch {
   changeTheme(): void;
   changeTheme(theme: 'light' | 'dark'): void;
+  setTurnLimit(turnLimit: number): void;
 
   setSelectedPanel(panel: 'team' | 'battle'): void;
 

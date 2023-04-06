@@ -13,6 +13,8 @@ import {
   FieldNumberOutlined,
   MobileOutlined,
   ClearOutlined,
+  FunctionOutlined,
+  SlidersOutlined,
 } from '@ant-design/icons';
 import { PhantomTouchIcon } from './PhantomTouchIcon';
 
@@ -98,6 +100,22 @@ const changeLog: [version: [number, number, number], render: () => JSX.Element][
         <li>
           <ClearOutlined />
           Reset button added to clear the current setup.
+        </li>
+      </ul>
+    ),
+  ],
+  [
+    [0, 9, 2],
+    () => (
+      <ul>
+        <li className="version-heading">Feature requests #1</li>
+        <li>
+          <FunctionOutlined />
+          <Text code>AllyTeamContainsHero</Text> function added for skill conditions required for Oella A1.
+        </li>
+        <li>
+          <SlidersOutlined />
+          Turn limit slider added to settings.
         </li>
       </ul>
     ),

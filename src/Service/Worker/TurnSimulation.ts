@@ -8,8 +8,10 @@ WorkerService.on('turn-simulation', (message: Message<TurnSimulationRequest>) =>
     sequence,
     message: { args },
   } = message;
+  const sw = performance.now();
   const state = setupBattle(args);
   const turns = simulateTurns(state);
-  const response: Message<TurnSimulationResponse> = { sequence, message: { turns } };
+  const duration = performance.now() - sw;
+  const response: Message<TurnSimulationResponse> = { sequence, message: { turns, duration } };
   self.postMessage(response);
 });

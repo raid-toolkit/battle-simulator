@@ -12,6 +12,7 @@ import { themeClassName } from '../../Styles/Variables';
 import { getSerializedTeamUrl } from '../SerializedTeam';
 import { BossSetupByStage } from '../StageInfo';
 import { RTK } from '../../Data';
+import safeLocalStorage from '../../Common/LocalStorage';
 
 const AppModelContext = React.createContext<AppModel | null>(null);
 
@@ -20,15 +21,20 @@ const defaultTune: TuneState = {
   championList: [],
 };
 
+const initialTurnLimit = safeLocalStorage.getItem('turn_limit');
+
 function useAppModelInternal(): AppModel {
   const [state, setState] = useImmer<AppState>({
     theme: 'dark',
+    turnLimit: initialTurnLimit ? parseInt(initialTurnLimit, 10) : 75,
     visiblePanel: 'team',
     initializedTune: false,
     saveState: {
       savedTunes: [],
       dirty: false,
     },
+    turnWorkerState: 'idle',
+    turnWorkerDuration: 0,
     tuneState: defaultTune,
     turnSimulationErrors: [],
     turnSimulation: [],
@@ -65,20 +71,29 @@ function useAppModelInternal(): AppModel {
         shieldHits: bossSetup.shieldHits,
         championSetups: championList as Required<ChampionSetup>[],
         speedAura,
-        stopAfter: 75,
+        stopAfter: state.turnLimit,
+      });
+      setState((state) => {
+        state.turnWorkerState = 'running';
       });
 
       request
         .then((response) => {
           setState((state) => {
-            state.turnSimulationErrors = [];
-            state.turnSimulation = response.turns as Draft<BattleTurn>[];
+            if (request) {
+              state.turnSimulationErrors = [];
+              state.turnSimulation = response.turns as Draft<BattleTurn>[];
+              state.turnWorkerDuration = response.duration;
+              state.turnWorkerState = 'idle';
+            }
           });
         })
         .catch((e) => {
           if (request) {
             setState((state) => {
               state.turnSimulationErrors = [e];
+              state.turnWorkerDuration = 0;
+              state.turnWorkerState = 'idle';
             });
             setError(e);
           }
@@ -93,9 +108,11 @@ function useAppModelInternal(): AppModel {
       setState((state) => {
         state.turnSimulationErrors = [...errors.values()];
         state.turnSimulation = [];
+        state.turnWorkerDuration = 0;
+        state.turnWorkerState = 'idle';
       });
     }
-  }, [state.tuneState, state.initializedTune, setState]);
+  }, [state.tuneState, state.initializedTune, state.turnLimit, setState]);
 
   const dispatch = React.useMemo<AppDispatch>(
     () =>
@@ -104,6 +121,13 @@ function useAppModelInternal(): AppModel {
           setState((state) => {
             state.theme =
               theme && ['dark', 'light'].includes(theme) ? theme : state.theme === 'light' ? 'dark' : 'light';
+          });
+        }
+
+        setTurnLimit(turnLimit: number) {
+          safeLocalStorage.setItem('turn_limit', turnLimit.toString());
+          setState((state) => {
+            state.turnLimit = turnLimit;
           });
         }
 

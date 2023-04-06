@@ -34,9 +34,16 @@ export interface CompatibleTuneState {
 
 export interface AppState {
   theme: 'light' | 'dark';
+  turnLimit: number;
+
   visiblePanel: 'team' | 'battle';
+
   highlight?: [championIndex: number, skillIndex?: number];
   initializedTune: boolean;
+
+  turnWorkerState: 'idle' | 'running';
+  turnWorkerDuration: number;
+
   tourStep?: TourStep;
   saveState: SaveState;
   tuneState: TuneState;

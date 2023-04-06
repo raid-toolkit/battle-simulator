@@ -6,11 +6,13 @@ import {
   BlessingTypeId,
   ChampionState,
   ExpressionBuilderVariable,
+  RarityId,
   StatusEffect,
   TurnState,
 } from '../Types';
 import { evalExpression } from './Expression';
 import { useAbility } from './ProcessAbility';
+import { RTK } from '../../Data';
 
 const statusEffectSuperiorTo: Partial<Record<StatusEffectTypeId, StatusEffectTypeId>> = {
   [StatusEffectTypeId.BlockHeal100p]: StatusEffectTypeId.BlockHeal50p,
@@ -60,6 +62,24 @@ export function applyEffect(
 ) {
   const owner = state.championStates[ownerIndex];
   for (const target of targets) {
+    const ownerType = RTK.heroTypes[owner.setup.typeId];
+    const targetType = RTK.heroTypes[target.setup.typeId];
+    if (
+      effect.condition &&
+      !evalExpression(state, effect.condition, {
+        [ExpressionBuilderVariable.TRG_RARITY]: RarityId[targetType.rarity],
+        [ExpressionBuilderVariable.TRG_BUFF_COUNT]: target.buffs.length,
+        [ExpressionBuilderVariable.TRG_DEBUFF_COUNT]: target.debuffs.length,
+        // [ExpressionBuilderVariable.targetFactionId]: targetType.faction,
+        [ExpressionBuilderVariable.RARITY]: RarityId[ownerType.rarity],
+        [ExpressionBuilderVariable.BUFF_COUNT]: owner.debuffs.length,
+        [ExpressionBuilderVariable.DEBUFF_COUNT]: owner.debuffs.length,
+        // TODO
+      })
+    ) {
+      continue;
+    }
+
     switch (effect.kindId) {
       case EffectKindId.Damage: {
         if (target.shieldHitsRemaining) {
