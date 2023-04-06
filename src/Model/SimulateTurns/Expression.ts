@@ -1,4 +1,3 @@
-import { EffectKindId } from '@raid-toolkit/webclient';
 import { BattleState, ExpressionBuilderFunction, ExpressionBuilderVariable, ExpressionVars } from '../Types';
 
 const constantVars: ExpressionVars = {

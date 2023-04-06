@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, message } from 'antd';
-import { LoginOutlined, SettingOutlined } from '@ant-design/icons';
+import { LoginOutlined } from '@ant-design/icons';
 import { SignedIn, SignedOut, useClerk, UserButton } from '@clerk/clerk-react';
 import { AppTour, TeamView, TurnSimulatorView, WelcomeDialog } from './Views';
 import { themeClassName } from './Styles/Variables';
