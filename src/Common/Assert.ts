@@ -5,3 +5,9 @@ export function assert<T>(condition: T | undefined | null, message?: string): as
     throw new Error(message ? `Assert: ${message}` : 'Assertion error');
   }
 }
+
+export function debugAssert<T>(condition: T | undefined | null, message?: string) {
+  if (!condition) {
+    console.warn(message ? `Assert: ${message}` : 'Assertion error');
+  }
+}

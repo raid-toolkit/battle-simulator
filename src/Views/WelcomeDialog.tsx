@@ -15,6 +15,8 @@ import {
   ClearOutlined,
   FunctionOutlined,
   SlidersOutlined,
+  HistoryOutlined,
+  PlusCircleOutlined,
 } from '@ant-design/icons';
 import { PhantomTouchIcon } from './PhantomTouchIcon';
 
@@ -116,6 +118,22 @@ const changeLog: [version: [number, number, number], render: () => JSX.Element][
         <li>
           <SlidersOutlined />
           Turn limit slider added to settings.
+        </li>
+      </ul>
+    ),
+  ],
+  [
+    [0, 9, 3],
+    () => (
+      <ul>
+        <li className="version-heading">Bug fixes</li>
+        <li>
+          <HistoryOutlined />
+          Cooldown reduction implemented.
+        </li>
+        <li>
+          <PlusCircleOutlined />
+          Tomb lord extra turns fixed.
         </li>
       </ul>
     ),

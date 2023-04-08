@@ -1,7 +1,8 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { EffectKindId, EffectType, StatusEffectTypeId, TeamAttackParams } from '@raid-toolkit/webclient';
-import { assert, cloneObject, shuffle } from '../../Common';
+import { assert, cloneObject, debugAssert, shuffle } from '../../Common';
 import {
+  AbilityState,
   BattleState,
   BlessingTypeId,
   ChampionState,
@@ -244,6 +245,29 @@ export function applyEffect(
         }
         state.turnVariables[ExpressionBuilderVariable.targetIsAlreadyHasExtraTurn] = 1;
         state.turnQueue.push(target.index);
+        break;
+      }
+      case EffectKindId.ReduceCooldown: {
+        const params = effect.changeSkillCooldownParams;
+        if (!params) {
+          console.warn('Missing changeSkillCooldownParams', { effect });
+          break;
+        }
+        if (params.skillIndex !== undefined) {
+          debugAssert(params.skillToChange);
+        }
+        const abilities = target.abilityState.reduce<AbilityState[]>((acc, ability) => {
+          if (acc.length > params.skillToChange || ability.cooldownRemaining === 0) {
+            return acc;
+          }
+          if (params.skillIndex === null || ability.index === params.skillIndex) {
+            return acc.concat(ability);
+          }
+          return acc;
+        }, [] as AbilityState[]);
+        for (const ability of abilities) {
+          ability.cooldownRemaining = params.turns === -1 ? 0 : Math.max(0, ability.cooldownRemaining - params.turns);
+        }
         break;
       }
       default: {
