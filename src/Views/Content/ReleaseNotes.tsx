@@ -21,9 +21,7 @@ export const ReleaseNotes = () => {
   const newChanges: JSX.Element[] = React.useMemo(() => reverseLog.slice(0, 3).map(renderVersion), []);
   const oldChanges: JSX.Element[] = React.useMemo(() => reverseLog.slice(3).map(renderVersion), []);
 
-  React.useEffect(() => {
-    return markChangesSeen;
-  }, []);
+  React.useEffect(markChangesSeen, []);
 
   return (
     <div>

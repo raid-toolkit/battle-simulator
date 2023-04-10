@@ -5,12 +5,9 @@ import { LocalStorageKeys } from '../../Model/LocalStorageKeys';
 const { Paragraph, Title } = Typography;
 
 export const WelcomeBody: React.FC = () => {
-  React.useEffect(
-    () => () => {
-      safeLocalStorage.setItem(LocalStorageKeys.SeenWelcomeDialog, 'true');
-    },
-    []
-  );
+  React.useEffect(() => {
+    safeLocalStorage.setItem(LocalStorageKeys.SeenWelcomeDialog, 'true');
+  }, []);
   return (
     <>
       <Title level={4}>Welcome to Raid Fire Knight turn simulator!</Title>
