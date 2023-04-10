@@ -2,13 +2,16 @@ import React from 'react';
 import { Button, message } from 'antd';
 import { LoginOutlined } from '@ant-design/icons';
 import { SignedIn, SignedOut, useClerk, UserButton } from '@clerk/clerk-react';
-import { AppTour, TeamView, TurnSimulatorView, WelcomeDialog } from './Views';
+import { AppTour, TeamView, TurnSimulatorView } from './Views';
 import { themeClassName } from './Styles/Variables';
-import { AppMenu, SettingsButton, ViewMenu } from './Views/Parts';
+import { SaveTeamButton, ViewMenu } from './Views/Parts';
 import { useAppModel } from './Model';
 import { isMobile } from 'is-mobile';
 import './App.css';
 import { round } from './Common';
+import { AppMenu } from './Views/App/AppMenu';
+import { InformationDialog } from './Views/App/InformationDialog';
+import { SettingsDialog } from './Views/App/SettingsDialog';
 
 export const App: React.FC = () => {
   const [messageApi, contextHolder] = message.useMessage({ maxCount: 1, top: 48 });
@@ -29,21 +32,21 @@ export const App: React.FC = () => {
   return (
     <section className={`root-section ${themeClassName}`}>
       <section className="site-header">
-        <AppMenu />
+        <div>
+          <SaveTeamButton />
+        </div>
         <div className="mobile-only">
           <ViewMenu />
         </div>
-        <div style={{ flex: 1 }} className="desktop-only" />
-        <div style={{ justifySelf: 'flex-end' }}>
+        <div className="user-corner">
           <SignedIn>
             <UserButton />
           </SignedIn>
           <SignedOut>
             <Button title="Sign in" shape="circle" icon={<LoginOutlined />} onClick={() => openSignIn()} />
           </SignedOut>
-        </div>
-        <div style={{ justifySelf: 'flex-end' }}>
-          <SettingsButton />
+
+          <AppMenu />
         </div>
       </section>
       <section className="site-content">
@@ -56,7 +59,8 @@ export const App: React.FC = () => {
       </section>
       {contextHolder}
       {!isMobile() && <AppTour />}
-      <WelcomeDialog />
+      <InformationDialog />
+      <SettingsDialog />
     </section>
   );
 };

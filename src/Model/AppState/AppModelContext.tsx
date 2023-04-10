@@ -28,6 +28,8 @@ function useAppModelInternal(): AppModel {
     theme: 'dark',
     turnLimit: initialTurnLimit ? parseInt(initialTurnLimit, 10) : 75,
     visiblePanel: 'team',
+    infoDialogTab: undefined,
+    settingsVisible: false,
     initializedTune: false,
     saveState: {
       savedTunes: [],
@@ -134,6 +136,18 @@ function useAppModelInternal(): AppModel {
         setSelectedPanel(panel: 'team' | 'battle'): void {
           setState((state) => {
             state.visiblePanel = panel;
+          });
+        }
+
+        setInfoDialogTab(tab: 'about' | 'changelog' | 'acknowledgements' | undefined): void {
+          setState((state) => {
+            state.infoDialogTab = tab;
+          });
+        }
+
+        setSettingsVisible(visible: boolean): void {
+          setState((state) => {
+            state.settingsVisible = visible;
           });
         }
 

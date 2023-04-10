@@ -7,6 +7,8 @@ export interface AppDispatch {
   setTurnLimit(turnLimit: number): void;
 
   setSelectedPanel(panel: 'team' | 'battle'): void;
+  setInfoDialogTab(tab: 'about' | 'changelog' | 'acknowledgements' | undefined): void;
+  setSettingsVisible(visible: boolean): void;
 
   setHighlight(): void;
   setHighlight(championIndex: number, skillIndex?: number): void;

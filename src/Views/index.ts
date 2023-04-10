@@ -4,4 +4,3 @@ export * from './TurnSimulatorView';
 export * from './StatusEffectIcon';
 
 export * from './AppTour';
-export * from './WelcomeDialog';

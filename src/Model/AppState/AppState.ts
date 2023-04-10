@@ -36,7 +36,9 @@ export interface AppState {
   theme: 'light' | 'dark';
   turnLimit: number;
 
+  infoDialogTab: 'about' | 'changelog' | 'acknowledgements' | undefined;
   visiblePanel: 'team' | 'battle';
+  settingsVisible: boolean;
 
   highlight?: [championIndex: number, skillIndex?: number];
   initializedTune: boolean;

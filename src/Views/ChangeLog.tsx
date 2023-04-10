@@ -14,11 +14,30 @@ import {
   SlidersOutlined,
   HistoryOutlined,
   PlusCircleOutlined,
+  HighlightOutlined,
 } from '@ant-design/icons';
 import { PhantomTouchIcon } from './PhantomTouchIcon';
 import { Typography } from 'antd';
+import safeLocalStorage from '../Common/LocalStorage';
+import { LocalStorageKeys } from '../Model/LocalStorageKeys';
 
 const { Text } = Typography;
+
+export function numericVersion(version: [number, number, number]) {
+  return version[0] * 10000 + version[1] * 100 + version[2];
+}
+
+export function parseVersion(version: string): [number, number, number] {
+  return version.split(',').map((v) => parseInt(v, 10)) as [number, number, number];
+}
+
+export const lastNumericVersionSeen = numericVersion(
+  parseVersion(safeLocalStorage.getItem(LocalStorageKeys.LastChangeSeen) ?? '0.0.0')
+);
+
+export function hasUnseenChanges() {
+  return changeLog.some(([version]) => numericVersion(version) > lastNumericVersionSeen);
+}
 
 export const changeLog: [version: [number, number, number], render: () => JSX.Element][] = [
   [
@@ -152,4 +171,19 @@ export const changeLog: [version: [number, number, number], render: () => JSX.El
       </ul>
     ),
   ],
+  [
+    [0, 9, 5],
+    () => (
+      <ul>
+        <li className="version-heading">Style updates</li>
+        <li>
+          <HighlightOutlined />
+          Reorganized the UI a bit, moving most extra functions into the top right menu; made other UI elements more
+          mobile friendly
+        </li>
+      </ul>
+    ),
+  ],
 ];
+
+export const [lastChange] = changeLog[changeLog.length - 1];
