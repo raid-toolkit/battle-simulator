@@ -1,74 +1,53 @@
 import React from 'react';
-import { SearchOutlined, HighlightOutlined, CoffeeOutlined, TeamOutlined } from '@ant-design/icons';
-import { Space, Button, Popover, Modal, Typography, Avatar } from 'antd';
+import { HighlightOutlined, TeamOutlined, EnvironmentOutlined, EllipsisOutlined } from '@ant-design/icons';
+import { Space, Button, Modal, Typography, Avatar, Dropdown, MenuProps } from 'antd';
 import isMobile from 'is-mobile';
 import { useAppModel } from '../../Model';
 import { SaveTeamButton } from './SaveTeamButton';
 import './AppMenu.css';
+import { ToggleEnvironmentButton } from './ToggleEnvironmentButton';
 
 export const AppMenu: React.FC = () => {
   const { state, dispatch } = useAppModel();
   const [showThanks, setShowThanks] = React.useState(false);
   const hideThanks = React.useCallback(() => setShowThanks(false), []);
 
-  const renderMenu = React.useCallback(() => {
-    return (
-      <Space.Compact direction="vertical">
-        <Button
-          size="large"
-          icon={
-            <img
-              src="/logo.png"
-              alt="Raid Toolkit Logo"
-              style={{ objectFit: 'scale-down', height: '1rem', paddingRight: 4 }}
-            />
-          }
-          target="_blank"
-          href="https://raidtoolkit.com"
-          type="text"
-          style={{ textAlign: 'left' }}
-        >
-          Raid Toolkit
-        </Button>
-        <Button
-          size="large"
-          icon={<TeamOutlined />}
-          type="text"
-          style={{ textAlign: 'left' }}
-          onClick={() => setShowThanks(true)}
-        >
-          Special thanks to...
-        </Button>
-      </Space.Compact>
-    );
-  }, []);
+  const items: MenuProps['items'] = React.useMemo(
+    () => [
+      {
+        key: 'rtk',
+        icon: <img src="/logo.png" alt="Raid Toolkit Logo" style={{ objectFit: 'scale-down', height: '1rem' }} />,
+        label: 'Raid Toolkit',
+        onClick: () => window.open('https://raidtoolkit.com', '_blank'),
+      },
+      {
+        key: 'thanks',
+        icon: <TeamOutlined />,
+        label: 'Acknowledgements',
+        onClick: () => setShowThanks(true),
+      },
+    ],
+    []
+  );
+
   return (
     <Space>
-      <Space.Compact className="mobile-only">
+      <Space.Compact>
         <SaveTeamButton />
       </Space.Compact>
       <Space.Compact className="desktop-only">
-        <SaveTeamButton />
         {!isMobile() && (
-          <Button icon={<SearchOutlined />} onClick={() => state.tourStep === undefined && dispatch.setTourStep(0)}>
-            Take the tour
-          </Button>
+          <Button
+            title="Take the tour"
+            icon={<EnvironmentOutlined />}
+            onClick={() => state.tourStep === undefined && dispatch.setTourStep(0)}
+          />
         )}
-        <Button icon={<HighlightOutlined />} onClick={dispatch.changeTheme}>
-          Change theme
-        </Button>
-        <Popover
-          placement="bottomLeft"
-          arrow={false}
-          color="var(--color-primary)"
-          overlayInnerStyle={{ padding: 2 }}
-          trigger={['click']}
-          content={renderMenu}
-        >
-          <Button type="dashed" icon={<CoffeeOutlined />}>
-            Powered by...
-          </Button>
-        </Popover>
+        <Button icon={<HighlightOutlined />} title="Change theme" onClick={dispatch.changeTheme} />
+        <ToggleEnvironmentButton />
+        <Dropdown placement="bottomRight" arrow={false} trigger={['click']} menu={{ items }}>
+          <Button title="Menu" icon={<EllipsisOutlined />} />
+        </Dropdown>
       </Space.Compact>
       <Modal
         open={showThanks}

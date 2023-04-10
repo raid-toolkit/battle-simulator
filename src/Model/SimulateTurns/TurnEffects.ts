@@ -83,7 +83,7 @@ export function applyEffect(
 
     switch (effect.kindId) {
       case EffectKindId.Damage: {
-        if (target.shieldHitsRemaining) {
+        if (typeof target.shieldHitsRemaining === 'number') {
           target.shieldHitsRemaining = Math.max(0, target.shieldHitsRemaining - 1);
           if (owner.phantomTouchCooldown === 0 && owner.setup.blessing === BlessingTypeId.MagicOrb) {
             owner.phantomTouchCooldown = 1;

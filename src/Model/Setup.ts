@@ -1,4 +1,4 @@
-import { Visibility } from '@raid-toolkit/webclient';
+import { SkillBonusType, Visibility } from '@raid-toolkit/webclient';
 import { RTK } from '../Data';
 import { AbilitySetup, ChampionSetup } from './Types';
 
@@ -23,6 +23,14 @@ export function lookupChampionSetup(typeId: number): ChampionSetup | undefined {
       skillTypeId: skill.typeId,
       cooldown: skill.cooldown,
     };
+
+    if (skill.upgrades) {
+      for (const upgrade of skill.upgrades) {
+        if (upgrade.type === SkillBonusType.CooltimeTurn) {
+          ability.cooldown -= upgrade.value;
+        }
+      }
+    }
 
     abilities.push(ability);
   }

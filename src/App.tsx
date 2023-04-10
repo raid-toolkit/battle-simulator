@@ -11,7 +11,7 @@ import './App.css';
 import { round } from './Common';
 
 export const App: React.FC = () => {
-  const [messageApi, contextHolder] = message.useMessage({ maxCount: 1 });
+  const [messageApi, contextHolder] = message.useMessage({ maxCount: 1, top: 48 });
   const { state } = useAppModel();
   const { openSignIn } = useClerk();
 

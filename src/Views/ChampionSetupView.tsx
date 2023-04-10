@@ -138,6 +138,7 @@ export const ChampionSetupView: React.FC<ChampionSetupViewProps> = ({ index }) =
               style={{ width: 90, textAlign: 'right' }}
               value={setup.speed || undefined}
               onChange={setSpeed}
+              inputMode="decimal"
               prefix={<ThunderboltOutlined />}
               // addonBefore="Speed"
               min={70}
