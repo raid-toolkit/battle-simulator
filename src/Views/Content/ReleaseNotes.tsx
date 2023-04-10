@@ -1,5 +1,5 @@
 import { Collapse, Typography } from 'antd';
-import { changeLog, hasUnseenChanges, lastNumericVersionSeen, numericVersion } from '../ChangeLog';
+import { changeLog, hasUnseenChanges, lastNumericVersionSeen, markChangesSeen, numericVersion } from '../ChangeLog';
 import './ReleaseNotes.css';
 import React from 'react';
 
@@ -20,6 +20,10 @@ function renderVersion([version, render]: [[number, number, number], () => JSX.E
 export const ReleaseNotes = () => {
   const newChanges: JSX.Element[] = React.useMemo(() => reverseLog.slice(0, 3).map(renderVersion), []);
   const oldChanges: JSX.Element[] = React.useMemo(() => reverseLog.slice(3).map(renderVersion), []);
+
+  React.useEffect(() => {
+    return markChangesSeen;
+  }, []);
 
   return (
     <div>

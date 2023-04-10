@@ -187,3 +187,7 @@ export const changeLog: [version: [number, number, number], render: () => JSX.El
 ];
 
 export const [lastChange] = changeLog[changeLog.length - 1];
+
+export function markChangesSeen() {
+  safeLocalStorage.setItem(LocalStorageKeys.LastChangeSeen, lastChange.join(','));
+}
