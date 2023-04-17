@@ -15,6 +15,7 @@ import {
   HistoryOutlined,
   PlusCircleOutlined,
   HighlightOutlined,
+  UpCircleOutlined,
 } from '@ant-design/icons';
 import { PhantomTouchIcon } from './PhantomTouchIcon';
 import { Typography } from 'antd';
@@ -180,6 +181,18 @@ export const changeLog: [version: [number, number, number], render: () => JSX.El
           <HighlightOutlined />
           Reorganized the UI a bit, moving most extra functions into the top right menu; made other UI elements more
           mobile friendly
+        </li>
+      </ul>
+    ),
+  ],
+  [
+    [0, 9, 6],
+    () => (
+      <ul>
+        <li className="version-heading">Game Version 36872 update</li>
+        <li>
+          <UpCircleOutlined />
+          Added & updated new champs and skills
         </li>
       </ul>
     ),
