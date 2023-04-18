@@ -37,7 +37,7 @@
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
-    "extract-images": "node ./scripts/images/getImages.mjs --verbose",
+    "extract-images": "node ./scripts/assets.mjs extract --verbose",
     "db:setup": "ts-node --project ./tsconfig.scripts.json ./scripts/Fauna/Setup.ts",
     "db:destroy": "ts-node --project ./tsconfig.scripts.json ./scripts/Fauna/Destroy.ts"
   },
@@ -106,6 +106,7 @@
     "ts-jest": "^29.0.5",
     "ts-node": "^10.9.1",
     "typescript": "^4.4.2",
-    "webpack": "^5.76.1"
+    "webpack": "^5.76.1",
+    "yargs": "^17.7.1"
   }
 }
