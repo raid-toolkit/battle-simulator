@@ -23,6 +23,7 @@ const assetPatterns = {
       outputDir: './public/images/blessings',
       assetDir: ['resources', '*/Raid_Data/StreamingAssets/AssetBundles'],
       bundleFiles: 'BlessingIcon_*',
+      default: false,
     },
   ],
   effects: [
