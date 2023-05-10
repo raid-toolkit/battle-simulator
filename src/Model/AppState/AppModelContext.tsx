@@ -247,6 +247,7 @@ function useAppModelInternal(): AppModel {
             } else {
               const setup = lookupChampionSetup(typeId);
               assert(setup, 'typeId not found');
+              setup.speed = state.tuneState.championList[index]?.speed; // carry speed over
               state.tuneState.championList[index] = setup;
             }
           });
