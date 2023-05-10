@@ -10,8 +10,9 @@ import {
 import { ChampionSelectMenu } from '../Components';
 import { AbilitySetupListView } from './AbilitySetupListView';
 import { BlessingTypeId, TourStep, useAppModel } from '../Model';
-import { PhantomTouchIcon } from './PhantomTouchIcon';
+import { PhantomTouchIcon, ImmunityIcon } from '../Icons';
 import './ChampionSetupView.css';
+import { ArtifactSetKindId } from '@raid-toolkit/webclient';
 
 export interface ChampionSetupViewProps {
   index: number;
@@ -44,6 +45,16 @@ export const ChampionSetupView: React.FC<ChampionSetupViewProps> = ({ index }) =
   const togglePhantomTouch = React.useCallback(() => {
     dispatch.updateChampion(index, (setup) => {
       setup.blessing = setup.blessing ? null : BlessingTypeId.MagicOrb;
+    });
+  }, [index, dispatch]);
+
+  const toggleImmunity = React.useCallback(() => {
+    dispatch.updateChampion(index, (setup) => {
+      if (setup.setKinds?.includes(ArtifactSetKindId.BlockDebuff)) {
+        setup.setKinds = setup.setKinds.filter((x) => x !== ArtifactSetKindId.BlockDebuff);
+      } else {
+        setup.setKinds = (setup.setKinds || []).concat(ArtifactSetKindId.BlockDebuff);
+      }
     });
   }, [index, dispatch]);
 
@@ -128,7 +139,17 @@ export const ChampionSetupView: React.FC<ChampionSetupViewProps> = ({ index }) =
               title="Phantom Touch"
               style={{
                 borderBottomRightRadius: 0,
-                color: setup.blessing === BlessingTypeId.MagicOrb ? token.colorPrimary : token.colorText,
+                color: setup.blessing === BlessingTypeId.MagicOrb ? token.colorPrimaryHover : token.colorText,
+              }}
+            />
+            <Button
+              type="text"
+              icon={<ImmunityIcon />}
+              onClick={toggleImmunity}
+              title="Immunity"
+              style={{
+                borderBottomRightRadius: 0,
+                color: setup.setKinds?.includes(ArtifactSetKindId.BlockDebuff) ? token.orange : token.colorText,
               }}
             />
             <InputNumber

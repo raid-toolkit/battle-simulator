@@ -42,9 +42,8 @@ export const TeamView: React.FC<TeamViewProps> = () => {
         }}
       >
         <Space style={{ padding: '0 8px' }}>
-          <div className="input-box" style={{ color: speedAura > 0 ? 'var(--cyan)' : undefined }}>
-            <img style={{ height: '2em' }} className="avatar" src="/images/aura/Speed.png" alt="speed aura" />{' '}
-            {speedAura}%
+          <div className="input-box speed-aura-input" style={{ color: speedAura > 0 ? 'var(--cyan)' : undefined }}>
+            <img className="avatar speed-aura-icon" src="/images/aura/Speed.png" alt="speed aura" /> {speedAura}%
           </div>
           <StageSelectionView style={{ width: 100 }} />
           <Button

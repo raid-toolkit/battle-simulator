@@ -17,7 +17,7 @@ import {
   HighlightOutlined,
   UpCircleOutlined,
 } from '@ant-design/icons';
-import { PhantomTouchIcon } from './PhantomTouchIcon';
+import { ImmunityIcon, PhantomTouchIcon } from '../Icons';
 import { Typography } from 'antd';
 import safeLocalStorage from '../Common/LocalStorage';
 import { LocalStorageKeys } from '../Model/LocalStorageKeys';
@@ -193,6 +193,18 @@ export const changeLog: [version: [number, number, number], render: () => JSX.El
         <li>
           <UpCircleOutlined />
           Added & updated new champs and skills
+        </li>
+      </ul>
+    ),
+  ],
+  [
+    [0, 9, 7],
+    () => (
+      <ul>
+        <li className="version-heading">Immunity set support</li>
+        <li>
+          <ImmunityIcon />
+          Added immunity artifact set toggle to start the battle with 2 turn block debuffs.
         </li>
       </ul>
     ),

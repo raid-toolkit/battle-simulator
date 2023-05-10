@@ -9,3 +9,12 @@
   overflow-y: auto;
   scrollbar-gutter: stable;
 }
+
+.speed-aura-input {
+  min-width: 75px;
+  text-align: center;
+}
+
+.speed-aura-icon {
+  height: 1.75em;
+}

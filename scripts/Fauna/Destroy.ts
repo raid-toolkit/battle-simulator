@@ -1,12 +1,6 @@
-import dotenv from 'dotenv';
-import fs from 'fs';
-import * as envfile from 'envfile';
 import FaunaDB from 'faunadb';
 import { handleSetupError } from './Helpers';
-
-const readline = require('readline-promise').default;
-
-dotenv.config({ path: '.env.' + process.argv[2] });
+import { withDB } from './Wrapper';
 
 const {
   Exists,
@@ -30,27 +24,6 @@ const {
   Keys,
   AccessProviders,
 } = FaunaDB.query;
-
-const keyQuestion = `----- Please provide the FaunaDB admin key) -----
-An admin key is powerful, it should only be used for the setup script, not to run your application!
-At the end of the script a key with limited privileges will be returned that should be used to run your application
-Enter your key:`;
-
-const main = async () => {
-  let serverKey = process.env.FAUNA_ADMIN;
-  if (!serverKey) {
-    const interactiveSession = readline.createInterface({
-      input: process.stdin,
-      output: process.stdout,
-    });
-    await interactiveSession.questionAsync(keyQuestion).then((key) => {
-      serverKey = key;
-      interactiveSession.close();
-    });
-  }
-  const client = new FaunaDB.Client({ secret: serverKey! });
-  await deleteAll(client);
-};
 
 const deleteAll = async (client) => {
   // If this option is provided, the db will be created as a child db of the database
@@ -131,4 +104,4 @@ const deleteTokens = async (client) => {
   return client.query(Map(Paginate(Documents(Tokens())), Lambda('ref', Delete(Var('ref')))));
 };
 
-main();
+withDB(deleteAll, { selectTopLevelDB: true });

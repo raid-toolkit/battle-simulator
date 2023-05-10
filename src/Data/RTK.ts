@@ -19,7 +19,7 @@ export class RTKStatic {
   }
 
   public getString(value: LocalizedText | undefined): string {
-    return value ? this.strings[value.key] || value.localizedValue || value.defaultValue : '';
+    return (value ? this.strings[value.key] || value.localizedValue || value.defaultValue : '').replace(/●/g, ' ');
   }
 
   public async load(): Promise<void> {

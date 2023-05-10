@@ -1,24 +1,19 @@
-import React from "react";
-import { Select, SelectProps } from "antd";
-import { useAsyncDataSource } from "../Hooks";
-import "./ChampionSelectMenu.css";
-import { heroTypesDataSource } from "../DataSources/HeroTypesDataSource";
-import { HeroType } from "@raid-toolkit/webclient";
-import { Avatar } from "../Avatar/Avatar";
+import React from 'react';
+import { Select, SelectProps } from 'antd';
+import { useAsyncDataSource } from '../Hooks';
+import './ChampionSelectMenu.css';
+import { heroTypesDataSource } from '../DataSources/HeroTypesDataSource';
+import { HeroType } from '@raid-toolkit/webclient';
+import { Avatar } from '../Avatar/Avatar';
+import { RTK } from '../../Data';
 
 export interface ChampionSelectMenuProps
-  extends Omit<
-    SelectProps<number, ChampionSelectItemProps>,
-    "onSelect" | "options"
-  > {
+  extends Omit<SelectProps<number, ChampionSelectItemProps>, 'onSelect' | 'options'> {
   bordered?: boolean;
   style?: React.CSSProperties;
   selectedValue?: number;
   onClear?: () => void;
-  onSelect: (
-    typeId: number | undefined,
-    heroType: HeroType | undefined
-  ) => void;
+  onSelect: (typeId: number | undefined, heroType: HeroType | undefined) => void;
 }
 
 export interface ChampionSelectItemProps {
@@ -29,15 +24,12 @@ export interface ChampionSelectItemProps {
   match(value: string): boolean;
 }
 
-function heroTypeToOption([, heroType]: [
-  id: string,
-  heroType: HeroType
-]): ChampionSelectItemProps {
+function heroTypeToOption([, heroType]: [id: string, heroType: HeroType]): ChampionSelectItemProps {
   return {
     heroType,
     value: heroType.typeId,
     match(value: string) {
-      return heroType.name.defaultValue
+      return (RTK.getString(heroType.name) + RTK.getString(heroType.shortName))
         .toLocaleLowerCase()
         .includes(value.toLocaleLowerCase());
     },
@@ -45,7 +37,7 @@ function heroTypeToOption([, heroType]: [
       return (
         <div className="champion-select-item">
           <Avatar height="1em" width="1em" id={heroType.avatarKey} />
-          {heroType.name.defaultValue}
+          {RTK.getString(heroType.shortName)}
         </div>
       );
     },
@@ -62,10 +54,7 @@ export const ChampionSelectMenu: React.FC<ChampionSelectMenuProps> = ({
   ...selectProps
 }) => {
   const heroTypes = useAsyncDataSource(heroTypesDataSource);
-  const options = React.useMemo(
-    () => heroTypes.map(heroTypeToOption),
-    [heroTypes]
-  );
+  const options = React.useMemo(() => heroTypes.map(heroTypeToOption), [heroTypes]);
   const handleSelect = React.useCallback(
     (_: unknown, value?: ChampionSelectItemProps) => {
       onSelect(value?.value, value?.heroType);

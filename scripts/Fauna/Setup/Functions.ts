@@ -1,17 +1,6 @@
 import { Client, Expr, query as q } from 'faunadb';
 import { TableName } from './Constants';
-
-// import {
-//   CreateFweet,
-//   LikeFweet,
-//   Refweet,
-//   Comment,
-//   GetFweets,
-//   GetFweetsByTag,
-//   GetFweetsByAuthor
-// } from './../queries/fweets'
-// import { Follow } from './../queries/followers'
-// import { RegisterWithUser, RegisterAccount, LoginAccount, LoginAccountExample1 } from './../queries/auth'
+import { v4 } from 'uuid';
 
 const {
   Create,
@@ -39,7 +28,7 @@ export interface DBFunction {
 }
 
 // A convenience function to either create or update a function.
-function CreateOrUpdateFunction(obj) {
+function CreateOrUpdateFunction(obj: DBFunction) {
   return If(
     Exists(q.Function(obj.name)),
     Update(q.Function(obj.name), { body: obj.body, role: obj.role }),
@@ -56,6 +45,7 @@ function CreateOrUpdateFunction(obj) {
 function CreateTeam(name: Expr, savedTeam: Expr) {
   const FQLStatement = Create(Collection(TableName.Teams), {
     data: {
+      id: v4(),
       name,
       savedTeam,
       author: CurrentIdentity(),
@@ -82,7 +72,7 @@ export const GetTeamUDF = CreateOrUpdateFunction({
           teamDoc: Get(Ref(Collection(TableName.Teams), Var('teamId'))),
         },
         {
-          id: Select(['ref', 'id'], Var('teamDoc')),
+          id: Select(['data', 'id'], Var('teamDoc')),
           name: Select(['data', 'name'], Var('teamDoc')),
           savedTeam: Select(['data', 'savedTeam'], Var('teamDoc')),
           author: Select(['data', 'author'], Var('teamDoc')),

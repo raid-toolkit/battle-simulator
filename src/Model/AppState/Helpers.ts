@@ -36,3 +36,7 @@ declare module '@raid-toolkit/webclient' {
 export function isAuraApplicable(leaderSkill: LeaderStatBonus | undefined, areaId: AreaId) {
   return leaderSkill && (!leaderSkill.area || leaderSkill.area?.toLocaleLowerCase() === areaId);
 }
+
+export function assertValidChampionSetup(setup: ChampionSetup): asserts setup is Readonly<Required<ChampionSetup>> {
+  assert(setup.speed !== undefined && setup.typeId !== undefined);
+}

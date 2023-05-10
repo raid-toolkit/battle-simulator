@@ -22,7 +22,6 @@ body,
 }
 
 .site-header > div {
-  display: flex;
   flex-direction: row;
   gap: 8px;
   justify-content: center;

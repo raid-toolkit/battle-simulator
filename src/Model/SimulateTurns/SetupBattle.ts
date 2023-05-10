@@ -1,15 +1,23 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { StatusEffectTypeId } from '@raid-toolkit/webclient';
+import { ArtifactSetKindId, StatusEffectTypeId } from '@raid-toolkit/webclient';
 import { RTK } from '../../Data';
 import { TURN_METER_RATE } from '../Constants';
 import { lookupChampionSetup } from '../Setup';
-import { BattleState, ChampionState, ChampionTeam, SimulateTurnsArgs } from '../Types';
+import { BattleState, ChampionSetup, ChampionState, ChampionTeam, SimulateTurnsArgs, StatusEffect } from '../Types';
 
 export function setupBattle(args: SimulateTurnsArgs): BattleState {
   const { championSetups, bossSpeed, shieldHits, speedAura } = args;
   const championStates = championSetups.map<ChampionState>((setup, index) => {
     const baseSpeed = RTK.heroTypes[setup.typeId!].unscaledStats.Speed;
     const speed = setup.speed + baseSpeed * ((speedAura ?? 0) / 100);
+    const buffs: StatusEffect[] = [];
+    if (
+      setup.setKinds?.includes(ArtifactSetKindId.BlockDebuff) ||
+      setup.setKinds?.includes(ArtifactSetKindId.ResistanceAndBlockDebuff) ||
+      setup.setKinds?.includes(ArtifactSetKindId.StoneSkinHpResDef)
+    ) {
+      buffs.push({ typeId: StatusEffectTypeId.BlockDebuff, duration: 3 });
+    }
     return {
       index,
       setup,
@@ -18,7 +26,7 @@ export function setupBattle(args: SimulateTurnsArgs): BattleState {
       speed,
       turnMeter: speed * TURN_METER_RATE * 3,
       turnsTaken: 0,
-      buffs: [],
+      buffs,
       debuffs: [],
       abilityState: setup.abilities.map((ability, index) => ({
         index,
@@ -49,10 +57,9 @@ export function setupBattle(args: SimulateTurnsArgs): BattleState {
     setup: {
       typeId: 26566, // FK10
       speed: bossSpeed,
-      blessing: null,
       skillOpener: -1,
       abilities: bossSetup.abilities,
-    },
+    } as Required<ChampionSetup>,
     buffs: [],
     debuffs: [],
     immuneTo: [

@@ -916,6 +916,18 @@ index e07b9f6..6b2376a 100644
 +  DifficultyId['Insane'] = 'Insane';
 +  DifficultyId['None'] = 'None';
 +})((DifficultyId = exports.DifficultyId || (exports.DifficultyId = {})));
+diff --git a/node_modules/@raid-toolkit/webclient/lib/Types/HeroType.d.ts b/node_modules/@raid-toolkit/webclient/lib/Types/HeroType.d.ts
+index aa15d4f..5089be8 100644
+--- a/node_modules/@raid-toolkit/webclient/lib/Types/HeroType.d.ts
++++ b/node_modules/@raid-toolkit/webclient/lib/Types/HeroType.d.ts
+@@ -27,6 +27,7 @@ export interface LeaderStatBonus extends StatBonus {
+ export interface HeroType {
+     typeId: number;
+     name: LocalizedText;
++    shortName: LocalizedText;
+     affinity: Affinity;
+     faction: Faction;
+     role: HeroRole;
 diff --git a/node_modules/@raid-toolkit/webclient/lib/Types/HeroType.js b/node_modules/@raid-toolkit/webclient/lib/Types/HeroType.js
 index 68b0378..db8b17d 100644
 --- a/node_modules/@raid-toolkit/webclient/lib/Types/HeroType.js
