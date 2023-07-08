@@ -6,6 +6,7 @@ const constantVars: ExpressionVars = {
   [ExpressionBuilderVariable.canUniqueApplyForBaseEffect]: 0,
   [ExpressionBuilderVariable.isOwnersTurn]: 1, // TODO
   [ExpressionBuilderVariable.effectProducerIsSkillProducer]: 1, // ?
+  [ExpressionBuilderVariable.CHANGED_STAMINA_AMOUNT]: 0,
 };
 
 function getExpressionContext(

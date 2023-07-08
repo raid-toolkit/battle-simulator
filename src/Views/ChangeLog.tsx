@@ -16,6 +16,7 @@ import {
   PlusCircleOutlined,
   HighlightOutlined,
   UpCircleOutlined,
+  HourglassOutlined,
 } from '@ant-design/icons';
 import { ImmunityIcon, PhantomTouchIcon } from '../Icons';
 import { Typography } from 'antd';
@@ -205,6 +206,18 @@ export const changeLog: [version: [number, number, number], render: () => JSX.El
         <li>
           <ImmunityIcon />
           Added immunity artifact set toggle to start the battle with 2 turn block debuffs.
+        </li>
+      </ul>
+    ),
+  ],
+  [
+    [0, 9, 8],
+    () => (
+      <ul>
+        <li className="version-heading">Freeze skill support</li>
+        <li>
+          <HourglassOutlined />
+          Freeze debuffs will now correctly reduce the turnmeter of Fyro by 15%.
         </li>
       </ul>
     ),
