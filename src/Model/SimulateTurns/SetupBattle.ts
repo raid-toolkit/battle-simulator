@@ -69,7 +69,6 @@ export function setupBattle(args: SimulateTurnsArgs): BattleState {
       StatusEffectTypeId.BlockPassiveSkills,
       StatusEffectTypeId.Fear1,
       StatusEffectTypeId.Fear2,
-      StatusEffectTypeId.Freeze,
       StatusEffectTypeId.Provoke,
       StatusEffectTypeId.BlockRevive, // not really an immunity, but avoids treating it as a debuff slot
     ],

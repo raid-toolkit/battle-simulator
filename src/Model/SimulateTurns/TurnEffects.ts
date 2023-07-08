@@ -169,10 +169,23 @@ export function applyEffect(
             // TODO: Show this in the UI somehow?
             continue;
           }
-          effectList.push({
+          const effect: StatusEffect = {
             duration: statusEffect.duration,
             typeId: statusEffect.typeId,
-          });
+          };
+
+          // unholy hack of hacks. actually it's not bad, but fuck me.
+          if (
+            target.isBoss &&
+            Math.floor(target.setup.typeId / 100) === 265 &&
+            statusEffect.typeId === StatusEffectTypeId.Freeze
+          ) {
+            target.turnMeter = Math.max(target.turnMeter - 15, 0);
+            // debuff gets removed immediately, so just don't apply it after reducing turn meter
+            break;
+          }
+
+          effectList.push(effect);
         }
         break;
       }
