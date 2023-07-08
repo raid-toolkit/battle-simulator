@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { EffectKindId, EffectType, StatusEffectTypeId, TeamAttackParams } from '@raid-toolkit/webclient';
+import { EffectKindId, EffectType, SkillType, StatusEffectTypeId, TeamAttackParams } from '@raid-toolkit/webclient';
 import { assert, cloneObject, debugAssert, shuffle } from '../../Common';
 import {
   AbilityState,
@@ -57,6 +57,7 @@ function selectAllyAttacks(
 export function applyEffect(
   state: BattleState,
   ownerIndex: number,
+  skill: SkillType,
   effect: EffectType,
   targets: ChampionState[],
   turnState: TurnState
@@ -169,7 +170,7 @@ export function applyEffect(
             // TODO: Show this in the UI somehow?
             continue;
           }
-          const effect: StatusEffect = {
+          const effectToApply: StatusEffect = {
             duration: statusEffect.duration,
             typeId: statusEffect.typeId,
           };
@@ -180,12 +181,21 @@ export function applyEffect(
             Math.floor(target.setup.typeId / 100) === 265 &&
             statusEffect.typeId === StatusEffectTypeId.Freeze
           ) {
-            target.turnMeter = Math.max(target.turnMeter - 15, 0);
+            // get the count
+            let count = 1;
+            let rootEffect: EffectType | undefined = effect;
+            while (rootEffect?.relation?.effectTypeId) {
+              rootEffect = skill.effects.find((effect) => effect.id === rootEffect?.relation?.effectTypeId);
+            }
+            if (rootEffect && rootEffect !== effect) {
+              count *= rootEffect.count;
+            }
+            target.turnMeter = Math.max(target.turnMeter - 15 * count, 0);
             // debuff gets removed immediately, so just don't apply it after reducing turn meter
             break;
           }
 
-          effectList.push(effect);
+          effectList.push(effectToApply);
         }
         break;
       }
