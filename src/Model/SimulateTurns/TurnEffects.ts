@@ -185,6 +185,7 @@ export function applyEffect(
             let count = 1;
             let rootEffect: EffectType | undefined = effect;
             while (rootEffect?.relation?.effectTypeId) {
+              // eslint-disable-next-line no-loop-func
               rootEffect = skill.effects.find((effect) => effect.id === rootEffect?.relation?.effectTypeId);
             }
             if (rootEffect && rootEffect !== effect) {
