@@ -6,7 +6,7 @@ import { selectEffectTargets } from './EffectTargets';
 import { applyEffect } from './TurnEffects';
 import { processValkyrieBuff } from './ValkyrieHack';
 
-export function useAbility(state: BattleState, turn: BattleTurn): void {
+export function processAbility(state: BattleState, turn: BattleTurn): void {
   const champion = state.championStates[turn.championIndex];
   const ability = champion.abilityState[turn.abilityIndex];
 
@@ -43,7 +43,7 @@ export function useAbility(state: BattleState, turn: BattleTurn): void {
         const target = state.championStates[index];
         if (target.buffs.some((effect) => effect.typeId === StatusEffectTypeId.Counterattack)) {
           // eslint-disable-next-line react-hooks/rules-of-hooks
-          useAbility(state, { championIndex: index, abilityIndex: 0, state: cloneObject(state) });
+          processAbility(state, { championIndex: index, abilityIndex: 0, state: cloneObject(state) });
         }
       }
       turnState.isProcessingCounterAttack = false;

@@ -12,7 +12,7 @@ import {
   TurnState,
 } from '../Types';
 import { evalExpression } from './Expression';
-import { useAbility } from './ProcessAbility';
+import { processAbility } from './ProcessAbility';
 import { RTK } from '../../Data';
 
 const statusEffectSuperiorTo: Partial<Record<StatusEffectTypeId, StatusEffectTypeId>> = {
@@ -104,7 +104,7 @@ export function applyEffect(
         turnState.isProcessingAllyAttack = true;
         try {
           for (const ally of allies) {
-            useAbility(state, { championIndex: ally.index, abilityIndex: 0, state: cloneObject(state) });
+            processAbility(state, { championIndex: ally.index, abilityIndex: 0, state: cloneObject(state) });
           }
         } finally {
           turnState.isProcessingAllyAttack = false;

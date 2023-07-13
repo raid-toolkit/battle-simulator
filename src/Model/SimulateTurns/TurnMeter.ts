@@ -3,7 +3,7 @@ import { StatusEffectTypeId } from '@raid-toolkit/webclient';
 import { assert, cloneObject } from '../../Common';
 import { TURN_METER_RATE } from '../Constants';
 import { BattleState, ChampionState, BattleTurn } from '../Types';
-import { useAbility } from './ProcessAbility';
+import { processAbility } from './ProcessAbility';
 import { processValkyrieBuff } from './ValkyrieHack';
 
 const speedAdjustments: Partial<Record<StatusEffectTypeId, number>> = {
@@ -91,7 +91,7 @@ export function simulateTurns(state: BattleState) {
       champion.debuffs = champion.debuffs.filter((buff) => (buff.duration -= 1) > 0);
       champion.turnMeter = 0; //champion.speed * TURN_METER_RATE;
 
-      useAbility(state, turn);
+      processAbility(state, turn);
 
       ability.cooldownRemaining = ability.ability.cooldown;
       ++champion.turnsTaken;
