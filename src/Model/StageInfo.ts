@@ -51,4 +51,9 @@ export const BossSetupByStage: Record<number, BossSetup> = {
     speed: 250,
     shieldHits: 21,
   },
+  11: {
+    typeId: 26440, // void
+    speed: 275,
+    shieldHits: 0,
+  },
 };

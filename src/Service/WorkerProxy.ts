@@ -1,5 +1,5 @@
 import { DeferredResult, PendingResult } from '../Common';
-import { SimulateTurnsArgs } from '../Model';
+import type { SimulateTurnsArgs } from '../Model';
 import { CancelTaskRequest, Message, ServiceRequest, ServiceResponse, TurnSimulationResponse } from './Types';
 
 class WorkerProxy {

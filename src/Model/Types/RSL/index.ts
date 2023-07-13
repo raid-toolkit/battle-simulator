@@ -5,3 +5,4 @@ export * from './ExpressionBuilderFunction';
 export * from './ExpressionBuilderVariable';
 export * from './StatKind';
 export * from './RarityId';
+export * from './RegionId';

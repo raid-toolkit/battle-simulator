@@ -1,5 +1,5 @@
 import EventEmitter from 'events';
-import { Message, ServiceRequest } from '../Types';
+import type { Message, ServiceRequest } from '../Types';
 
 class WorkQueue extends EventEmitter {
   private queue: Message<ServiceRequest>[] = [];
