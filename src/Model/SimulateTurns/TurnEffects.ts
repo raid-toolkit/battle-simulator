@@ -158,6 +158,7 @@ export function applyEffect(
               StatusEffectTypeId.ContinuousDamage025p,
               StatusEffectTypeId.ContinuousDamage5p,
               StatusEffectTypeId.Burn,
+              StatusEffectTypeId.TimeBomb,
             ].includes(statusEffect.typeId)
           ) {
             existingEffect.duration = Math.max(statusEffect.duration, existingEffect.duration);
