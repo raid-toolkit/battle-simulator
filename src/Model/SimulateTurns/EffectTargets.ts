@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { EffectKindId, EffectTargetType, EffectType, TargetExclusion } from '@raid-toolkit/webclient';
+import { shuffle } from '../../Common';
 import { BattleState, ChampionState, TurnState } from '../Types';
 
 function selectTargetChampions(
@@ -29,16 +30,10 @@ function selectTargetChampions(
       return state.championStates.filter((champion) => champion.team !== ownerTeam);
     }
     case EffectTargetType.RandomEnemy: {
-      return state.championStates
-        .filter((champion) => champion.team !== ownerTeam)
-        .reverse()
-        .slice(0, effectType.count);
+      return shuffle(state.championStates.filter((champion) => champion.team !== ownerTeam)).slice(0, 1);
     }
     case EffectTargetType.RandomAlly: {
-      return state.championStates
-        .filter((champion) => champion.team === ownerTeam)
-        .reverse()
-        .slice(0, effectType.count);
+      return shuffle(state.championStates.filter((champion) => champion.team === ownerTeam)).slice(0, 1);
     }
     case EffectTargetType.AllHeroes: {
       // Seer: Karma Burn

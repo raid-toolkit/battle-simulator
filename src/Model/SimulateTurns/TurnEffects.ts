@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { EffectKindId, EffectType, SkillType, StatusEffectTypeId, TeamAttackParams } from '@raid-toolkit/webclient';
-import { assert, cloneObject, debugAssert, shuffle } from '../../Common';
+import { assert, cloneObject, debugAssert } from '../../Common';
 import {
   AbilityState,
   BattleState,
@@ -44,11 +44,11 @@ function selectAllyAttacks(
   const owner = state.championStates[ownerIndex];
   const ownerTeam = owner.team;
 
-  const allies = shuffle(
-    state.championStates.filter(
+  const allies = state.championStates
+    .filter(
       (champion) => champion.team === ownerTeam && (!params.ExcludeProducerFromAttack || champion.index !== ownerIndex)
     )
-  )
+    .reverse()
     .slice(0, params.TeammatesCount)
     .sort((a, b) => a.index - b.index);
   return allies;
@@ -246,6 +246,12 @@ export function applyEffect(
           }
           --count;
         }
+        break;
+      }
+      case EffectKindId.ReduceStamina: {
+        if (Math.floor(target.setup.typeId / 100) === 265) break; // Fyro is immune to TM decreases
+        const tmIncrease = evalExpression(state, effect.multiplier, {});
+        target.turnMeter -= tmIncrease;
         break;
       }
       case EffectKindId.IncreaseStamina: {
