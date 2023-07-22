@@ -44,14 +44,17 @@ function selectAllyAttacks(
   const owner = state.championStates[ownerIndex];
   const ownerTeam = owner.team;
 
-  const allies = state.championStates
-    .filter(
-      (champion) => champion.team === ownerTeam && (!params.ExcludeProducerFromAttack || champion.index !== ownerIndex)
-    )
-    .reverse()
-    .slice(0, params.TeammatesCount)
-    .sort((a, b) => a.index - b.index);
-  return allies;
+  const allies = new Set(
+    state.championStates
+      .filter((champion) => champion.team === ownerTeam && champion.index !== ownerIndex)
+      .reverse()
+      .slice(0, params.TeammatesCount)
+      .sort((a, b) => a.index - b.index)
+  );
+  if (!params.ExcludeProducerFromAttack) {
+    allies.add(owner);
+  }
+  return [...allies];
 }
 
 export function applyEffect(
