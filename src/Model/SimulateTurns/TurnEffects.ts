@@ -47,7 +47,6 @@ function selectAllyAttacks(
   const allies = new Set(
     state.championStates
       .filter((champion) => champion.team === ownerTeam && champion.index !== ownerIndex)
-      .reverse()
       .slice(0, params.TeammatesCount)
       .sort((a, b) => a.index - b.index)
   );
