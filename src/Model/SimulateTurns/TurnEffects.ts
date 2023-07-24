@@ -48,12 +48,11 @@ function selectAllyAttacks(
     state.championStates
       .filter((champion) => champion.team === ownerTeam && champion.index !== ownerIndex)
       .slice(0, params.TeammatesCount)
-      .sort((a, b) => a.index - b.index)
   );
   if (!params.ExcludeProducerFromAttack) {
     allies.add(owner);
   }
-  return [...allies];
+  return [...allies].sort((a, b) => a.index - b.index);
 }
 
 export function applyEffect(
