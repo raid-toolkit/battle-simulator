@@ -117,7 +117,7 @@ function useAppModelInternal(): AppModel {
         state.turnWorkerState = 'idle';
       });
     }
-  }, [state.tuneState, state.initializedTune, state.turnLimit, setState]);
+  }, [state.tuneState, state.initializedTune, state.turnLimit, state.bossTurnLimit, setState]);
 
   const dispatch = React.useMemo<AppDispatch>(
     () =>
