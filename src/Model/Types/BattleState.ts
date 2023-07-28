@@ -19,7 +19,8 @@ export interface SimulateTurnsArgs {
   shieldHits: number;
   speedAura?: number;
 
-  stopAfter?: number;
+  turnLimit?: number;
+  bossTurnLimit?: number;
 }
 
 export interface AbilityState {
@@ -31,7 +32,6 @@ export interface AbilityState {
 export interface ChampionState {
   team: ChampionTeam;
   isBoss?: boolean;
-  definesPhase?: boolean;
   shieldHitsRemaining?: number;
   phantomTouchCooldown?: number;
 
@@ -58,9 +58,11 @@ export interface BattleState {
 }
 
 export interface BattleTurn {
+  bossTurnIndex: number;
   championIndex: number;
   abilityIndex: number;
   state: Readonly<BattleState>;
+  isInfinite?: boolean;
 }
 
 export interface TurnState {

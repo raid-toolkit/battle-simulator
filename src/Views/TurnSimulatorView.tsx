@@ -95,14 +95,9 @@ export const TurnSimulatorView: React.FC<TurnSimulatorViewProps> = () => {
 
   const turnGroups = React.useMemo(() => {
     const turnGroups: BattleTurn[][] = [];
-    let currentTurnGroup: BattleTurn[] = [];
     try {
       for (const turn of turnSimulation) {
-        currentTurnGroup.push(turn);
-        if (turn.state.championStates[turn.championIndex].definesPhase) {
-          turnGroups.push(currentTurnGroup);
-          currentTurnGroup = [];
-        }
+        (turnGroups[turn.bossTurnIndex] = turnGroups[turn.bossTurnIndex] || []).push(turn);
       }
     } catch (e) {
       console.error(e);

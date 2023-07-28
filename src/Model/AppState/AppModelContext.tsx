@@ -21,12 +21,14 @@ const defaultTune: TuneState = {
   championList: [],
 };
 
-const initialTurnLimit = safeLocalStorage.getItem('turn_limit');
+const initialTurnLimit = safeLocalStorage.getItem('v1_turn_limit');
+const initialBossTurnLimit = safeLocalStorage.getItem('v1_boss_turn_limit');
 
 function useAppModelInternal(): AppModel {
   const [state, setState] = useImmer<AppState>({
     theme: 'dark',
-    turnLimit: initialTurnLimit ? parseInt(initialTurnLimit, 10) : 75,
+    bossTurnLimit: initialTurnLimit ? parseInt(initialTurnLimit, 10) : 6,
+    turnLimit: initialBossTurnLimit ? parseInt(initialBossTurnLimit, 10) : 75,
     visiblePanel: 'team',
     infoDialogTab: undefined,
     settingsVisible: false,
@@ -73,7 +75,8 @@ function useAppModelInternal(): AppModel {
         shieldHits: bossSetup.shieldHits,
         championSetups: championList as Required<ChampionSetup>[],
         speedAura,
-        stopAfter: state.turnLimit,
+        turnLimit: state.turnLimit,
+        bossTurnLimit: state.bossTurnLimit,
       });
       setState((state) => {
         state.turnWorkerState = 'running';
@@ -127,9 +130,16 @@ function useAppModelInternal(): AppModel {
         }
 
         setTurnLimit(turnLimit: number) {
-          safeLocalStorage.setItem('turn_limit', turnLimit.toString());
+          safeLocalStorage.setItem('v1_turn_limit', turnLimit.toString());
           setState((state) => {
             state.turnLimit = turnLimit;
+          });
+        }
+
+        setBossTurnLimit(turnLimit: number) {
+          safeLocalStorage.setItem('v1_boss_turn_limit', turnLimit.toString());
+          setState((state) => {
+            state.bossTurnLimit = turnLimit;
           });
         }
 

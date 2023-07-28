@@ -18,8 +18,10 @@ export const SettingsDialog: React.FC = () => {
       ]}
     >
       <Title level={5}>Turn limit</Title>
-      <Paragraph type="secondary">Set the maximum number of turns to simulate.</Paragraph>
-      <Slider min={50} max={500} step={5} defaultValue={state.turnLimit} onAfterChange={dispatch.setTurnLimit} />
+      <Paragraph type="secondary">Set the maximum number of boss turns to simulate.</Paragraph>
+      <Slider min={1} max={20} step={1} defaultValue={state.bossTurnLimit} onAfterChange={dispatch.setBossTurnLimit} />
+      <Paragraph type="secondary">Set the maximum number of turns considered infinite.</Paragraph>
+      <Slider min={10} max={100} step={1} defaultValue={state.turnLimit} onAfterChange={dispatch.setTurnLimit} />
     </Modal>
   );
 };

@@ -11,6 +11,18 @@ import './TurnRow.css';
 
 export const TurnRow: React.FC<{ turn: BattleTurn }> = ({ turn }) => {
   const { state } = useAppModel();
+  if (turn.isInfinite) {
+    return (
+      <div
+        style={{
+          backgroundColor: 'rgba(128,128,128,0.2)',
+          textAlign: 'center',
+        }}
+      >
+        ♾️
+      </div>
+    );
+  }
   const championState = turn.state.championStates[turn.championIndex];
   const championType = RTK.heroTypes[championState.setup.typeId];
   const skillType = RTK.skillTypes[championState.setup.abilities[turn.abilityIndex].skillTypeId];

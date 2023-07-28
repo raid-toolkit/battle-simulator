@@ -70,32 +70,53 @@ export function selectAbility(state: BattleState, championIndex: number): number
 export function simulateTurns(state: BattleState) {
   const turns: BattleTurn[] = [];
   processValkyrieBuff(state);
-  for (let i = 0; i < (state.args.stopAfter ?? 250); ++i) {
-    const nextTurn = runToNextTurn(state);
-    assert(nextTurn !== -1, 'No turn to take');
-    state.turnQueue.push(nextTurn);
+  const turnLimit = state.args.turnLimit ?? 250,
+    bossTurnLimit = state.args.bossTurnLimit ?? 10;
+  let bossTurn = 0;
+  for (; bossTurn < bossTurnLimit; ++bossTurn) {
+    let turnCount = 0;
+    for (; turnCount < turnLimit; ++turnCount) {
+      const nextTurn = runToNextTurn(state);
+      assert(nextTurn !== -1, 'No turn to take');
+      state.turnQueue.push(nextTurn);
 
-    let championIndex: number | undefined;
-    while ((championIndex = state.turnQueue.pop()) !== undefined) {
-      state.turnVariables = {};
-      state.currentTurnOwner = championIndex;
-      const abilityIndex = selectAbility(state, championIndex);
-      const turn: BattleTurn = { state: cloneObject(state), championIndex, abilityIndex };
+      let championIndex: number | undefined;
+      while ((championIndex = state.turnQueue.pop()) !== undefined) {
+        state.turnVariables = {};
+        state.currentTurnOwner = championIndex;
+        const abilityIndex = selectAbility(state, championIndex);
+        const turn: BattleTurn = { bossTurnIndex: bossTurn, state: cloneObject(state), championIndex, abilityIndex };
 
-      const champion = state.championStates[championIndex];
-      const ability = champion.abilityState[abilityIndex];
-      champion.phantomTouchCooldown = 0;
+        const champion = state.championStates[championIndex];
+        const ability = champion.abilityState[abilityIndex];
+        champion.phantomTouchCooldown = 0;
 
-      // please punish me for this
-      champion.buffs = champion.buffs.filter((buff) => (buff.duration -= 1) > 0);
-      champion.debuffs = champion.debuffs.filter((buff) => (buff.duration -= 1) > 0);
-      champion.turnMeter = 0; //champion.speed * TURN_METER_RATE;
+        // please punish me for this
+        champion.buffs = champion.buffs.filter((buff) => (buff.duration -= 1) > 0);
+        champion.debuffs = champion.debuffs.filter((buff) => (buff.duration -= 1) > 0);
+        champion.turnMeter = 0; //champion.speed * TURN_METER_RATE;
 
-      processAbility(state, turn);
+        processAbility(state, turn);
 
-      ability.cooldownRemaining = ability.ability.cooldown;
-      ++champion.turnsTaken;
-      turns.push(turn);
+        ability.cooldownRemaining = ability.ability.cooldown;
+        ++champion.turnsTaken;
+        turns.push(turn);
+      }
+
+      // after boss turn, start next boss turn
+      if (state.championStates[nextTurn].isBoss) {
+        break;
+      }
+    }
+    if (turnCount >= turnLimit) {
+      turns.push({
+        abilityIndex: -1,
+        championIndex: -1,
+        bossTurnIndex: bossTurn,
+        state,
+        isInfinite: true,
+      });
+      break;
     }
   }
   return turns;

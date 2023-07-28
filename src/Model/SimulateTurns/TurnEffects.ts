@@ -105,7 +105,12 @@ export function applyEffect(
         turnState.isProcessingAllyAttack = true;
         try {
           for (const ally of allies) {
-            processAbility(state, { championIndex: ally.index, abilityIndex: 0, state: cloneObject(state) });
+            processAbility(state, {
+              bossTurnIndex: -1,
+              championIndex: ally.index,
+              abilityIndex: 0,
+              state: cloneObject(state),
+            });
           }
         } finally {
           turnState.isProcessingAllyAttack = false;

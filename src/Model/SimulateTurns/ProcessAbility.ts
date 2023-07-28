@@ -43,7 +43,12 @@ export function processAbility(state: BattleState, turn: BattleTurn): void {
         const target = state.championStates[index];
         if (target.buffs.some((effect) => effect.typeId === StatusEffectTypeId.Counterattack)) {
           // eslint-disable-next-line react-hooks/rules-of-hooks
-          processAbility(state, { championIndex: index, abilityIndex: 0, state: cloneObject(state) });
+          processAbility(state, {
+            bossTurnIndex: -1,
+            championIndex: index,
+            abilityIndex: 0,
+            state: cloneObject(state),
+          });
         }
       }
       turnState.isProcessingCounterAttack = false;

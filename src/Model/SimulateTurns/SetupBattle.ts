@@ -43,7 +43,6 @@ export function setupBattle(args: SimulateTurnsArgs): BattleState {
     index: championStates.length,
     team: ChampionTeam.Enemy,
     isBoss: true,
-    definesPhase: true,
     name: RTK.getString(RTK.heroTypes[bossSetup.typeId!].name),
     speed: bossSpeed,
     turnMeter: bossSpeed * TURN_METER_RATE * 3,

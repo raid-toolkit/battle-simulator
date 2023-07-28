@@ -34,6 +34,7 @@ export interface CompatibleTuneState {
 
 export interface AppState {
   theme: 'light' | 'dark';
+  bossTurnLimit: number;
   turnLimit: number;
 
   infoDialogTab: 'about' | 'changelog' | 'acknowledgements' | undefined;
