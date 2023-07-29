@@ -1,1 +1,2 @@
-export * from "./RTK";
+export * from './RTK';
+export * from './ImageIndex';

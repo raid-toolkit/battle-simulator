@@ -1,0 +1,7 @@
+.table-row.skill-effect {
+  display: flex;
+  padding: 0px 4px;
+  height: 32px;
+  align-items: center;
+  gap: 4px;
+}

@@ -10,8 +10,8 @@ export function sanitizeAbilitySetup(abilitySetup: AbilitySetup): AbilitySetup {
 }
 
 export function sanitizeChampionSetup(championSetup: ChampionSetup): ChampionSetup {
-  const { abilities, blessing, skillOpener, speed, typeId } = championSetup;
-  return { abilities: abilities.map(sanitizeAbilitySetup), blessing, skillOpener, speed, typeId };
+  const { abilities, blessing, setKinds, skillOpener, speed, typeId } = championSetup;
+  return { abilities: abilities.map(sanitizeAbilitySetup), blessing, setKinds, skillOpener, speed, typeId };
 }
 
 export function sanitizeTuneState(tuneState: CompatibleTuneState): TuneState {

@@ -5,6 +5,7 @@ import { useAppModel } from '../Model';
 import { RichString } from '../Components';
 import './AbilitySetupView.css';
 import { RTK } from '../Data';
+import { SkillEffectView } from './Parts';
 
 export interface AbilitySetupViewProps {
   skillTypeId: number;
@@ -66,14 +67,14 @@ export const AbilitySetupView: React.FC<AbilitySetupViewProps> = ({ skillTypeId,
     [abilityIndex, abilityCount]
   );
 
-  const [showDescription, setShowDescription] = React.useState(false);
+  const [showDetails, setShowDetails] = React.useState(false);
 
   const displayName = RTK.getString(staticAbility.name);
   const description = RTK.getString(staticAbility.description);
   return (
     <div className="ability-row">
       <Space.Compact block>
-        <span onClick={() => setShowDescription((value) => !value)} className="ability-title">
+        <span onClick={() => setShowDetails((value) => !value)} className="ability-title">
           <span className={`ability-slot ${isHighlighted ? 'ability-slot-highlight' : ''}`} onClick={toggleHighlight}>
             A{ability.index + 1}
           </span>
@@ -128,10 +129,21 @@ export const AbilitySetupView: React.FC<AbilitySetupViewProps> = ({ skillTypeId,
           onChange={abilityIndex > 0 ? setCooldown : undefined}
         />
       </Space.Compact>
-      {showDescription && description && (
+      {showDetails && description && (
         <div className="skill-description-box">
           <div className="skill-description">
             <RichString>{description}</RichString>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            {staticAbility.effects.map((effect) => (
+              <SkillEffectView
+                key={`skillEffect_${effect.id}`}
+                abilityIndex={abilityIndex}
+                ownerIndex={ownerIndex}
+                skillTypeId={skillTypeId}
+                skillEffectId={effect.id}
+              />
+            ))}
           </div>
         </div>
       )}

@@ -2,6 +2,7 @@
 import { EffectKindId, EffectType, SkillType, StatusEffectTypeId, TeamAttackParams } from '@raid-toolkit/webclient';
 import { assert, cloneObject, debugAssert } from '../../Common';
 import {
+  AbilitySetup,
   AbilityState,
   BattleState,
   BlessingTypeId,
@@ -58,6 +59,7 @@ function selectAllyAttacks(
 export function applyEffect(
   state: BattleState,
   ownerIndex: number,
+  abilitySetup: AbilitySetup,
   skill: SkillType,
   effect: EffectType,
   targets: ChampionState[],
@@ -82,6 +84,8 @@ export function applyEffect(
     ) {
       continue;
     }
+
+    const mods = abilitySetup.effectMods?.[effect.id];
 
     switch (effect.kindId) {
       case EffectKindId.Damage: {
@@ -147,7 +151,12 @@ export function applyEffect(
           assert(false, `Unexpected effect kind ${effect.kindId}`);
         }
 
-        for (const statusEffect of statusEffects) {
+        for (const statusEffectIndex in statusEffects) {
+          const statusEffect = statusEffects[statusEffectIndex];
+          if (mods?.disabledStatusEffectIndexes?.[statusEffectIndex]) {
+            continue;
+          }
+
           if (target.immuneTo?.includes(statusEffect.typeId)) {
             continue;
           }
