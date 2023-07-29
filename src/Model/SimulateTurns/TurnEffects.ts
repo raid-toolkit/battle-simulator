@@ -15,6 +15,7 @@ import {
 import { evalExpression } from './Expression';
 import { processAbility } from './ProcessAbility';
 import { RTK } from '../../Data';
+import { getSkillChanceUpgrade } from './Helpers';
 
 const statusEffectSuperiorTo: Partial<Record<StatusEffectTypeId, StatusEffectTypeId>> = {
   [StatusEffectTypeId.BlockHeal100p]: StatusEffectTypeId.BlockHeal50p,
@@ -89,17 +90,18 @@ export function applyEffect(
       continue;
     }
 
+    const addedChance = getSkillChanceUpgrade(skill);
     const mods = abilitySetup.effectMods?.[effect.id];
     if (mods?.disabled) {
       continue;
     }
 
-    if (effect.chance && state.random() > effect.chance) {
-      continue; // failed chance
-    }
-
     switch (effect.kindId) {
       case EffectKindId.Damage: {
+        if (effect.chance && state.random() > effect.chance + addedChance) {
+          continue; // failed chance
+        }
+
         if (typeof target.shieldHitsRemaining === 'number') {
           target.shieldHitsRemaining = Math.max(0, target.shieldHitsRemaining - 1);
           if (owner.phantomTouchCooldown === 0 && owner.setup.blessing === BlessingTypeId.MagicOrb) {
@@ -187,6 +189,10 @@ export function applyEffect(
               StatusEffectTypeId.TimeBomb,
             ].includes(statusEffect.typeId)
           ) {
+            if (effect.chance && state.random() > effect.chance + addedChance) {
+              continue; // failed chance
+            }
+
             existingEffect.duration = Math.max(statusEffect.duration, existingEffect.duration);
             existingEffect.typeId = statusEffect.typeId;
             continue;
@@ -221,7 +227,7 @@ export function applyEffect(
 
             // apply odds to each debuff
             for (let nFreeze = 0; nFreeze < count; ++nFreeze) {
-              if (effect.chance && state.random() > effect.chance) {
+              if (effect.chance && state.random() > effect.chance + addedChance) {
                 continue; // failed chance
               }
               target.turnMeter = Math.max(target.turnMeter - 15, 0);
@@ -230,6 +236,9 @@ export function applyEffect(
             break;
           }
 
+          if (effect.chance && state.random() > effect.chance + addedChance) {
+            break; // failed chance
+          }
           effectList.push(effectToApply);
         }
         break;
@@ -243,6 +252,9 @@ export function applyEffect(
         }
         let count = params.count !== -1 ? params.count : target.debuffs.length;
         while (count > 0 && target.debuffs.length > 0) {
+          if (effect.chance && state.random() > effect.chance + addedChance) {
+            continue; // failed chance
+          }
           if (params.statusEffectTypeIds?.length) {
             const index = target.debuffs.findIndex((effect) => params.statusEffectTypeIds.includes(effect.typeId));
             if (index !== -1) {
@@ -266,6 +278,10 @@ export function applyEffect(
 
         let count = params.count !== -1 ? params.count : target.buffs.length;
         while (count > 0 && target.buffs.length > 0) {
+          if (effect.chance && state.random() > effect.chance + addedChance) {
+            continue; // failed chance
+          }
+
           if (params.effectTypeIds?.length) {
             const buff = target.buffs.find((effect) => params.effectTypeIds.includes(effect.typeId));
             if (buff) {

@@ -5,6 +5,7 @@ import './SkillEffectView.css';
 import { AbilitySetup, ChampionSetup, useAppModel } from '../../../Model';
 import { Button, Typography, theme } from 'antd';
 import { StopOutlined } from '@ant-design/icons';
+import { getSkillChanceUpgrade } from '../../../Model/SimulateTurns/Helpers';
 
 export interface SkillEffectViewProps {
   ownerIndex: number;
@@ -17,12 +18,13 @@ interface RowProps {
   icon?: string;
   description?: string;
   title: string;
+  chance?: number;
 
   onDisabledChanged?: (value: boolean) => void;
   disabled?: boolean;
 }
 
-const Row: React.FC<RowProps> = ({ icon, description, title, disabled, onDisabledChanged }) => {
+const Row: React.FC<RowProps> = ({ icon, description, title, disabled, chance, onDisabledChanged }) => {
   const { token } = theme.useToken();
   const disabledCallback = React.useCallback(() => {
     onDisabledChanged?.(!disabled);
@@ -38,13 +40,22 @@ const Row: React.FC<RowProps> = ({ icon, description, title, disabled, onDisable
           onClick={disabledCallback}
         />
       )}
+      {chance && (
+        <Typography.Text disabled={disabled} style={{ whiteSpace: 'nowrap' }}>
+          {Math.min(100, Math.round(chance * 100))}%
+        </Typography.Text>
+      )}
       {description && (
-        <Typography.Text code disabled={disabled}>
+        <Typography.Text
+          code
+          disabled={disabled}
+          style={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}
+        >
           {description}
         </Typography.Text>
       )}
       <div style={{ flex: 1 }} />
-      {<span>{title}</span>}
+      <span style={{ whiteSpace: 'nowrap' }}>{title}</span>
     </div>
   );
 };
@@ -85,6 +96,7 @@ export const ApplyStatusView: React.FC<InnerViewProps & { title: string }> = ({
   abilitySetup,
   skillEffect,
   skillEffectId,
+  skillType,
   ownerIndex,
   skillIndex,
 }) => {
@@ -108,6 +120,7 @@ export const ApplyStatusView: React.FC<InnerViewProps & { title: string }> = ({
             key={`skillEffect_${index}_${info.typeId}`}
             title={title}
             description={skillEffect.condition}
+            chance={(skillEffect.chance ?? 1) + getSkillChanceUpgrade(skillType)}
             icon={statusEffectImage(info.typeId)}
             onDisabledChanged={(disabled) => setSkillEffectDisabled(index, disabled)}
             disabled={!!abilitySetup.effectMods?.[skillEffectId]?.disabledStatusEffectIndexes?.[index]}
@@ -122,6 +135,7 @@ export const ChangeStamina: React.FC<InnerViewProps> = ({
   abilitySetup,
   skillEffect,
   skillEffectId,
+  skillType,
   ownerIndex,
   skillIndex,
 }) => {
@@ -145,6 +159,7 @@ export const ChangeStamina: React.FC<InnerViewProps> = ({
     <Row
       title={title}
       icon={icon}
+      chance={(skillEffect.chance ?? 1) + getSkillChanceUpgrade(skillType)}
       description={[skillEffect.condition, skillEffect.multiplier].filter(Boolean).join(': ')}
       onDisabledChanged={setSkillEffectDisabled}
       disabled={!!abilitySetup.effectMods?.[skillEffectId]?.disabled}
