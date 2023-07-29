@@ -4,3 +4,4 @@ export * from './Math';
 export * from './Objects';
 export * from './DeferredResult';
 export * from './PendingResult';
+export * from './Random';

@@ -7,6 +7,9 @@ export interface AppDispatch {
   setBossTurnLimit(turnLimit: number): void;
   setTurnLimit(turnLimit: number): void;
 
+  setRandomSeed(randomSeed: number | ((seed: number) => number)): void;
+  setChanceMode(mode: 'rng' | 'guaranteed'): void;
+
   setSelectedPanel(panel: 'team' | 'battle'): void;
   setInfoDialogTab(tab: 'about' | 'changelog' | 'acknowledgements' | undefined): void;
   setSettingsVisible(visible: boolean): void;

@@ -27,6 +27,8 @@ const initialBossTurnLimit = safeLocalStorage.getItem('v2_boss_turn_limit');
 function useAppModelInternal(): AppModel {
   const [state, setState] = useImmer<AppState>({
     theme: 'dark',
+    randomSeed: 0,
+    chanceMode: 'guaranteed',
     turnLimit: initialTurnLimit ? parseInt(initialTurnLimit, 10) : 6,
     bossTurnLimit: initialBossTurnLimit ? parseInt(initialBossTurnLimit, 10) : 40,
     visiblePanel: 'team',
@@ -71,6 +73,8 @@ function useAppModelInternal(): AppModel {
           ? leaderSkill.value * 100
           : 0;
       let request: PendingResult<TurnSimulationResponse> | undefined = BackgroundService.requestTurnSimulation({
+        randomSeed: state.randomSeed,
+        chanceMode: state.chanceMode,
         bossSpeed: bossSetup.speed,
         shieldHits: bossSetup.shieldHits,
         championSetups: championList as Required<ChampionSetup>[],
@@ -117,7 +121,7 @@ function useAppModelInternal(): AppModel {
         state.turnWorkerState = 'idle';
       });
     }
-  }, [state.tuneState, state.initializedTune, state.turnLimit, state.bossTurnLimit, setState]);
+  }, [state.tuneState, state.initializedTune, state.turnLimit, state.bossTurnLimit, state.randomSeed, setState]);
 
   const dispatch = React.useMemo<AppDispatch>(
     () =>
@@ -140,6 +144,18 @@ function useAppModelInternal(): AppModel {
           safeLocalStorage.setItem('v2_boss_turn_limit', turnLimit.toString());
           setState((state) => {
             state.bossTurnLimit = turnLimit;
+          });
+        }
+
+        setRandomSeed(randomSeed: number | ((seed: number) => number)) {
+          setState((state) => {
+            state.randomSeed = typeof randomSeed === 'function' ? randomSeed(state.randomSeed) : randomSeed;
+          });
+        }
+
+        setChanceMode(mode: 'rng' | 'guaranteed'): void {
+          setState((state) => {
+            state.chanceMode = mode;
           });
         }
 

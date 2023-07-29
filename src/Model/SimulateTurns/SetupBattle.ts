@@ -4,6 +4,7 @@ import { RTK } from '../../Data';
 import { TURN_METER_RATE } from '../Constants';
 import { lookupChampionSetup } from '../Setup';
 import { BattleState, ChampionSetup, ChampionState, ChampionTeam, SimulateTurnsArgs, StatusEffect } from '../Types';
+import { mulberry32 } from '../../Common';
 
 export function setupBattle(args: SimulateTurnsArgs): BattleState {
   const { championSetups, bossSpeed, shieldHits, speedAura } = args;
@@ -73,6 +74,7 @@ export function setupBattle(args: SimulateTurnsArgs): BattleState {
     ],
   });
   return {
+    random: mulberry32(args.randomSeed),
     args,
     championStates,
     turnVariables: {},

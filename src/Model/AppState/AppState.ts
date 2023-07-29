@@ -37,6 +37,9 @@ export interface AppState {
   bossTurnLimit: number;
   turnLimit: number;
 
+  randomSeed: number;
+  chanceMode: 'rng' | 'guaranteed';
+
   infoDialogTab: 'about' | 'changelog' | 'acknowledgements' | undefined;
   visiblePanel: 'team' | 'battle';
   settingsVisible: boolean;

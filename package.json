@@ -21,6 +21,7 @@
     "jsonpack": "^1.1.5",
     "localforage": "^1.10.0",
     "react": "^18.2.0",
+    "react-collapsed": "^4.0.4",
     "react-dom": "^18.2.0",
     "safe-localstorage": "^1.0.1",
     "sass": "^1.60.0",
