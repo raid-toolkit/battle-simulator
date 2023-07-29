@@ -107,7 +107,7 @@ export const ApplyStatusView: React.FC<InnerViewProps & { title: string }> = ({
           <Row
             key={`skillEffect_${index}_${info.typeId}`}
             title={title}
-            description={skillEffect.multiplier}
+            description={skillEffect.condition}
             icon={statusEffectImage(info.typeId)}
             onDisabledChanged={(disabled) => setSkillEffectDisabled(index, disabled)}
             disabled={!!abilitySetup.effectMods?.[skillEffectId]?.disabledStatusEffectIndexes?.[index]}
