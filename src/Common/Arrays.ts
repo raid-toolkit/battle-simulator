@@ -20,7 +20,7 @@ export function removeItemAtIndex<T>(arr: readonly T[], index: number): readonly
   return [...arr.slice(0, index), ...arr.slice(index + 1)];
 }
 
-export function shuffle<T>(array: readonly Readonly<T>[]) {
+export function shuffle<T>(rng: () => number, array: readonly Readonly<T>[]) {
   let currentIndex = array.length,
     randomIndex;
   const result = [...array];
@@ -28,7 +28,7 @@ export function shuffle<T>(array: readonly Readonly<T>[]) {
   // While there remain elements to shuffle.
   while (currentIndex !== 0) {
     // Pick a remaining element.
-    randomIndex = Math.floor(Math.random() * currentIndex);
+    randomIndex = Math.floor(rng() * currentIndex);
     currentIndex--;
 
     // And swap it with the current element.

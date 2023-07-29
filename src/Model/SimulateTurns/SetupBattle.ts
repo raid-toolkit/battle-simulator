@@ -74,7 +74,7 @@ export function setupBattle(args: SimulateTurnsArgs): BattleState {
     ],
   });
   return {
-    random: mulberry32(args.randomSeed),
+    random: args.chanceMode === 'rng' ? mulberry32(args.randomSeed) : () => 0,
     args,
     championStates,
     turnVariables: {},

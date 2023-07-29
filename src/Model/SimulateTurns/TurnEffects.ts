@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { EffectKindId, EffectType, SkillType, StatusEffectTypeId, TeamAttackParams } from '@raid-toolkit/webclient';
-import { assert, cloneObject, debugAssert } from '../../Common';
+import { assert, cloneObject, debugAssert, shuffle } from '../../Common';
 import {
   AbilitySetup,
   AbilityState,
@@ -46,9 +46,10 @@ function selectAllyAttacks(
   const ownerTeam = owner.team;
 
   const allies = new Set(
-    state.championStates
-      .filter((champion) => champion.team === ownerTeam && champion.index !== ownerIndex)
-      .slice(0, params.TeammatesCount)
+    shuffle(
+      state.random,
+      state.championStates.filter((champion) => champion.team === ownerTeam && champion.index !== ownerIndex)
+    ).slice(0, params.TeammatesCount)
   );
   if (!params.ExcludeProducerFromAttack) {
     allies.add(owner);
@@ -91,6 +92,10 @@ export function applyEffect(
     const mods = abilitySetup.effectMods?.[effect.id];
     if (mods?.disabled) {
       continue;
+    }
+
+    if (effect.chance && state.random() > effect.chance) {
+      continue; // failed chance
     }
 
     switch (effect.kindId) {
@@ -213,7 +218,14 @@ export function applyEffect(
             if (rootEffect && rootEffect !== effect) {
               count *= rootEffect.count;
             }
-            target.turnMeter = Math.max(target.turnMeter - 15 * count, 0);
+
+            // apply odds to each debuff
+            for (let nFreeze = 0; nFreeze < count; ++nFreeze) {
+              if (effect.chance && state.random() > effect.chance) {
+                continue; // failed chance
+              }
+              target.turnMeter = Math.max(target.turnMeter - 15, 0);
+            }
             // debuff gets removed immediately, so just don't apply it after reducing turn meter
             break;
           }
