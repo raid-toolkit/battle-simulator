@@ -21,6 +21,8 @@ export interface BossSetup {
 export interface TuneState {
   stage: number;
   championList: ChampionSetup[];
+  randomSeed: number;
+  chanceMode: 'rng' | 'guaranteed';
 }
 
 export interface CompatibleTuneState {
@@ -30,15 +32,14 @@ export interface CompatibleTuneState {
   /** @deprecated */
   speedAura?: number;
   championList: ChampionSetup[];
+  randomSeed: number;
+  chanceMode: 'rng' | 'guaranteed';
 }
 
 export interface AppState {
   theme: 'light' | 'dark';
   bossTurnLimit: number;
   turnLimit: number;
-
-  randomSeed: number;
-  chanceMode: 'rng' | 'guaranteed';
 
   infoDialogTab: 'about' | 'changelog' | 'acknowledgements' | undefined;
   visiblePanel: 'team' | 'battle';

@@ -17,10 +17,10 @@ export const RandomPanel: React.FC = () => {
           <Space>
             <span>Effect chances</span>
             <Switch
-              checkedChildren="RNG"
+              checkedChildren="Simulated"
               unCheckedChildren="100%"
-              checked={state.chanceMode === 'rng'}
-              onChange={() => dispatch.setChanceMode(state.chanceMode === 'rng' ? 'guaranteed' : 'rng')}
+              checked={state.tuneState.chanceMode === 'rng'}
+              onChange={() => dispatch.setChanceMode(state.tuneState.chanceMode === 'rng' ? 'guaranteed' : 'rng')}
             />
           </Space>
           <Space>
@@ -29,15 +29,15 @@ export const RandomPanel: React.FC = () => {
               type="number"
               addonBefore="Random Seed"
               style={{ width: 200 }}
-              value={state.randomSeed ?? 0}
-              onChange={(e) => dispatch.setRandomSeed(parseInt(e.target.value, 10) ?? state.randomSeed)}
+              value={state.tuneState.randomSeed ?? 0}
+              onChange={(e) => dispatch.setRandomSeed(parseInt(e.target.value, 10) ?? state.tuneState.randomSeed)}
             />
             <Button icon={<PlusOutlined />} onClick={() => dispatch.setRandomSeed((seed) => ++seed)} />
           </Space>
         </div>
       </div>
       <Button
-        type={state.chanceMode === 'rng' ? 'primary' : 'dashed'}
+        type={state.tuneState.chanceMode === 'rng' ? 'primary' : 'dashed'}
         size="small"
         icon={isExpanded ? <UpOutlined /> : <DownOutlined />}
         onClick={() => setExpanded((value) => !value)}

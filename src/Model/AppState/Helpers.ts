@@ -26,14 +26,14 @@ export function sanitizeChampionSetup(championSetup: ChampionSetup): ChampionSet
 }
 
 export function sanitizeTuneState(tuneState: CompatibleTuneState): TuneState {
-  const { boss, championList } = tuneState;
+  const { boss, championList, randomSeed, chanceMode } = tuneState;
   const stage =
     tuneState.stage ??
     (boss
       ? Number(Object.entries(BossSetupByStage).find(([, bossSetup]) => bossSetup.speed === boss!.speed)?.[0])
       : 10);
   assert(typeof stage === 'number');
-  return { stage, championList: championList.map(sanitizeChampionSetup) };
+  return { stage, championList: championList.map(sanitizeChampionSetup), randomSeed, chanceMode };
 }
 
 declare module '@raid-toolkit/webclient' {
