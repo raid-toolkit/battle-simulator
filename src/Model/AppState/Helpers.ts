@@ -5,8 +5,8 @@ import { AbilitySetup, AreaId, ChampionSetup } from '../Types';
 import { CompatibleTuneState, TuneState } from './AppState';
 
 export function sanitizeAbilitySetup(abilitySetup: AbilitySetup): AbilitySetup {
-  const { cooldown, index, skillTypeId, opener, priority } = abilitySetup;
-  return { cooldown, index, skillTypeId, opener, priority };
+  const { cooldown, index, skillTypeId, opener, priority, effectMods } = abilitySetup;
+  return { cooldown, index, skillTypeId, opener, priority, effectMods };
 }
 
 export function sanitizeChampionSetup(championSetup: ChampionSetup): ChampionSetup {
