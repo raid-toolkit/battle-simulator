@@ -28,7 +28,7 @@ const Row: React.FC<RowProps> = ({ icon, description, title, disabled, onDisable
     onDisabledChanged?.(!disabled);
   }, [disabled, onDisabledChanged]);
   return (
-    <div className="table-row skill-effect">
+    <div className={['table-row', 'skill-effect', disabled && 'modified'].filter(Boolean).join(' ')}>
       {icon && <img className="inline-icon" alt={title || title} src={icon} />}
       {disabled !== undefined && (
         <Button
@@ -44,7 +44,7 @@ const Row: React.FC<RowProps> = ({ icon, description, title, disabled, onDisable
         </Typography.Text>
       )}
       <div style={{ flex: 1 }} />
-      {<Typography.Text disabled={disabled}>{title}</Typography.Text>}
+      {<span>{title}</span>}
     </div>
   );
 };
@@ -118,6 +118,40 @@ export const ApplyStatusView: React.FC<InnerViewProps & { title: string }> = ({
   );
 };
 
+export const ChangeStamina: React.FC<InnerViewProps> = ({
+  abilitySetup,
+  skillEffect,
+  skillEffectId,
+  ownerIndex,
+  skillIndex,
+}) => {
+  const { dispatch } = useAppModel();
+  const setSkillEffectDisabled = React.useCallback(
+    (disabled: boolean) => {
+      dispatch.updateChampionSkill(ownerIndex, skillIndex, (ability) => {
+        const mods = (ability.effectMods ??= {});
+        const mod = (mods[skillEffectId] ??= {});
+        mod.disabled = disabled;
+      });
+    },
+    [dispatch, ownerIndex, skillIndex, skillEffectId]
+  );
+  const { title, icon } =
+    skillEffect.kindId === EffectKindId.ReduceStamina
+      ? { title: 'Reduce Turn Meter', icon: '/images/effects/ReduceStamina.png' }
+      : { title: 'Increase Turn Meter', icon: '/images/effects/IncreaseStamina.png' };
+
+  return (
+    <Row
+      title={title}
+      icon={icon}
+      description={[skillEffect.condition, skillEffect.multiplier].filter(Boolean).join(': ')}
+      onDisabledChanged={setSkillEffectDisabled}
+      disabled={!!abilitySetup.effectMods?.[skillEffectId]?.disabled}
+    />
+  );
+};
+
 export const SkillEffectView: React.FC<SkillEffectViewProps> = ({
   ownerIndex,
   abilityIndex,
@@ -156,6 +190,10 @@ export const SkillEffectView: React.FC<SkillEffectViewProps> = ({
     }
     case EffectKindId.ApplyDebuff: {
       return <ApplyStatusView {...innerProps} title="Apply Debuff" />;
+    }
+    case EffectKindId.IncreaseStamina:
+    case EffectKindId.ReduceStamina: {
+      return <ChangeStamina {...innerProps} />;
     }
   }
   return <></>;

@@ -1,6 +1,7 @@
 export interface SkillEffectModification {
   // modificiations
   disabledStatusEffectIndexes?: Record<number, boolean>;
+  disabled?: boolean;
 }
 
 export interface AbilitySetup {

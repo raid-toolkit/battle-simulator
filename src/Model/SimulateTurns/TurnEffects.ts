@@ -69,12 +69,15 @@ export function applyEffect(
   for (const target of targets) {
     const ownerType = RTK.heroTypes[owner.setup.typeId];
     const targetType = RTK.heroTypes[target.setup.typeId];
+    const relTarget = target; // TODO: Update to use effect info
     if (
       effect.condition &&
       !evalExpression(state, effect.condition, {
         [ExpressionBuilderVariable.TRG_RARITY]: RarityId[targetType.rarity],
         [ExpressionBuilderVariable.TRG_BUFF_COUNT]: target.buffs.length,
         [ExpressionBuilderVariable.TRG_DEBUFF_COUNT]: target.debuffs.length,
+        [ExpressionBuilderVariable.TRG_STAMINA]: target.turnMeter,
+        [ExpressionBuilderVariable.REL_TRG_STAMINA]: relTarget.turnMeter,
         // [ExpressionBuilderVariable.targetFactionId]: targetType.faction,
         [ExpressionBuilderVariable.RARITY]: RarityId[ownerType.rarity],
         [ExpressionBuilderVariable.BUFF_COUNT]: owner.debuffs.length,
@@ -86,6 +89,9 @@ export function applyEffect(
     }
 
     const mods = abilitySetup.effectMods?.[effect.id];
+    if (mods?.disabled) {
+      continue;
+    }
 
     switch (effect.kindId) {
       case EffectKindId.Damage: {

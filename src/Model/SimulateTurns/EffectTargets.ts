@@ -76,6 +76,7 @@ function selectTargetChampions(
     case EffectTargetType.OwnerAllies: {
       return state.championStates.filter((champion) => champion.team === ownerTeam && champion.index !== ownerIndex);
     }
+    case EffectTargetType.RelationProducer:
     case EffectTargetType.Producer: {
       return [owner]; // e.g. casts heal on self
     }

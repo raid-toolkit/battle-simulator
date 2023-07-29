@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, InputNumber, Select, Space, theme } from 'antd';
-import { FlagOutlined, FlagFilled, StopOutlined, HistoryOutlined } from '@ant-design/icons';
-import { useAppModel } from '../Model';
+import { FlagOutlined, FlagFilled, StopOutlined, HistoryOutlined, ToolOutlined } from '@ant-design/icons';
+import { abilityHasMods, useAppModel } from '../Model';
 import { RichString } from '../Components';
 import './AbilitySetupView.css';
 import { RTK } from '../Data';
@@ -79,6 +79,7 @@ export const AbilitySetupView: React.FC<AbilitySetupViewProps> = ({ skillTypeId,
             A{ability.index + 1}
           </span>
           <span>{displayName}</span>
+          {abilityHasMods(ability) && <ToolOutlined style={{ color: token.orange, paddingLeft: 4, fontSize: 16 }} />}
         </span>
         {ability.index === 0 ? (
           <span

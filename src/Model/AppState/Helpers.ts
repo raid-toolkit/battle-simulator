@@ -4,6 +4,17 @@ import { BossSetupByStage } from '../StageInfo';
 import { AbilitySetup, AreaId, ChampionSetup } from '../Types';
 import { CompatibleTuneState, TuneState } from './AppState';
 
+export function abilityHasMods(ability: AbilitySetup) {
+  return (
+    ability.effectMods &&
+    Object.values(ability.effectMods).some(
+      (mod) =>
+        mod.disabled ||
+        (mod.disabledStatusEffectIndexes && Object.values(mod.disabledStatusEffectIndexes).some((disabled) => disabled))
+    )
+  );
+}
+
 export function sanitizeAbilitySetup(abilitySetup: AbilitySetup): AbilitySetup {
   const { cooldown, index, skillTypeId, opener, priority, effectMods } = abilitySetup;
   return { cooldown, index, skillTypeId, opener, priority, effectMods };

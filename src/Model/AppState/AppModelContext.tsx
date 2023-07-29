@@ -27,8 +27,8 @@ const initialBossTurnLimit = safeLocalStorage.getItem('v1_boss_turn_limit');
 function useAppModelInternal(): AppModel {
   const [state, setState] = useImmer<AppState>({
     theme: 'dark',
-    bossTurnLimit: initialTurnLimit ? parseInt(initialTurnLimit, 10) : 6,
-    turnLimit: initialBossTurnLimit ? parseInt(initialBossTurnLimit, 10) : 75,
+    turnLimit: initialTurnLimit ? parseInt(initialTurnLimit, 10) : 6,
+    bossTurnLimit: initialBossTurnLimit ? parseInt(initialBossTurnLimit, 10) : 75,
     visiblePanel: 'team',
     infoDialogTab: undefined,
     settingsVisible: false,
