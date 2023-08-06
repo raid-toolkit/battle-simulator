@@ -18,7 +18,6 @@ import {
   UpCircleOutlined,
   HourglassOutlined,
 } from '@ant-design/icons';
-import { CgDice5 } from 'react-icons/cg';
 import { ImmunityIcon, PhantomTouchIcon } from '../Icons';
 import { Typography } from 'antd';
 import safeLocalStorage from '../Common/LocalStorage';
