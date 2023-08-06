@@ -1,7 +1,8 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { EffectKindId, EffectType, SkillType, StatusEffectTypeId, TeamAttackParams } from '@raid-toolkit/webclient';
-import { assert, cloneObject, debugAssert } from '../../Common';
+import { assert, cloneObject, debugAssert, shuffle } from '../../Common';
 import {
+  AbilitySetup,
   AbilityState,
   BattleState,
   BlessingTypeId,
@@ -14,6 +15,7 @@ import {
 import { evalExpression } from './Expression';
 import { processAbility } from './ProcessAbility';
 import { RTK } from '../../Data';
+import { getSkillChanceUpgrade } from './Helpers';
 
 const statusEffectSuperiorTo: Partial<Record<StatusEffectTypeId, StatusEffectTypeId>> = {
   [StatusEffectTypeId.BlockHeal100p]: StatusEffectTypeId.BlockHeal50p,
@@ -44,20 +46,24 @@ function selectAllyAttacks(
   const owner = state.championStates[ownerIndex];
   const ownerTeam = owner.team;
 
-  const allies = new Set(
-    state.championStates
-      .filter((champion) => champion.team === ownerTeam && champion.index !== ownerIndex)
-      .slice(0, params.TeammatesCount)
-  );
+  const count = params.TeammatesCount > 0 ? params.TeammatesCount : 6;
+  const allies = shuffle(
+    state.random,
+    state.championStates.filter((champion) => champion.team === ownerTeam && champion.index !== ownerIndex)
+  )
+    .slice(0, count)
+    .sort((a, b) => a.index - b.index);
+
   if (!params.ExcludeProducerFromAttack) {
-    allies.add(owner);
+    allies.splice(0, 0, owner);
   }
-  return [...allies].sort((a, b) => a.index - b.index);
+  return allies;
 }
 
 export function applyEffect(
   state: BattleState,
   ownerIndex: number,
+  abilitySetup: AbilitySetup,
   skill: SkillType,
   effect: EffectType,
   targets: ChampionState[],
@@ -67,12 +73,15 @@ export function applyEffect(
   for (const target of targets) {
     const ownerType = RTK.heroTypes[owner.setup.typeId];
     const targetType = RTK.heroTypes[target.setup.typeId];
+    const relTarget = target; // TODO: Update to use effect info
     if (
       effect.condition &&
       !evalExpression(state, effect.condition, {
         [ExpressionBuilderVariable.TRG_RARITY]: RarityId[targetType.rarity],
         [ExpressionBuilderVariable.TRG_BUFF_COUNT]: target.buffs.length,
         [ExpressionBuilderVariable.TRG_DEBUFF_COUNT]: target.debuffs.length,
+        [ExpressionBuilderVariable.TRG_STAMINA]: target.turnMeter,
+        [ExpressionBuilderVariable.REL_TRG_STAMINA]: relTarget.turnMeter,
         // [ExpressionBuilderVariable.targetFactionId]: targetType.faction,
         [ExpressionBuilderVariable.RARITY]: RarityId[ownerType.rarity],
         [ExpressionBuilderVariable.BUFF_COUNT]: owner.debuffs.length,
@@ -83,8 +92,18 @@ export function applyEffect(
       continue;
     }
 
+    const addedChance = getSkillChanceUpgrade(skill);
+    const mods = abilitySetup.effectMods?.[effect.id];
+    if (mods?.disabled) {
+      continue;
+    }
+
     switch (effect.kindId) {
       case EffectKindId.Damage: {
+        if (effect.chance && state.random() > effect.chance + addedChance) {
+          continue; // failed chance
+        }
+
         if (typeof target.shieldHitsRemaining === 'number') {
           target.shieldHitsRemaining = Math.max(0, target.shieldHitsRemaining - 1);
           if (owner.phantomTouchCooldown === 0 && owner.setup.blessing === BlessingTypeId.MagicOrb) {
@@ -147,7 +166,12 @@ export function applyEffect(
           assert(false, `Unexpected effect kind ${effect.kindId}`);
         }
 
-        for (const statusEffect of statusEffects) {
+        for (const statusEffectIndex in statusEffects) {
+          const statusEffect = statusEffects[statusEffectIndex];
+          if (mods?.disabledStatusEffectIndexes?.[statusEffectIndex]) {
+            continue;
+          }
+
           if (target.immuneTo?.includes(statusEffect.typeId)) {
             continue;
           }
@@ -167,6 +191,10 @@ export function applyEffect(
               StatusEffectTypeId.TimeBomb,
             ].includes(statusEffect.typeId)
           ) {
+            if (effect.chance && state.random() > effect.chance + addedChance) {
+              continue; // failed chance
+            }
+
             existingEffect.duration = Math.max(statusEffect.duration, existingEffect.duration);
             existingEffect.typeId = statusEffect.typeId;
             continue;
@@ -198,11 +226,21 @@ export function applyEffect(
             if (rootEffect && rootEffect !== effect) {
               count *= rootEffect.count;
             }
-            target.turnMeter = Math.max(target.turnMeter - 15 * count, 0);
+
+            // apply odds to each debuff
+            for (let nFreeze = 0; nFreeze < count; ++nFreeze) {
+              if (effect.chance && state.random() > effect.chance + addedChance) {
+                continue; // failed chance
+              }
+              target.turnMeter = Math.max(target.turnMeter - 15, 0);
+            }
             // debuff gets removed immediately, so just don't apply it after reducing turn meter
             break;
           }
 
+          if (effect.chance && state.random() > effect.chance + addedChance) {
+            break; // failed chance
+          }
           effectList.push(effectToApply);
         }
         break;
@@ -216,6 +254,9 @@ export function applyEffect(
         }
         let count = params.count !== -1 ? params.count : target.debuffs.length;
         while (count > 0 && target.debuffs.length > 0) {
+          if (effect.chance && state.random() > effect.chance + addedChance) {
+            continue; // failed chance
+          }
           if (params.statusEffectTypeIds?.length) {
             const index = target.debuffs.findIndex((effect) => params.statusEffectTypeIds.includes(effect.typeId));
             if (index !== -1) {
@@ -239,6 +280,10 @@ export function applyEffect(
 
         let count = params.count !== -1 ? params.count : target.buffs.length;
         while (count > 0 && target.buffs.length > 0) {
+          if (effect.chance && state.random() > effect.chance + addedChance) {
+            continue; // failed chance
+          }
+
           if (params.effectTypeIds?.length) {
             const buff = target.buffs.find((effect) => params.effectTypeIds.includes(effect.typeId));
             if (buff) {

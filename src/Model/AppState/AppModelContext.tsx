@@ -18,17 +18,19 @@ const AppModelContext = React.createContext<AppModel | null>(null);
 
 const defaultTune: TuneState = {
   stage: 10,
+  chanceMode: 'guaranteed',
+  randomSeed: 0,
   championList: [],
 };
 
-const initialTurnLimit = safeLocalStorage.getItem('v1_turn_limit');
-const initialBossTurnLimit = safeLocalStorage.getItem('v1_boss_turn_limit');
+const initialTurnLimit = safeLocalStorage.getItem('v2_turn_limit');
+const initialBossTurnLimit = safeLocalStorage.getItem('v2_boss_turn_limit');
 
 function useAppModelInternal(): AppModel {
   const [state, setState] = useImmer<AppState>({
     theme: 'dark',
-    bossTurnLimit: initialTurnLimit ? parseInt(initialTurnLimit, 10) : 6,
-    turnLimit: initialBossTurnLimit ? parseInt(initialBossTurnLimit, 10) : 75,
+    turnLimit: initialTurnLimit ? parseInt(initialTurnLimit, 10) : 6,
+    bossTurnLimit: initialBossTurnLimit ? parseInt(initialBossTurnLimit, 10) : 40,
     visiblePanel: 'team',
     infoDialogTab: undefined,
     settingsVisible: false,
@@ -71,6 +73,8 @@ function useAppModelInternal(): AppModel {
           ? leaderSkill.value * 100
           : 0;
       let request: PendingResult<TurnSimulationResponse> | undefined = BackgroundService.requestTurnSimulation({
+        randomSeed: state.tuneState.randomSeed,
+        chanceMode: state.tuneState.chanceMode,
         bossSpeed: bossSetup.speed,
         shieldHits: bossSetup.shieldHits,
         championSetups: championList as Required<ChampionSetup>[],
@@ -130,16 +134,29 @@ function useAppModelInternal(): AppModel {
         }
 
         setTurnLimit(turnLimit: number) {
-          safeLocalStorage.setItem('v1_turn_limit', turnLimit.toString());
+          safeLocalStorage.setItem('v2_turn_limit', turnLimit.toString());
           setState((state) => {
             state.turnLimit = turnLimit;
           });
         }
 
         setBossTurnLimit(turnLimit: number) {
-          safeLocalStorage.setItem('v1_boss_turn_limit', turnLimit.toString());
+          safeLocalStorage.setItem('v2_boss_turn_limit', turnLimit.toString());
           setState((state) => {
             state.bossTurnLimit = turnLimit;
+          });
+        }
+
+        setRandomSeed(randomSeed: number | ((seed: number) => number)) {
+          setState((state) => {
+            state.tuneState.randomSeed =
+              typeof randomSeed === 'function' ? randomSeed(state.tuneState.randomSeed) : randomSeed;
+          });
+        }
+
+        setChanceMode(mode: 'rng' | 'guaranteed'): void {
+          setState((state) => {
+            state.tuneState.chanceMode = mode;
           });
         }
 

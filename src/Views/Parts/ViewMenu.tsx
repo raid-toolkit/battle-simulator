@@ -1,17 +1,19 @@
-import { Radio } from 'antd';
+import { Segmented } from 'antd';
 import { useAppModel } from '../../Model';
+import type { SegmentedLabeledOption } from 'antd/es/segmented';
+
+const options: SegmentedLabeledOption[] = [
+  { label: 'Battle', value: 'battle' },
+  { label: 'Team', value: 'team' },
+];
 
 export const ViewMenu: React.FC = () => {
   const { state, dispatch } = useAppModel();
   return (
-    <Radio.Group
+    <Segmented
+      options={options}
       value={state.visiblePanel}
-      onChange={(e) => {
-        dispatch.setSelectedPanel(e.target.value);
-      }}
-    >
-      <Radio.Button value="battle">Battle</Radio.Button>
-      <Radio.Button value="team">Team</Radio.Button>
-    </Radio.Group>
+      onChange={dispatch.setSelectedPanel as (value: string | number) => void}
+    />
   );
 };

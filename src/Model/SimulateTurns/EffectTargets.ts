@@ -30,10 +30,16 @@ function selectTargetChampions(
       return state.championStates.filter((champion) => champion.team !== ownerTeam);
     }
     case EffectTargetType.RandomEnemy: {
-      return shuffle(state.championStates.filter((champion) => champion.team !== ownerTeam)).slice(0, 1);
+      return shuffle(
+        state.random,
+        state.championStates.filter((champion) => champion.team !== ownerTeam)
+      ).slice(0, 1);
     }
     case EffectTargetType.RandomAlly: {
-      return shuffle(state.championStates.filter((champion) => champion.team === ownerTeam)).slice(0, 1);
+      return shuffle(
+        state.random,
+        state.championStates.filter((champion) => champion.team === ownerTeam)
+      ).slice(0, 1);
     }
     case EffectTargetType.AllHeroes: {
       // Seer: Karma Burn
@@ -76,6 +82,7 @@ function selectTargetChampions(
     case EffectTargetType.OwnerAllies: {
       return state.championStates.filter((champion) => champion.team === ownerTeam && champion.index !== ownerIndex);
     }
+    case EffectTargetType.RelationProducer:
     case EffectTargetType.Producer: {
       return [owner]; // e.g. casts heal on self
     }

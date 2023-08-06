@@ -1,0 +1,16 @@
+.table-row.skill-effect {
+  display: flex;
+  padding: 0px 4px;
+  height: 32px;
+  align-items: center;
+  gap: 4px;
+}
+
+.table-row.skill-effect.modified {
+  border: 1px solid var(--orange4);
+  color: var(--orange4);
+}
+
+.table-row.skill-effect.modified:hover::after {
+  border: 1px solid var(--orange6);
+}

@@ -18,6 +18,8 @@ export interface SimulateTurnsArgs {
   bossSpeed: number;
   shieldHits: number;
   speedAura?: number;
+  randomSeed: number;
+  chanceMode: 'rng' | 'guaranteed';
 
   turnLimit?: number;
   bossTurnLimit?: number;
@@ -48,6 +50,7 @@ export interface ChampionState {
 }
 
 export interface BattleState {
+  random: () => number;
   args: SimulateTurnsArgs;
   championStates: ChampionState[];
   turnQueue: number[];

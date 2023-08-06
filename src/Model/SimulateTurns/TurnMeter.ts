@@ -113,7 +113,7 @@ export function simulateTurns(state: BattleState) {
         abilityIndex: -1,
         championIndex: -1,
         bossTurnIndex: bossTurn,
-        state,
+        state: cloneObject(state),
         isInfinite: true,
       });
       break;

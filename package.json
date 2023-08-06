@@ -1,6 +1,6 @@
 {
   "name": "battle-simulator",
-  "version": "0.9.8",
+  "version": "0.9.9",
   "private": true,
   "dependencies": {
     "@ant-design/colors": "^7.0.0",
@@ -21,7 +21,9 @@
     "jsonpack": "^1.1.5",
     "localforage": "^1.10.0",
     "react": "^18.2.0",
+    "react-collapsed": "^4.0.4",
     "react-dom": "^18.2.0",
+    "react-icons": "^4.10.1",
     "safe-localstorage": "^1.0.1",
     "sass": "^1.60.0",
     "ts-deferred": "^1.0.4",
@@ -38,6 +40,7 @@
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook",
     "extract-images": "node ./scripts/assets.mjs extract --verbose",
+    "static-update": "node ./scripts/static-update.js",
     "db:setup": "ts-node --project ./tsconfig.scripts.json ./scripts/Fauna/Setup.ts",
     "db:backup": "ts-node --project ./tsconfig.scripts.json ./scripts/Fauna/Backup.ts",
     "db:destroy": "ts-node --project ./tsconfig.scripts.json ./scripts/Fauna/Destroy.ts"
