@@ -23,6 +23,7 @@ import { ImmunityIcon, PhantomTouchIcon } from '../Icons';
 import { Typography } from 'antd';
 import safeLocalStorage from '../Common/LocalStorage';
 import { LocalStorageKeys } from '../Model/LocalStorageKeys';
+import { Dice } from '../Components';
 
 const { Text } = Typography;
 
@@ -229,7 +230,7 @@ export const changeLog: [version: [number, number, number], render: () => JSX.El
       <ul>
         <li className="version-heading">RNG Mode</li>
         <li>
-          <CgDice5 />
+          <Dice value={4} />
           You can now enable RNG mode at the top of the turn simulator to test different outcomes.
         </li>
       </ul>
