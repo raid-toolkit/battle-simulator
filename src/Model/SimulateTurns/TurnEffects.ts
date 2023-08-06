@@ -46,16 +46,18 @@ function selectAllyAttacks(
   const owner = state.championStates[ownerIndex];
   const ownerTeam = owner.team;
 
-  const allies = new Set(
-    shuffle(
-      state.random,
-      state.championStates.filter((champion) => champion.team === ownerTeam && champion.index !== ownerIndex)
-    ).slice(0, params.TeammatesCount)
-  );
+  const count = params.TeammatesCount > 0 ? params.TeammatesCount : 6;
+  const allies = shuffle(
+    state.random,
+    state.championStates.filter((champion) => champion.team === ownerTeam && champion.index !== ownerIndex)
+  )
+    .slice(0, count)
+    .sort((a, b) => a.index - b.index);
+
   if (!params.ExcludeProducerFromAttack) {
-    allies.add(owner);
+    allies.splice(0, 0, owner);
   }
-  return [...allies].sort((a, b) => a.index - b.index);
+  return allies;
 }
 
 export function applyEffect(

@@ -18,6 +18,7 @@ import {
   UpCircleOutlined,
   HourglassOutlined,
 } from '@ant-design/icons';
+import { CgDice5 } from 'react-icons/cg';
 import { ImmunityIcon, PhantomTouchIcon } from '../Icons';
 import { Typography } from 'antd';
 import safeLocalStorage from '../Common/LocalStorage';
@@ -218,6 +219,18 @@ export const changeLog: [version: [number, number, number], render: () => JSX.El
         <li>
           <HourglassOutlined />
           Freeze debuffs will now correctly reduce the turnmeter of Fyro by 15%.
+        </li>
+      </ul>
+    ),
+  ],
+  [
+    [0, 9, 9],
+    () => (
+      <ul>
+        <li className="version-heading">RNG Mode</li>
+        <li>
+          <CgDice5 />
+          You can now enable RNG mode at the top of the turn simulator to test different outcomes.
         </li>
       </ul>
     ),

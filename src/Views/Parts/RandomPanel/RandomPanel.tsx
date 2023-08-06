@@ -3,6 +3,7 @@ import { Button, Input, Space, Switch } from 'antd';
 import React from 'react';
 import { useCollapse } from 'react-collapsed';
 import { useAppModel } from '../../../Model';
+import { Dice } from '../../../Components';
 
 export const RandomPanel: React.FC = () => {
   const { state, dispatch } = useAppModel();
@@ -10,6 +11,11 @@ export const RandomPanel: React.FC = () => {
     easing: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
     duration: 500,
   });
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const diceIcon = React.useMemo(() => <Dice value={Math.floor(Math.random() * 6)} />, [state.tuneState.randomSeed]);
+  const expandIcon = isExpanded ? <UpOutlined /> : <DownOutlined />;
+
   return (
     <div className="random-panel">
       <div className="random-panel-container" {...getCollapseProps()}>
@@ -39,7 +45,7 @@ export const RandomPanel: React.FC = () => {
       <Button
         type={state.tuneState.chanceMode === 'rng' ? 'primary' : 'dashed'}
         size="small"
-        icon={isExpanded ? <UpOutlined /> : <DownOutlined />}
+        icon={state.tuneState.chanceMode === 'rng' ? diceIcon : expandIcon}
         onClick={() => setExpanded((value) => !value)}
       >
         RNG
