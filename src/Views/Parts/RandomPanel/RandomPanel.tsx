@@ -24,7 +24,7 @@ export const RandomPanel: React.FC = () => {
             />
           </Space>
           <Space>
-            <Button icon={<MinusOutlined />} onClick={() => dispatch.setRandomSeed((seed) => --seed)} />
+            <Button icon={<MinusOutlined />} onClick={() => dispatch.setRandomSeed((seed) => (seed || 0) - 1)} />
             <Input
               type="number"
               addonBefore="Random Seed"
@@ -32,7 +32,7 @@ export const RandomPanel: React.FC = () => {
               value={state.tuneState.randomSeed ?? 0}
               onChange={(e) => dispatch.setRandomSeed(parseInt(e.target.value, 10) ?? state.tuneState.randomSeed)}
             />
-            <Button icon={<PlusOutlined />} onClick={() => dispatch.setRandomSeed((seed) => ++seed)} />
+            <Button icon={<PlusOutlined />} onClick={() => dispatch.setRandomSeed((seed) => (seed || 0) + 1)} />
           </Space>
         </div>
       </div>
