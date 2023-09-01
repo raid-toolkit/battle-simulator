@@ -1,4 +1,4 @@
-const rootDir = process.env.USERPROFILE + '\\AppData\\Local\\PlariumPlay\\StandAloneApps\\raid';
+const rootDir = 'M:/Games/Plarium/raid-shadow-legends';
 
 const assetPatterns = {
   avatars: [
