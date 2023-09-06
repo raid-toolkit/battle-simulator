@@ -25,7 +25,7 @@ export const SettingsDialog: React.FC = () => {
         min={1}
         max={20}
         step={1}
-        defaultValue={state.bossTurnLimit}
+        value={state.bossTurnLimit}
         onAfterChange={dispatch.setBossTurnLimit}
       />
       <Paragraph>Set the maximum number of turns considered infinite.</Paragraph>
@@ -35,7 +35,7 @@ export const SettingsDialog: React.FC = () => {
         min={10}
         max={100}
         step={1}
-        defaultValue={state.turnLimit}
+        value={state.turnLimit}
         onAfterChange={dispatch.setTurnLimit}
       />
     </Modal>
