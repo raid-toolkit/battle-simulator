@@ -1,4 +1,4 @@
-import { BattleTurn, ChampionSetup, TourStep } from '../Types';
+import type { Area, BattleTurn, BossSetup, ChampionSetup, TourStep } from '../Types';
 
 export interface SavedTune {
   saveKey: string;
@@ -12,14 +12,8 @@ export interface SaveState {
   dirty: boolean;
 }
 
-export interface BossSetup {
-  typeId: number;
-  speed: number;
-  shieldHits: number;
-}
-
 export interface TuneState {
-  stage: number;
+  stage: number | undefined;
   championList: ChampionSetup[];
   randomSeed: number;
   chanceMode: 'rng' | 'guaranteed';
@@ -40,6 +34,9 @@ export interface AppState {
   theme: 'light' | 'dark';
   bossTurnLimit: number;
   turnLimit: number;
+
+  area?: string;
+  region?: string;
 
   infoDialogTab: 'about' | 'changelog' | 'acknowledgements' | undefined;
   visiblePanel: 'team' | 'battle';

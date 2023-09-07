@@ -2,7 +2,7 @@ import React from 'react';
 import { Tooltip } from 'antd';
 import { CompressOutlined } from '@ant-design/icons';
 import isMobile from 'is-mobile';
-import { BattleTurn, ChampionTeam, useAppModel } from '../Model';
+import { BattleTurn, ChampionTeam, getConfig, useAppModel } from '../Model';
 import { Avatar } from '../Components';
 import { RTK } from '../Data';
 import { colors } from './TurnGroupCardView';
@@ -23,6 +23,7 @@ export const TurnRow: React.FC<{ turn: BattleTurn }> = ({ turn }) => {
       </div>
     );
   }
+  const config = getConfig(state);
   const championState = turn.state.championStates[turn.championIndex];
   const championType = RTK.heroTypes[championState.setup.typeId];
   const skillType = RTK.skillTypes[championState.setup.abilities[turn.abilityIndex].skillTypeId];
@@ -50,8 +51,12 @@ export const TurnRow: React.FC<{ turn: BattleTurn }> = ({ turn }) => {
         <span style={{ flex: 1 }}>
           {championName}: {skillName}
         </span>
-        <span style={{ marginRight: 4 }}>{hitsRemaining}</span>
-        <CompressOutlined />
+        {config?.decoration === 'shield-hits' ? (
+          <>
+            <span style={{ marginRight: 4 }}>{hitsRemaining}</span>
+            <CompressOutlined />
+          </>
+        ) : null}
       </div>
     </Tooltip>
   );

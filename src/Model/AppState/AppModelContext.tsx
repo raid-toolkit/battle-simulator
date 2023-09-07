@@ -10,14 +10,14 @@ import { AppState, CompatibleTuneState, TuneState } from './AppState';
 import { isAuraApplicable, sanitizeChampionSetup, sanitizeTuneState } from './Helpers';
 import { themeClassName } from '../../Styles/Variables';
 import { getSerializedTeamUrl } from '../SerializedTeam';
-import { BossSetupByStage } from '../StageInfo';
 import { RTK } from '../../Data';
 import safeLocalStorage from '../../Common/LocalStorage';
+import { SimulatorConfigurations, StageLookup } from '../Configurations';
 
 const AppModelContext = React.createContext<AppModel | null>(null);
 
 const defaultTune: TuneState = {
-  stage: 10,
+  stage: 2082010,
   chanceMode: 'guaranteed',
   randomSeed: 0,
   championList: [],
@@ -65,55 +65,60 @@ function useAppModelInternal(): AppModel {
     }
     const championList = state.tuneState.championList;
     const errors = new Set(championList.flatMap(validateSetup));
-    if (championList.length && errors.size === 0) {
-      const bossSetup = BossSetupByStage[state.tuneState.stage];
-      const leaderSkill = RTK.heroTypes[championList[0].typeId!].leaderSkill;
-      const speedAura =
-        isAuraApplicable(leaderSkill, AreaId.dungeon) && leaderSkill.kind?.toLocaleLowerCase() === StatKind.speed
-          ? leaderSkill.value * 100
-          : 0;
-      let request: PendingResult<TurnSimulationResponse> | undefined = BackgroundService.requestTurnSimulation({
-        randomSeed: state.tuneState.randomSeed,
-        chanceMode: state.tuneState.chanceMode,
-        bossSpeed: bossSetup.speed,
-        shieldHits: bossSetup.shieldHits,
-        championSetups: championList as Required<ChampionSetup>[],
-        speedAura,
-        turnLimit: state.turnLimit,
-        bossTurnLimit: state.bossTurnLimit,
-      });
-      setState((state) => {
-        state.turnWorkerState = 'running';
-      });
+    try {
+      if (state.tuneState.stage === undefined) throw new Error('Must select a stage');
 
-      request
-        .then((response) => {
-          setState((state) => {
-            if (request) {
-              state.turnSimulationErrors = [];
-              state.turnSimulation = response.turns as Draft<BattleTurn>[];
-              state.turnWorkerDuration = response.duration;
-              state.turnWorkerState = 'idle';
-            }
-          });
-        })
-        .catch((e) => {
-          if (request) {
-            setState((state) => {
-              state.turnSimulationErrors = [e];
-              state.turnWorkerDuration = 0;
-              state.turnWorkerState = 'idle';
-            });
-            setError(e);
-          }
-          request = undefined;
+      if (championList.length && errors.size === 0) {
+        const leaderSkill = RTK.heroTypes[championList[0].typeId!].leaderSkill;
+        const speedAura =
+          isAuraApplicable(leaderSkill, AreaId.dungeon) && leaderSkill.kind?.toLocaleLowerCase() === StatKind.speed
+            ? leaderSkill.value * 100
+            : 0;
+        let request: PendingResult<TurnSimulationResponse> | undefined = BackgroundService.requestTurnSimulation({
+          stageId: state.tuneState.stage,
+          randomSeed: state.tuneState.randomSeed,
+          chanceMode: state.tuneState.chanceMode,
+          championSetups: championList as Required<ChampionSetup>[],
+          speedAura,
+          turnLimit: state.turnLimit,
+          bossTurnLimit: state.bossTurnLimit,
+        });
+        setState((state) => {
+          state.turnWorkerState = 'running';
         });
 
-      return () => {
-        request?.cancel();
-        request = undefined;
-      };
-    } else {
+        request
+          .then((response) => {
+            setState((state) => {
+              if (request) {
+                state.turnSimulationErrors = [];
+                state.turnSimulation = response.turns as Draft<BattleTurn>[];
+                state.turnWorkerDuration = response.duration;
+                state.turnWorkerState = 'idle';
+              }
+            });
+          })
+          .catch((e) => {
+            if (request) {
+              setState((state) => {
+                state.turnSimulationErrors = [e];
+                state.turnWorkerDuration = 0;
+                state.turnWorkerState = 'idle';
+              });
+              setError(e);
+            }
+            request = undefined;
+          });
+
+        return () => {
+          request?.cancel();
+          request = undefined;
+        };
+      }
+    } catch (e: unknown) {
+      errors.add((e as Error).message);
+    }
+    if (errors.size) {
       setState((state) => {
         state.turnSimulationErrors = [...errors.values()];
         state.turnSimulation = [];
@@ -193,6 +198,9 @@ function useAppModelInternal(): AppModel {
         importTune(tuneState: CompatibleTuneState): void {
           setState((state) => {
             state.tuneState = sanitizeTuneState(tuneState);
+            const stage = StageLookup.find((stage) => stage.stage === state.tuneState.stage);
+            state.area = stage?.area;
+            state.region = stage?.region;
             state.initializedTune = true;
           });
         }
@@ -200,12 +208,17 @@ function useAppModelInternal(): AppModel {
         loadDefaultTune(): void {
           setState((state) => {
             state.tuneState = defaultTune;
+            const stage = StageLookup.find((stage) => stage.stage === state.tuneState.stage);
+            state.area = stage?.area;
+            state.region = stage?.region;
             state.initializedTune = true;
           });
         }
 
-        setStage(stage: number): void {
+        setStage([area, region, stage]: [string?, string?, number?]): void {
           setState((state) => {
+            state.area = area;
+            state.region = region;
             state.tuneState.stage = stage;
           });
         }
@@ -232,7 +245,8 @@ function useAppModelInternal(): AppModel {
 
         addChampionDraft(): void {
           setState((state) => {
-            if (state.tuneState.championList.length >= 5) return;
+            if (state.area === undefined) return;
+            if (state.tuneState.championList.length >= SimulatorConfigurations[state.area].config.playerHeroes) return;
             state.tuneState.championList.push({
               abilities: [],
             });

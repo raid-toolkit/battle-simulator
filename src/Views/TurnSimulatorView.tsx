@@ -1,7 +1,7 @@
 import { CloseCircleOutlined, FireOutlined } from '@ant-design/icons';
 import { Result, Typography } from 'antd';
 import React from 'react';
-import { BattleTurn, useAppModel } from '../Model';
+import { BattleTurn, getConfig, useAppModel } from '../Model';
 import { TurnGroupCardView } from './TurnGroupCardView';
 import './TurnSimulatorView.css';
 
@@ -89,15 +89,30 @@ export const EmptyWithErrors: React.FC = () => {
 };
 
 export const TurnSimulatorView: React.FC<TurnSimulatorViewProps> = () => {
-  const {
-    state: { turnSimulation },
-  } = useAppModel();
+  const { state } = useAppModel();
 
   const turnGroups = React.useMemo(() => {
     const turnGroups: BattleTurn[][] = [];
+    const config = getConfig(state);
+    const fastestHeroIndex = state.tuneState.championList.indexOf(
+      [...state.tuneState.championList].sort((a, b) => (a.speed ?? 0) - (b.speed ?? 0))[0]
+    );
+    let fastestChampTurnCount = 0;
     try {
-      for (const turn of turnSimulation) {
-        (turnGroups[turn.bossTurnIndex] = turnGroups[turn.bossTurnIndex] || []).push(turn);
+      for (const turn of state.turnSimulation) {
+        switch (config?.grouping ?? 'none') {
+          case 'none':
+            (turnGroups[0] = turnGroups[0] || []).push(turn);
+            break;
+          case 'boss-turn':
+            (turnGroups[turn.bossTurnIndex] = turnGroups[turn.bossTurnIndex] || []).push(turn);
+            break;
+          case 'slowest':
+            (turnGroups[fastestChampTurnCount] = turnGroups[fastestChampTurnCount] || []).push(turn);
+            break;
+        }
+
+        if (turn.championIndex === fastestHeroIndex) ++fastestChampTurnCount;
       }
     } catch (e) {
       console.error(e);
@@ -105,7 +120,7 @@ export const TurnSimulatorView: React.FC<TurnSimulatorViewProps> = () => {
     return turnGroups;
     // last group may be incomplete
     // turnGroups.push(currentTurnGroup);
-  }, [turnSimulation]);
+  }, [state]);
 
   const turnCards = turnGroups.map((turnGroup, index) => (
     <TurnGroupCardView key={`group_${index}`} turnSequence={index + 1} turns={turnGroup} />

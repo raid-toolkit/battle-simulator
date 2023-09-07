@@ -31,7 +31,7 @@ export function processAbility(state: BattleState, turn: BattleTurn): void {
 
     // HACK: This should come from passive FK skill
     if (champion.shieldHitsRemaining !== undefined) {
-      champion.shieldHitsRemaining = state.args.shieldHits;
+      champion.shieldHitsRemaining = champion.fullShieldHits;;
       // hack me daddy
       processValkyrieBuff(state);
     }

@@ -98,6 +98,9 @@ export function applyEffect(
       continue;
     }
 
+    if (target.immuneToEffectKinds?.includes(effect.kindId))
+      continue;
+
     switch (effect.kindId) {
       case EffectKindId.Damage: {
         if (effect.chance && state.random() > effect.chance + addedChance) {
@@ -172,7 +175,7 @@ export function applyEffect(
             continue;
           }
 
-          if (target.immuneTo?.includes(statusEffect.typeId)) {
+          if (target.immuneToEffectTypes?.includes(statusEffect.typeId)) {
             continue;
           }
           const existingEffect = effectList.find(

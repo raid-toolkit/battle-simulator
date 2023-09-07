@@ -23,7 +23,7 @@ export interface AppDispatch {
   setSpeedAura(speedAura: number | null): void;
   importTune(tuneState: TuneState): void;
   loadDefaultTune(): void;
-  setStage(stage: number): void;
+  setStage(stage: [area?: string, region?: string, stage?: number]): void;
   /** @deprecated replace with more narrow method */
   temp_setChampionsList(championList: ChampionSetup[]): void;
   addChampionDraft(): void;

@@ -950,6 +950,18 @@ index 70b1e34..db8b17d 100644
 \ No newline at end of file
 +'use strict';
 +Object.defineProperty(exports, '__esModule', { value: true });
+diff --git a/node_modules/@raid-toolkit/webclient/lib/Types/SkillEnums.d.ts b/node_modules/@raid-toolkit/webclient/lib/Types/SkillEnums.d.ts
+index 8075807..27151ce 100644
+--- a/node_modules/@raid-toolkit/webclient/lib/Types/SkillEnums.d.ts
++++ b/node_modules/@raid-toolkit/webclient/lib/Types/SkillEnums.d.ts
+@@ -109,6 +109,7 @@ export declare enum EffectKindId {
+     CopyHero = 8001,
+     ChangeEffectTarget = 9000,
+     CancelEffect = 9001,
++    BlockEffect = 9030,
+     ForceStatusEffectTick = 9002,
+     ChangeSkyWrathCounter = 9005,
+     UpdateCombo = 9006,
 diff --git a/node_modules/@raid-toolkit/webclient/lib/Types/SkillEnums.js b/node_modules/@raid-toolkit/webclient/lib/Types/SkillEnums.js
 index b5fc6c9..61a9606 100644
 --- a/node_modules/@raid-toolkit/webclient/lib/Types/SkillEnums.js

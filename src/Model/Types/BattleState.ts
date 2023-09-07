@@ -1,4 +1,4 @@
-import { StatusEffectTypeId } from '@raid-toolkit/webclient';
+import { EffectKindId, StatusEffectTypeId } from '@raid-toolkit/webclient';
 import type { AbilitySetup } from './AbilitySetup';
 import type { ChampionSetup } from './ChampionSetup';
 import { ExpressionVars } from './RSL';
@@ -14,9 +14,8 @@ export interface StatusEffect {
 }
 
 export interface SimulateTurnsArgs {
+  stageId: number;
   championSetups: readonly Readonly<Required<ChampionSetup>>[];
-  bossSpeed: number;
-  shieldHits: number;
   speedAura?: number;
   randomSeed: number;
   chanceMode: 'rng' | 'guaranteed';
@@ -35,6 +34,7 @@ export interface ChampionState {
   team: ChampionTeam;
   isBoss?: boolean;
   shieldHitsRemaining?: number;
+  fullShieldHits?: number;
   phantomTouchCooldown?: number;
 
   index: number;
@@ -46,7 +46,8 @@ export interface ChampionState {
   abilityState: AbilityState[];
   debuffs: StatusEffect[];
   buffs: StatusEffect[];
-  immuneTo?: StatusEffectTypeId[];
+  immuneToEffectKinds?: EffectKindId[];
+  immuneToEffectTypes?: StatusEffectTypeId[];
 }
 
 export interface BattleState {

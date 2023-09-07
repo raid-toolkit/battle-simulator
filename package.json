@@ -103,6 +103,7 @@
     "multiview": "^3.0.1",
     "patch-package": "^6.5.1",
     "postinstall-postinstall": "^2.1.0",
+    "prettier": "3.0.3",
     "prop-types": "^15.8.1",
     "react-scripts": "5.0.1",
     "react-test-renderer": "^18.2.0",

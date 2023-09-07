@@ -6,6 +6,7 @@ import { AreaId, StatKind, TourStep, isAuraApplicable, useAppModel } from '../Mo
 import './TeamView.css';
 import { StageSelectionView } from './StageSelectionView';
 import { RTK } from '../Data';
+import { SimulatorConfigurations } from '../Model/Configurations';
 
 export interface TeamViewProps {}
 
@@ -42,14 +43,19 @@ export const TeamView: React.FC<TeamViewProps> = () => {
         }}
       >
         <Space style={{ padding: '0 8px' }}>
+          <StageSelectionView style={{ width: '100%' }} />
+        </Space>
+        <Space style={{ padding: '0 8px' }}>
           <div className="input-box speed-aura-input" style={{ color: speedAura > 0 ? 'var(--cyan)' : undefined }}>
             <img className="avatar speed-aura-icon" src="/images/aura/Speed.png" alt="speed aura" /> {speedAura}%
           </div>
-          <StageSelectionView style={{ width: 100 }} />
           <Button
             id="addChampionButton"
             title="Add Champion"
-            disabled={state.tuneState.championList.length >= 5}
+            disabled={
+              state.area === undefined ||
+              state.tuneState.championList.length >= SimulatorConfigurations[state.area].config.playerHeroes
+            }
             icon={<UserAddOutlined />}
             onClick={addChampion}
           />

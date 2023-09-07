@@ -1,8 +1,9 @@
 import { LeaderStatBonus } from '@raid-toolkit/webclient';
 import { assert } from '../../Common';
-import { BossSetupByStage } from '../StageInfo';
-import { AbilitySetup, AreaId, ChampionSetup } from '../Types';
-import { CompatibleTuneState, TuneState } from './AppState';
+import { BossSetupByStage } from '../FKStageInfo';
+import { AbilitySetup, AreaId, ChampionSetup, SimulatorConfig } from '../Types';
+import { AppState, CompatibleTuneState, TuneState } from './AppState';
+import { SimulatorConfigurations } from '../Configurations';
 
 export function abilityHasMods(ability: AbilitySetup) {
   return (
@@ -27,11 +28,14 @@ export function sanitizeChampionSetup(championSetup: ChampionSetup): ChampionSet
 
 export function sanitizeTuneState(tuneState: CompatibleTuneState): TuneState {
   const { boss, championList, randomSeed, chanceMode } = tuneState;
-  const stage =
+  let stage =
     tuneState.stage ??
     (boss
       ? Number(Object.entries(BossSetupByStage).find(([, bossSetup]) => bossSetup.speed === boss!.speed)?.[0])
-      : 10);
+      : 2082010);
+
+  if (stage <= 10) stage += 2082000;
+
   assert(typeof stage === 'number');
   return { stage, championList: championList.map(sanitizeChampionSetup), randomSeed, chanceMode };
 }
@@ -50,4 +54,8 @@ export function isAuraApplicable(leaderSkill: LeaderStatBonus | undefined, areaI
 
 export function assertValidChampionSetup(setup: ChampionSetup): asserts setup is Readonly<Required<ChampionSetup>> {
   assert(setup.speed !== undefined && setup.typeId !== undefined);
+}
+
+export function getConfig(state: AppState): SimulatorConfig | undefined {
+  return state.area ? SimulatorConfigurations[state.area]?.config : undefined;
 }
