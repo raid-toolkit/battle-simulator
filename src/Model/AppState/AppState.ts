@@ -1,4 +1,4 @@
-import type { Area, BattleTurn, BossSetup, ChampionSetup, TourStep } from '../Types';
+import type { BattleTurn, BossSetup, ChampionSetup, TourStep } from '../Types';
 
 export interface SavedTune {
   saveKey: string;
