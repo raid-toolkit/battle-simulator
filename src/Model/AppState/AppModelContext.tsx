@@ -36,7 +36,10 @@ function useAppModelInternal(): AppModel {
     theme: settings.theme,
     turnLimit: settings.turnLimit,
     groupLimit: settings.groupLimit,
-    effectSummarySettings: {},
+    effectSummarySettings: {
+      ally: settings.showAllyEffects,
+      enemy: settings.showEnemyEffects,
+    },
     visiblePanel: 'team',
     infoDialogTab: undefined,
     settingsVisible: false,
