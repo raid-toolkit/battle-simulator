@@ -7,7 +7,7 @@ import { lookupChampionSetup, validateSetup } from '../Setup';
 import { AbilitySetup, AreaId, BattleTurn, ChampionSetup, StatKind, TourStep } from '../Types';
 import { AppModel, AppDispatch } from './AppModel';
 import { AppState, CompatibleTuneState, TuneState } from './AppState';
-import { isAuraApplicable, sanitizeChampionSetup, sanitizeTuneState } from './Helpers';
+import { getConfig, isAuraApplicable, sanitizeChampionSetup, sanitizeTuneState } from './Helpers';
 import { themeClassName } from '../../Styles/Variables';
 import { getSerializedTeamUrl } from '../SerializedTeam';
 import { RTK } from '../../Data';
@@ -31,6 +31,7 @@ function useAppModelInternal(): AppModel {
     theme: 'dark',
     turnLimit: initialTurnLimit ? parseInt(initialTurnLimit, 10) : 40,
     bossTurnLimit: initialBossTurnLimit ? parseInt(initialBossTurnLimit, 10) : 6,
+    effectSummarySettings: {},
     visiblePanel: 'team',
     infoDialogTab: undefined,
     settingsVisible: false,
@@ -68,6 +69,7 @@ function useAppModelInternal(): AppModel {
     try {
       if (state.tuneState.stage === undefined) throw new Error('Must select a stage');
 
+      const config = getConfig(state);
       if (championList.length && errors.size === 0) {
         const leaderSkill = RTK.heroTypes[championList[0].typeId!].leaderSkill;
         const speedAura =
@@ -81,7 +83,8 @@ function useAppModelInternal(): AppModel {
           championSetups: championList as Required<ChampionSetup>[],
           speedAura,
           turnLimit: state.turnLimit,
-          bossTurnLimit: state.bossTurnLimit,
+          groupLimit: state.bossTurnLimit,
+          config,
         });
         setState((state) => {
           state.turnWorkerState = 'running';
@@ -126,7 +129,7 @@ function useAppModelInternal(): AppModel {
         state.turnWorkerState = 'idle';
       });
     }
-  }, [state.tuneState, state.initializedTune, state.turnLimit, state.bossTurnLimit, setState]);
+  }, [state.area, state.tuneState, state.initializedTune, state.turnLimit, state.bossTurnLimit, setState]);
 
   const dispatch = React.useMemo<AppDispatch>(
     () =>
@@ -139,16 +142,31 @@ function useAppModelInternal(): AppModel {
         }
 
         setTurnLimit(turnLimit: number) {
-          safeLocalStorage.setItem('v3_turn_limit', turnLimit.toString());
+          if (turnLimit !== null && turnLimit !== null) safeLocalStorage.setItem('v3_turn_limit', turnLimit.toString());
+          else safeLocalStorage.removeItem('v3_turn_limit');
+
           setState((state) => {
             state.turnLimit = turnLimit;
           });
         }
 
         setBossTurnLimit(turnLimit: number) {
-          safeLocalStorage.setItem('v3_boss_turn_limit', turnLimit.toString());
+          if (turnLimit !== null && turnLimit !== null)
+            safeLocalStorage.setItem('v3_boss_turn_limit', turnLimit.toString());
+          else safeLocalStorage.removeItem('v3_boss_turn_limit');
           setState((state) => {
             state.bossTurnLimit = turnLimit;
+          });
+        }
+
+        toggleAllyEffectSummary(): void {
+          setState((state) => {
+            state.effectSummarySettings.ally = !state.effectSummarySettings.ally;
+          });
+        }
+        toggleEnemyEffectSummary(): void {
+          setState((state) => {
+            state.effectSummarySettings.enemy = !state.effectSummarySettings.enemy;
           });
         }
 

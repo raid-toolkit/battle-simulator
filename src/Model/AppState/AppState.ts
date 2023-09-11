@@ -30,10 +30,16 @@ export interface CompatibleTuneState {
   chanceMode: 'rng' | 'guaranteed';
 }
 
+export interface EffectSummarySetting {
+  enemy?: boolean;
+  ally?: boolean;
+}
+
 export interface AppState {
   theme: 'light' | 'dark';
   bossTurnLimit: number;
   turnLimit: number;
+  effectSummarySettings: EffectSummarySetting;
 
   area?: string;
   region?: string;

@@ -93,26 +93,9 @@ export const TurnSimulatorView: React.FC<TurnSimulatorViewProps> = () => {
 
   const turnGroups = React.useMemo(() => {
     const turnGroups: BattleTurn[][] = [];
-    const config = getConfig(state);
-    const fastestHeroIndex = state.tuneState.championList.indexOf(
-      [...state.tuneState.championList].sort((a, b) => (a.speed ?? 0) - (b.speed ?? 0))[0]
-    );
-    let fastestChampTurnCount = 0;
     try {
       for (const turn of state.turnSimulation) {
-        switch (config?.grouping ?? 'none') {
-          case 'none':
-            (turnGroups[0] = turnGroups[0] || []).push(turn);
-            break;
-          case 'boss-turn':
-            (turnGroups[turn.bossTurnIndex] = turnGroups[turn.bossTurnIndex] || []).push(turn);
-            break;
-          case 'slowest':
-            (turnGroups[fastestChampTurnCount] = turnGroups[fastestChampTurnCount] || []).push(turn);
-            break;
-        }
-
-        if (turn.championIndex === fastestHeroIndex) ++fastestChampTurnCount;
+        (turnGroups[turn.groupIndex] = turnGroups[turn.groupIndex] || []).push(turn);
       }
     } catch (e) {
       console.error(e);

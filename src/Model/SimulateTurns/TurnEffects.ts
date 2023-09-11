@@ -98,8 +98,7 @@ export function applyEffect(
       continue;
     }
 
-    if (target.immuneToEffectKinds?.includes(effect.kindId))
-      continue;
+    if (target.immuneToEffectKinds?.includes(effect.kindId)) continue;
 
     switch (effect.kindId) {
       case EffectKindId.Damage: {
@@ -128,7 +127,8 @@ export function applyEffect(
         try {
           for (const ally of allies) {
             processAbility(state, {
-              bossTurnIndex: -1,
+              bossTurnCount: -1,
+              groupIndex: -1,
               championIndex: ally.index,
               abilityIndex: 0,
               state: cloneObject(state),

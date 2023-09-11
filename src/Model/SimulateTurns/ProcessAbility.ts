@@ -31,7 +31,7 @@ export function processAbility(state: BattleState, turn: BattleTurn): void {
 
     // HACK: This should come from passive FK skill
     if (champion.shieldHitsRemaining !== undefined) {
-      champion.shieldHitsRemaining = champion.fullShieldHits;;
+      champion.shieldHitsRemaining = champion.fullShieldHits;
       // hack me daddy
       processValkyrieBuff(state);
     }
@@ -44,7 +44,8 @@ export function processAbility(state: BattleState, turn: BattleTurn): void {
         if (target.buffs.some((effect) => effect.typeId === StatusEffectTypeId.Counterattack)) {
           // eslint-disable-next-line react-hooks/rules-of-hooks
           processAbility(state, {
-            bossTurnIndex: -1,
+            bossTurnCount: -1,
+            groupIndex: -1,
             championIndex: index,
             abilityIndex: 0,
             state: cloneObject(state),

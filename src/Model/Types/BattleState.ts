@@ -2,6 +2,7 @@ import { EffectKindId, StatusEffectTypeId } from '@raid-toolkit/webclient';
 import type { AbilitySetup } from './AbilitySetup';
 import type { ChampionSetup } from './ChampionSetup';
 import { ExpressionVars } from './RSL';
+import { SimulatorConfig } from './SimulatorConfig';
 
 export enum ChampionTeam {
   Friendly,
@@ -19,9 +20,10 @@ export interface SimulateTurnsArgs {
   speedAura?: number;
   randomSeed: number;
   chanceMode: 'rng' | 'guaranteed';
+  config: SimulatorConfig | undefined;
 
   turnLimit?: number;
-  bossTurnLimit?: number;
+  groupLimit?: number;
 }
 
 export interface AbilityState {
@@ -62,7 +64,8 @@ export interface BattleState {
 }
 
 export interface BattleTurn {
-  bossTurnIndex: number;
+  groupIndex: number;
+  bossTurnCount: number;
   championIndex: number;
   abilityIndex: number;
   state: Readonly<BattleState>;

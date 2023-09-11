@@ -2,7 +2,7 @@
 import { StatusEffectTypeId } from '@raid-toolkit/webclient';
 import { assert, cloneObject } from '../../Common';
 import { TURN_METER_RATE } from '../Constants';
-import { BattleState, ChampionState, BattleTurn } from '../Types';
+import { BattleState, ChampionState, BattleTurn, ChampionTeam } from '../Types';
 import { processAbility } from './ProcessAbility';
 import { processValkyrieBuff } from './ValkyrieHack';
 
@@ -71,52 +71,74 @@ export function simulateTurns(state: BattleState) {
   const turns: BattleTurn[] = [];
   processValkyrieBuff(state);
   const turnLimit = state.args.turnLimit ?? 250,
-    bossTurnLimit = state.args.bossTurnLimit ?? 10;
-  let bossTurn = 0;
-  for (; bossTurn < bossTurnLimit; ++bossTurn) {
-    let turnCount = 0;
-    for (; turnCount < turnLimit; ++turnCount) {
-      const nextTurn = runToNextTurn(state);
-      assert(nextTurn !== -1, 'No turn to take');
-      state.turnQueue.push(nextTurn);
+    groupLimit = state.args.groupLimit ?? 10;
+  let turnCount = 0,
+    groupCount = 0,
+    bossTurnCount = 0;
 
-      let championIndex: number | undefined;
-      while ((championIndex = state.turnQueue.pop()) !== undefined) {
-        state.turnVariables = {};
-        state.currentTurnOwner = championIndex;
-        const abilityIndex = selectAbility(state, championIndex);
-        const turn: BattleTurn = { bossTurnIndex: bossTurn, state: cloneObject(state), championIndex, abilityIndex };
+  const slowestAllyIndex = state.championStates.indexOf(
+    state.championStates
+      .filter((state) => state.team === ChampionTeam.Friendly)
+      .sort((a, b) => (a.speed ?? 0) - (b.speed ?? 0))[0]
+  );
 
-        const champion = state.championStates[championIndex];
-        const ability = champion.abilityState[abilityIndex];
-        champion.phantomTouchCooldown = 0;
+  for (; turnCount < turnLimit && groupCount < groupLimit; ++turnCount) {
+    const nextTurn = runToNextTurn(state);
+    assert(nextTurn !== -1, 'No turn to take');
+    state.turnQueue.push(nextTurn);
 
-        // please punish me for this
-        champion.buffs = champion.buffs.filter((buff) => (buff.duration -= 1) > 0);
-        champion.debuffs = champion.debuffs.filter((buff) => (buff.duration -= 1) > 0);
-        champion.turnMeter = 0; //champion.speed * TURN_METER_RATE;
+    let championIndex: number | undefined;
+    while ((championIndex = state.turnQueue.pop()) !== undefined) {
+      state.turnVariables = {};
+      state.currentTurnOwner = championIndex;
+      const abilityIndex = selectAbility(state, championIndex);
+      const turn: BattleTurn = {
+        bossTurnCount,
+        groupIndex: groupCount,
+        state: cloneObject(state),
+        championIndex,
+        abilityIndex,
+      };
 
-        processAbility(state, turn);
+      const champion = state.championStates[championIndex];
+      const ability = champion.abilityState[abilityIndex];
+      champion.phantomTouchCooldown = 0;
 
-        ability.cooldownRemaining = ability.ability.cooldown;
-        ++champion.turnsTaken;
-        turns.push(turn);
-      }
+      // please punish me for this
+      champion.buffs = champion.buffs.filter((buff) => (buff.duration -= 1) > 0);
+      champion.debuffs = champion.debuffs.filter((buff) => (buff.duration -= 1) > 0);
+      champion.turnMeter = 0; //champion.speed * TURN_METER_RATE;
 
-      // after boss turn, start next boss turn
-      if (state.championStates[nextTurn].isBoss) {
-        break;
-      }
+      processAbility(state, turn);
+
+      ability.cooldownRemaining = ability.ability.cooldown;
+      ++champion.turnsTaken;
+      turns.push(turn);
     }
+
     if (turnCount >= turnLimit) {
       turns.push({
+        groupIndex: groupCount,
         abilityIndex: -1,
         championIndex: -1,
-        bossTurnIndex: bossTurn,
+        bossTurnCount: bossTurnCount,
         state: cloneObject(state),
         isInfinite: true,
       });
       break;
+    }
+
+    // after boss turn, start next boss turn
+    if (state.championStates[nextTurn].isBoss) {
+      bossTurnCount++;
+      if (state.args.config?.grouping === 'boss-turn') {
+        groupCount++;
+        turnCount = 0;
+      }
+    }
+    if (nextTurn === slowestAllyIndex && state.args.config?.grouping === 'slowest') {
+      groupCount++;
+      turnCount = 0;
     }
   }
   return turns;

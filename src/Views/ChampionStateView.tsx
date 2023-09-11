@@ -1,5 +1,5 @@
 import React from 'react';
-import { BattleState } from '../Model';
+import { BattleState, ChampionTeam, EffectSummarySetting } from '../Model';
 import { Avatar, TurnMeter } from '../Components';
 import { RTK } from '../Data';
 import { StatusEffectIcon } from './StatusEffectIcon';
@@ -9,19 +9,26 @@ export interface ChampionStateViewProps {
   state: BattleState;
   index: number;
   takingTurn?: boolean;
-  showEffects?: boolean;
+  effectSummarySettings?: EffectSummarySetting;
   showTurnMeter?: boolean;
 }
 
 export const ChampionStateView: React.FC<ChampionStateViewProps> = ({
   state,
   index,
-  showEffects,
+  effectSummarySettings,
   showTurnMeter,
   takingTurn,
 }) => {
-  const height = Math.max(2, 0 + (showEffects ? 2 : 0) + (showTurnMeter ? 1 : 0));
   const championState = state.championStates[index];
+  const showEffects =
+    championState.team === ChampionTeam.Enemy
+      ? effectSummarySettings?.enemy !== false
+      : effectSummarySettings?.ally !== false;
+  const height = Math.max(2, 0 + (showEffects ? 2 : 0) + (showTurnMeter ? 1 : 0));
+
+  if (!showEffects && !showTurnMeter) return null;
+
   return (
     <div className="champion-state-view">
       <Avatar

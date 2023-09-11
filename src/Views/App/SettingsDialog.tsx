@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Modal, Slider, Typography } from 'antd';
+import { Button, Checkbox, InputNumber, Modal, Slider, Typography } from 'antd';
 import { useAppModel } from '../../Model';
 const { Title, Paragraph } = Typography;
 
@@ -19,25 +19,36 @@ export const SettingsDialog: React.FC = () => {
     >
       <Title level={5}>Turn limit</Title>
       <Paragraph>Set the maximum number of boss turns to simulate.</Paragraph>
-      <Slider
-        style={{ marginTop: 50 }}
-        tooltip={{ open: true }}
-        min={1}
-        max={20}
-        step={1}
-        value={state.bossTurnLimit}
-        onAfterChange={dispatch.setBossTurnLimit}
-      />
+      <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'end' }}>
+        <Slider
+          style={{ flex: 1 }}
+          min={3}
+          max={100}
+          step={3}
+          value={state.bossTurnLimit}
+          onChange={dispatch.setBossTurnLimit}
+        />
+        <InputNumber value={state.bossTurnLimit} min={3} max={100} step={3} onChange={dispatch.setBossTurnLimit} />
+      </div>
       <Paragraph>Set the maximum number of turns considered infinite.</Paragraph>
-      <Slider
-        style={{ marginTop: 50 }}
-        tooltip={{ open: true }}
-        min={10}
-        max={100}
-        step={1}
-        value={state.turnLimit}
-        onAfterChange={dispatch.setTurnLimit}
-      />
+      <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'end' }}>
+        <Slider
+          style={{ flex: 1 }}
+          min={25}
+          max={100}
+          step={1}
+          value={state.turnLimit}
+          onChange={dispatch.setTurnLimit}
+        />
+        <InputNumber min={25} max={100} step={1} value={state.turnLimit} onChange={dispatch.setTurnLimit} />
+      </div>
+      <Paragraph>Show effect summaries</Paragraph>
+      <Checkbox checked={state.effectSummarySettings?.ally} onChange={dispatch.toggleAllyEffectSummary}>
+        Ally
+      </Checkbox>
+      <Checkbox checked={state.effectSummarySettings?.enemy} onChange={dispatch.toggleEnemyEffectSummary}>
+        Enemy
+      </Checkbox>
     </Modal>
   );
 };

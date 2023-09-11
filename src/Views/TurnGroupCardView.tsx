@@ -1,11 +1,8 @@
 import React from 'react';
 import { Card } from 'antd';
-import { BattleTurn } from '../Model';
-import { presetDarkPalettes } from '@ant-design/colors';
+import { BattleTurn, useAppModel } from '../Model';
 import { TurnRow } from './TurnRow';
 import { BattleStateView } from './BattleStateView';
-
-export const colors = Object.entries(presetDarkPalettes).map(([key, value]) => value[5]);
 
 export interface TurnGroupCardViewProps {
   turnSequence: number;
@@ -13,6 +10,7 @@ export interface TurnGroupCardViewProps {
 }
 
 export const TurnGroupCardView: React.FC<TurnGroupCardViewProps> = ({ turns, turnSequence }) => {
+  const { state } = useAppModel();
   return (
     <Card
       className="boss-turn-card"
@@ -25,7 +23,11 @@ export const TurnGroupCardView: React.FC<TurnGroupCardViewProps> = ({ turns, tur
           <TurnRow key={`turn_${idx}`} turn={turn} />
         ))}
       </div>
-      <BattleStateView state={turns[turns.length - 1].state} showEffects turnIndex={-1} />
+      <BattleStateView
+        state={turns[turns.length - 1].state}
+        effectSummarySettings={state.effectSummarySettings}
+        turnIndex={-1}
+      />
     </Card>
   );
 };
