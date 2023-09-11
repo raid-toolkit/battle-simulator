@@ -133,6 +133,7 @@ function useAppModelInternal(): AppModel {
         state.turnWorkerState = 'idle';
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.area, state.tuneState, state.initializedTune, state.turnLimit, state.groupLimit, setState]);
 
   const dispatch = React.useMemo<AppDispatch>(
