@@ -28,11 +28,12 @@ const settings = createPersistedSettings({
   groupLimit: 6,
   showAllyEffects: true,
   showEnemyEffects: true,
+  theme: 'dark' as 'light' | 'dark',
 });
 
 function useAppModelInternal(): AppModel {
   const [state, setState] = useImmer<AppState>({
-    theme: 'dark',
+    theme: settings.theme,
     turnLimit: settings.turnLimit,
     groupLimit: settings.groupLimit,
     effectSummarySettings: {},
@@ -141,7 +142,7 @@ function useAppModelInternal(): AppModel {
       new (class AppDispatch implements AppDispatch {
         changeTheme(theme?: 'light' | 'dark') {
           setState((state) => {
-            state.theme =
+            state.theme = settings.theme =
               theme && ['dark', 'light'].includes(theme) ? theme : state.theme === 'light' ? 'dark' : 'light';
           });
         }
