@@ -1,5 +1,5 @@
 import React from 'react';
-import { BattleState, ChampionTeam, EffectSummarySetting } from '../Model';
+import { BattleState, EffectSummarySetting } from '../Model';
 import { ChampionStateView } from './ChampionStateView';
 
 export interface BattleStateViewProps {

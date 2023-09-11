@@ -11,8 +11,8 @@ import { getConfig, isAuraApplicable, sanitizeChampionSetup, sanitizeTuneState }
 import { themeClassName } from '../../Styles/Variables';
 import { getSerializedTeamUrl } from '../SerializedTeam';
 import { RTK } from '../../Data';
-import safeLocalStorage from '../../Common/LocalStorage';
 import { SimulatorConfigurations, StageLookup } from '../Configurations';
+import { createPersistedSettings, persistedSetting } from './PersistedSettings';
 
 const AppModelContext = React.createContext<AppModel | null>(null);
 
@@ -23,14 +23,18 @@ const defaultTune: TuneState = {
   championList: [],
 };
 
-const initialTurnLimit = safeLocalStorage.getItem('v3_turn_limit');
-const initialBossTurnLimit = safeLocalStorage.getItem('v3_boss_turn_limit');
+const settings = createPersistedSettings({
+  turnLimit: persistedSetting(40, 'v4_turn_limit'),
+  groupLimit: 6,
+  showAllyEffects: true,
+  showEnemyEffects: true,
+});
 
 function useAppModelInternal(): AppModel {
   const [state, setState] = useImmer<AppState>({
     theme: 'dark',
-    turnLimit: initialTurnLimit ? parseInt(initialTurnLimit, 10) : 40,
-    bossTurnLimit: initialBossTurnLimit ? parseInt(initialBossTurnLimit, 10) : 6,
+    turnLimit: settings.turnLimit,
+    groupLimit: settings.groupLimit,
     effectSummarySettings: {},
     visiblePanel: 'team',
     infoDialogTab: undefined,
@@ -83,7 +87,7 @@ function useAppModelInternal(): AppModel {
           championSetups: championList as Required<ChampionSetup>[],
           speedAura,
           turnLimit: state.turnLimit,
-          groupLimit: state.bossTurnLimit,
+          groupLimit: state.groupLimit,
           config,
         });
         setState((state) => {
@@ -129,7 +133,7 @@ function useAppModelInternal(): AppModel {
         state.turnWorkerState = 'idle';
       });
     }
-  }, [state.area, state.tuneState, state.initializedTune, state.turnLimit, state.bossTurnLimit, setState]);
+  }, [state.area, state.tuneState, state.initializedTune, state.turnLimit, state.groupLimit, setState]);
 
   const dispatch = React.useMemo<AppDispatch>(
     () =>
@@ -142,31 +146,25 @@ function useAppModelInternal(): AppModel {
         }
 
         setTurnLimit(turnLimit: number) {
-          if (turnLimit !== null && turnLimit !== null) safeLocalStorage.setItem('v3_turn_limit', turnLimit.toString());
-          else safeLocalStorage.removeItem('v3_turn_limit');
-
           setState((state) => {
-            state.turnLimit = turnLimit;
+            state.turnLimit = settings.turnLimit = turnLimit;
           });
         }
 
-        setBossTurnLimit(turnLimit: number) {
-          if (turnLimit !== null && turnLimit !== null)
-            safeLocalStorage.setItem('v3_boss_turn_limit', turnLimit.toString());
-          else safeLocalStorage.removeItem('v3_boss_turn_limit');
+        setGroupLimit(turnLimit: number) {
           setState((state) => {
-            state.bossTurnLimit = turnLimit;
+            state.groupLimit = settings.groupLimit = turnLimit;
           });
         }
 
         toggleAllyEffectSummary(): void {
           setState((state) => {
-            state.effectSummarySettings.ally = !state.effectSummarySettings.ally;
+            state.effectSummarySettings.ally = settings.showAllyEffects = !state.effectSummarySettings.ally;
           });
         }
         toggleEnemyEffectSummary(): void {
           setState((state) => {
-            state.effectSummarySettings.enemy = !state.effectSummarySettings.enemy;
+            state.effectSummarySettings.enemy = settings.showEnemyEffects = !state.effectSummarySettings.enemy;
           });
         }
 

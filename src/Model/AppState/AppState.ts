@@ -37,7 +37,7 @@ export interface EffectSummarySetting {
 
 export interface AppState {
   theme: 'light' | 'dark';
-  bossTurnLimit: number;
+  groupLimit: number;
   turnLimit: number;
   effectSummarySettings: EffectSummarySetting;
 

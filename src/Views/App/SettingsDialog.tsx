@@ -11,11 +11,11 @@ export const SettingsDialog: React.FC = () => {
       title="Settings"
       open={state.settingsVisible}
       onCancel={closeDialog}
-      footer={[
+      footer={
         <Button type="primary" onClick={closeDialog}>
           OK
-        </Button>,
-      ]}
+        </Button>
+      }
     >
       <Title level={5}>Turn limit</Title>
       <Paragraph>Set the maximum number of boss turns to simulate.</Paragraph>
@@ -25,10 +25,10 @@ export const SettingsDialog: React.FC = () => {
           min={3}
           max={100}
           step={3}
-          value={state.bossTurnLimit}
-          onChange={dispatch.setBossTurnLimit}
+          value={state.groupLimit}
+          onChange={dispatch.setGroupLimit}
         />
-        <InputNumber value={state.bossTurnLimit} min={3} max={100} step={3} onChange={dispatch.setBossTurnLimit} />
+        <InputNumber value={state.groupLimit} min={3} max={100} step={3} onChange={dispatch.setGroupLimit} />
       </div>
       <Paragraph>Set the maximum number of turns considered infinite.</Paragraph>
       <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'end' }}>

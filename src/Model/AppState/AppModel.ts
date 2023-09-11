@@ -4,7 +4,7 @@ import { AppState, TuneState } from './AppState';
 export interface AppDispatch {
   changeTheme(): void;
   changeTheme(theme: 'light' | 'dark'): void;
-  setBossTurnLimit(turnLimit?: number | null): void;
+  setGroupLimit(turnLimit?: number | null): void;
   setTurnLimit(turnLimit?: number | null): void;
   toggleAllyEffectSummary(): void;
   toggleEnemyEffectSummary(): void;
