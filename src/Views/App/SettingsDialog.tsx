@@ -18,19 +18,19 @@ export const SettingsDialog: React.FC = () => {
       }
     >
       <Title level={5}>Turn limit</Title>
-      <Paragraph>Set the maximum number of boss turns to simulate.</Paragraph>
+      <Paragraph>Set the maximum number of turn groups to simulate.</Paragraph>
       <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'end' }}>
         <Slider
           style={{ flex: 1 }}
           min={3}
-          max={100}
+          max={250}
           step={3}
           value={state.groupLimit}
           onChange={dispatch.setGroupLimit}
         />
         <InputNumber value={state.groupLimit} min={3} max={100} step={3} onChange={dispatch.setGroupLimit} />
       </div>
-      <Paragraph>Set the maximum number of turns considered infinite.</Paragraph>
+      <Paragraph>Set the maximum number of turns in one group that should be considered infinite.</Paragraph>
       <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'end' }}>
         <Slider
           style={{ flex: 1 }}
