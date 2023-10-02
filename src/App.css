@@ -70,6 +70,11 @@ body,
   height: 100%;
 }
 
+.site-panel {
+  display: flex;
+  flex-direction: column;
+}
+
 @media only screen and (max-width: 800px) {
   .site-sidebar {
     min-width: unset;
