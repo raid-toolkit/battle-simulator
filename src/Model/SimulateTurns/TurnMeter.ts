@@ -83,7 +83,7 @@ export function simulateTurns(state: BattleState) {
       .sort((a, b) => (a.speed ?? 0) - (b.speed ?? 0))[0]
   );
 
-  for (; turnCount < turnLimit && groupCount < groupLimit; ++turnCount) {
+  for (; turnCount < turnLimit && groupCount < groupLimit && totalTurnCount < 1500; ++turnCount) {
     const nextTurn = runToNextTurn(state);
     assert(nextTurn !== -1, 'No turn to take');
     state.turnQueue.push(nextTurn);
