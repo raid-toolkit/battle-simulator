@@ -79,7 +79,8 @@ body,
     display: none;
   }
   .site-panel.panel-visible:first-of-type {
-    display: block;
+    display: flex;
+    flex-direction: column;
     flex: 1;
   }
   .desktop-only {
