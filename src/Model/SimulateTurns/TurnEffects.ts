@@ -128,6 +128,7 @@ export function applyEffect(
           for (const ally of allies) {
             processAbility(state, {
               bossTurnCount: -1,
+              totalTurnCount: -1,
               groupIndex: -1,
               championIndex: ally.index,
               abilityIndex: 0,

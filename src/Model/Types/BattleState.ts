@@ -66,6 +66,7 @@ export interface BattleState {
 export interface BattleTurn {
   groupIndex: number;
   bossTurnCount: number;
+  totalTurnCount: number;
   championIndex: number;
   abilityIndex: number;
   state: Readonly<BattleState>;

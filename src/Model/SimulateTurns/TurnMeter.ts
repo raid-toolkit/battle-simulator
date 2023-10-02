@@ -74,6 +74,7 @@ export function simulateTurns(state: BattleState) {
     groupLimit = state.args.groupLimit ?? 10;
   let turnCount = 0,
     groupCount = 0,
+    totalTurnCount = 0,
     bossTurnCount = 0;
 
   const slowestAllyIndex = state.championStates.indexOf(
@@ -94,6 +95,7 @@ export function simulateTurns(state: BattleState) {
       const abilityIndex = selectAbility(state, championIndex);
       const turn: BattleTurn = {
         bossTurnCount,
+        totalTurnCount,
         groupIndex: groupCount,
         state: cloneObject(state),
         championIndex,
@@ -121,7 +123,8 @@ export function simulateTurns(state: BattleState) {
         groupIndex: groupCount,
         abilityIndex: -1,
         championIndex: -1,
-        bossTurnCount: bossTurnCount,
+        bossTurnCount,
+        totalTurnCount,
         state: cloneObject(state),
         isInfinite: true,
       });
@@ -129,6 +132,7 @@ export function simulateTurns(state: BattleState) {
     }
 
     // after boss turn, start next boss turn
+    totalTurnCount++;
     if (state.championStates[nextTurn].isBoss) {
       bossTurnCount++;
       if (state.args.config?.grouping === 'boss-turn') {

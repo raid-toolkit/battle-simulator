@@ -2,7 +2,7 @@ import { BattleState } from './BattleState';
 
 export interface SimulatorConfig {
   playerHeroes: number;
-  decoration: 'shield-hits' | 'devour';
+  decoration: 'shield-hits' | 'turn';
   grouping: 'boss-turn' | 'slowest' | 'none';
 }
 

@@ -8,6 +8,7 @@ import { RTK } from '../Data';
 import { useColor } from './Colors';
 import { BattleStateView } from './BattleStateView';
 import './TurnRow.css';
+import { BootIcon } from '../Icons';
 
 const showEffects: EffectSummarySetting = {
   ally: true,
@@ -67,10 +68,15 @@ export const TurnRow: React.FC<{ turn: BattleTurn }> = ({ turn }) => {
           {championName}: {skillName}
         </span>
         {config?.decoration === 'shield-hits' ? (
-          <>
-            <span style={{ marginRight: 4 }}>{hitsRemaining}</span>
-            <CompressOutlined />
-          </>
+          <span>
+            {hitsRemaining}
+            <CompressOutlined style={{ marginLeft: 4 }} />
+          </span>
+        ) : config?.decoration === 'turn' ? (
+          <span title={`Boss Turn: ${turn.bossTurnCount}`}>
+            {turn.totalTurnCount}
+            <BootIcon style={{ marginLeft: 4 }} />
+          </span>
         ) : null}
       </div>
     </Tooltip>

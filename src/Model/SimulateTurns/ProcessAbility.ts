@@ -45,6 +45,7 @@ export function processAbility(state: BattleState, turn: BattleTurn): void {
           // eslint-disable-next-line react-hooks/rules-of-hooks
           processAbility(state, {
             bossTurnCount: -1,
+            totalTurnCount: -1,
             groupIndex: -1,
             championIndex: index,
             abilityIndex: 0,

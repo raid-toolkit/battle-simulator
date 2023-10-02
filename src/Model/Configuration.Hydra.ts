@@ -8,7 +8,7 @@ import stageData from '../Static/stages.json';
 const { stages } = stageData;
 
 export const HydraConfig: SimulatorConfigDefinition = {
-  config: { decoration: 'devour', grouping: 'slowest', playerHeroes: 6 },
+  config: { decoration: 'turn', grouping: 'slowest', playerHeroes: 6 },
   stages: Object.fromEntries(
     Object.entries(stages).map(([id, { slots }]) => [
       id,
