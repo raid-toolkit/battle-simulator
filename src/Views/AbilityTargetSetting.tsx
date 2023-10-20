@@ -29,10 +29,12 @@ export const AbilityTargetSetting: React.FC<AbilityTargetSettingProps> = ({ skil
   }, [skill, ownerIndex, state]);
   const options = React.useMemo(() => {
     return [{ label: 'Default', value: NaN }].concat(
-      targets.map((target) => ({
-        label: RTK.getString(RTK.heroTypes[target.typeId!].name),
-        value: state.tuneState.championList.indexOf(target),
-      }))
+      targets
+        .filter((target) => target.typeId)
+        .map((target) => ({
+          label: RTK.getString(RTK.heroTypes[target.typeId!].name),
+          value: state.tuneState.championList.indexOf(target),
+        }))
     );
   }, [targets, state]);
 
