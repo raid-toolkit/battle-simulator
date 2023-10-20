@@ -34,7 +34,6 @@ function selectTargetChampions(
   }
   const targetType = effectType.targetParams.targetType;
   const exclusion = effectType.targetParams.exclusion;
-  const effectKind = effectType.kindId;
   switch (targetType) {
     case EffectTargetType.AllAllies: {
       const allAllies = state.championStates.filter((champion) => champion.team === ownerTeam);
