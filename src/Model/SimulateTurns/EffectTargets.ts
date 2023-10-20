@@ -1,14 +1,31 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { EffectKindId, EffectTargetType, EffectType, TargetExclusion } from '@raid-toolkit/webclient';
+import { EffectTargetType, EffectType, SkillTargets, SkillType, TargetExclusion } from '@raid-toolkit/webclient';
 import { shuffle } from '../../Common';
-import { BattleState, ChampionState, TurnState } from '../Types';
+import { AbilityState, BattleState, ChampionState, TurnState } from '../Types';
+import { RTK } from '../../Data';
+
+function skillTargetsAlly(skill: SkillType) {
+  if (skill.targets === undefined) return false;
+  switch (skill.targets) {
+    case SkillTargets.AliveAllies:
+    case SkillTargets.AllAllies:
+    case SkillTargets.AliveAlliesExceptProducer:
+    case SkillTargets.AllAlliesExceptProducer:
+    case SkillTargets.DeadAllies:
+      return true;
+    default:
+      return false;
+  }
+}
 
 function selectTargetChampions(
   state: Readonly<BattleState>,
   ownerIndex: number,
   effectType: EffectType,
-  turnState: TurnState
+  turnState: TurnState,
+  ability: AbilityState
 ): ChampionState[] {
+  const skill = RTK.skillTypes[ability.ability.skillTypeId];
   const owner = state.championStates[ownerIndex];
   const ownerTeam = owner.team;
   if (!effectType.targetParams) {
@@ -87,38 +104,14 @@ function selectTargetChampions(
       return [owner]; // e.g. casts heal on self
     }
     case EffectTargetType.Target: {
-      if (
-        [
-          EffectKindId.ApplyBuff,
-          EffectKindId.Heal,
-          EffectKindId.MultiplyBuff,
-          EffectKindId.IncreaseBuffLifetime,
-          EffectKindId.ReduceDebuffLifetime,
-          EffectKindId.IncreaseStamina,
-          EffectKindId.IncreaseShield,
-          EffectKindId.RemoveDebuff,
-        ].includes(effectKind)
-      ) {
+      if (skillTargetsAlly(skill)) {
+        if (ability.ability.targetIndex !== undefined && !isNaN(ability.ability.targetIndex)) {
+          return [state.championStates[ability.ability.targetIndex]];
+        }
         return state.championStates.filter((champion) => champion.team === ownerTeam).slice(0, 1);
-      }
-      if (
-        [
-          EffectKindId.ApplyDebuff,
-          EffectKindId.Damage,
-          EffectKindId.MultiplyDebuff,
-          EffectKindId.IncreaseDebuffLifetime,
-          EffectKindId.ReduceBuffLifetime,
-          EffectKindId.TeamAttack,
-          EffectKindId.IncreaseCooldown,
-          EffectKindId.IncreasePoisoning,
-          EffectKindId.IncreaseDamageTaken,
-          EffectKindId.ReduceStamina,
-        ].includes(effectKind)
-      ) {
+      } else {
         return state.championStates.filter((champion) => champion.team !== ownerTeam).slice(0, 1);
       }
-      // console.warn(`Unknown effect type ${effectKind}`);
-      return [];
     }
     case EffectTargetType.RelationTarget: {
       if (!effectType.relation) {
@@ -152,9 +145,10 @@ export function selectEffectTargets(
   state: Readonly<BattleState>,
   ownerIndex: number,
   effectType: EffectType,
-  turnState: TurnState
+  turnState: TurnState,
+  ability: AbilityState
 ): ChampionState[] {
-  const result = selectTargetChampions(state, ownerIndex, effectType, turnState);
+  const result = selectTargetChampions(state, ownerIndex, effectType, turnState, ability);
   turnState.effectTargets[effectType.id] = result.map((champion) => champion.index);
   return result;
 }

@@ -23,6 +23,7 @@ export const BattleStateView: React.FC<BattleStateViewProps> = ({
           state={state}
           index={championState.index}
           takingTurn={championState.index === turnIndex}
+          immediateTurn={championState.takeImmediateTurn}
           effectSummarySettings={effectSummarySettings}
           showTurnMeter={showTurnMeter}
         />

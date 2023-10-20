@@ -1,4 +1,4 @@
-import { LeaderStatBonus } from '@raid-toolkit/webclient';
+import { HeroType, LeaderStatBonus } from '@raid-toolkit/webclient';
 import { assert } from '../../Common';
 import { BossSetupByStage } from '../FKStageInfo';
 import { AbilitySetup, AreaId, ChampionSetup, SimulatorConfig } from '../Types';
@@ -17,8 +17,8 @@ export function abilityHasMods(ability: AbilitySetup) {
 }
 
 export function sanitizeAbilitySetup(abilitySetup: AbilitySetup): AbilitySetup {
-  const { cooldown, index, skillTypeId, opener, priority, effectMods } = abilitySetup;
-  return { cooldown, index, skillTypeId, opener, priority, effectMods };
+  const { cooldown, index, skillTypeId, opener, priority, effectMods, targetIndex } = abilitySetup;
+  return { cooldown, index, skillTypeId, opener, priority, effectMods, targetIndex };
 }
 
 export function sanitizeChampionSetup(championSetup: ChampionSetup): ChampionSetup {
@@ -46,6 +46,10 @@ declare module '@raid-toolkit/webclient' {
     areaTypeId: string;
     area: AreaId;
   }
+}
+
+export function getVisualInfo(heroType: HeroType) {
+  return Object.values(heroType.forms[0].visualInfosBySkin)[0];
 }
 
 export function isAuraApplicable(leaderSkill: LeaderStatBonus | undefined, areaId: AreaId) {

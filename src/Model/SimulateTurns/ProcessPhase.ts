@@ -23,7 +23,7 @@ export function processAfterEffectProcessedOnTarget(
         statusEffectIsApplied: 1,
       },
     };
-    const skills = heroType.skillTypeIds.map((typeId) => RTK.skillTypes[typeId]);
+    const skills = heroType.forms[0].skillTypeIds.map((typeId) => RTK.skillTypes[typeId]);
     for (const skill of skills) {
       const passives = skill.effects.filter(
         (effect) =>

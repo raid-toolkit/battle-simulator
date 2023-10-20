@@ -42,7 +42,10 @@
 }
 
 .ability-slot-highlight {
-  text-shadow: 0 0 1px var(--magenta), 0 0 2px var(--magenta), 0 0 4px var(--magenta);
+  text-shadow:
+    0 0 1px var(--magenta),
+    0 0 2px var(--magenta),
+    0 0 4px var(--magenta);
 }
 
 .ability-title {
@@ -59,4 +62,14 @@
   color: var(--color-text-description);
   width: 100%;
   padding: 0 8px 8px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.skill-targets {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
 }

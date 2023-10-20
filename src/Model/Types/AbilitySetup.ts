@@ -10,6 +10,7 @@ export interface AbilitySetup {
   priority?: number;
   cooldown: number;
   effectMods?: Record<number, SkillEffectModification>;
+  targetIndex?: number;
 
   /** @deprecated */
   opener?: boolean;

@@ -7,7 +7,7 @@ export function lookupChampionSetup(typeId: number): ChampionSetup | undefined {
   if (!heroType) return undefined;
 
   const abilities: AbilitySetup[] = [];
-  const skills = heroType.skillTypeIds.map((id) => RTK.skillTypes[id]);
+  const skills = heroType.forms[0].skillTypeIds.map((id) => RTK.skillTypes[id]);
   for (const skill of skills) {
     if (skill.visibility !== Visibility.Visible) {
       continue;

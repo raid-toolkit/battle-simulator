@@ -2,7 +2,7 @@ import React from 'react';
 import { Tooltip } from 'antd';
 import { CompressOutlined } from '@ant-design/icons';
 import isMobile from 'is-mobile';
-import { BattleTurn, ChampionTeam, EffectSummarySetting, getConfig, useAppModel } from '../Model';
+import { BattleTurn, ChampionTeam, EffectSummarySetting, getConfig, getVisualInfo, useAppModel } from '../Model';
 import { Avatar } from '../Components';
 import { RTK } from '../Data';
 import { useColor } from './Colors';
@@ -63,7 +63,11 @@ export const TurnRow: React.FC<{ turn: BattleTurn }> = ({ turn }) => {
           backgroundColor: color,
         }}
       >
-        <Avatar id={RTK.heroTypes[championState.setup.typeId].avatarKey} height="2rem" style={{ marginRight: 8 }} />
+        <Avatar
+          id={getVisualInfo(RTK.heroTypes[championState.setup.typeId]).avatar}
+          height="2rem"
+          style={{ marginRight: 8 }}
+        />
         <span style={{ flex: 1 }}>
           {championName}: {skillName}
         </span>

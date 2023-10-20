@@ -6,6 +6,7 @@ import { RichString } from '../Components';
 import './AbilitySetupView.css';
 import { RTK } from '../Data';
 import { SkillEffectView } from './Parts';
+import { AbilityTargetSetting } from './AbilityTargetSetting';
 
 export interface AbilitySetupViewProps {
   skillTypeId: number;
@@ -135,6 +136,7 @@ export const AbilitySetupView: React.FC<AbilitySetupViewProps> = ({ skillTypeId,
           <div className="skill-description">
             <RichString>{description}</RichString>
           </div>
+          <AbilityTargetSetting skill={staticAbility} skillIndex={abilityIndex} ownerIndex={ownerIndex} />
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             {staticAbility.effects.map((effect) => (
               <SkillEffectView

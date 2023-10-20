@@ -6,6 +6,7 @@ import { heroTypesDataSource } from '../DataSources/HeroTypesDataSource';
 import { HeroType } from '@raid-toolkit/webclient';
 import { Avatar } from '../Avatar/Avatar';
 import { RTK } from '../../Data';
+import { getVisualInfo } from '../../Model';
 
 export interface ChampionSelectMenuProps
   extends Omit<SelectProps<number, ChampionSelectItemProps>, 'onSelect' | 'options'> {
@@ -36,7 +37,7 @@ function heroTypeToOption([, heroType]: [id: string, heroType: HeroType]): Champ
     get label() {
       return (
         <div className="champion-select-item">
-          <Avatar height="1em" width="1em" id={heroType.avatarKey} />
+          <Avatar height="1em" width="1em" id={getVisualInfo(heroType).avatar} />
           {RTK.getString(heroType.shortName)}
         </div>
       );

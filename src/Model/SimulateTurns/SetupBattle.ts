@@ -9,7 +9,7 @@ import { StageBuilderByStage } from '../Configurations';
 export function setupBattle(args: SimulateTurnsArgs): BattleState {
   const { championSetups, stageId, speedAura } = args;
   const championStates = championSetups.map<ChampionState>((setup, index) => {
-    const baseSpeed = RTK.heroTypes[setup.typeId!].unscaledStats.Speed;
+    const baseSpeed = RTK.heroTypes[setup.typeId!].forms[0].unscaledStats.Speed;
     const speed = setup.speed + baseSpeed * ((speedAura ?? 0) / 100);
     const buffs: StatusEffect[] = [];
     if (

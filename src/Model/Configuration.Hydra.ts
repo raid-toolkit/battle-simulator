@@ -16,9 +16,11 @@ export const HydraConfig: SimulatorConfigDefinition = {
         setup(state, _stage) {
           for (const { typeId, speed } of slots) {
             const bossHero = lookupChampionSetup(typeId)!;
-            const immuneToEffects = RTK.heroTypes[typeId].skillTypeIds
+            const immuneToEffects = RTK.heroTypes[typeId].forms[0].skillTypeIds
               .map((skillTypeId) => RTK.skillTypes[skillTypeId])
-              .flatMap((skillType) => skillType.effects.filter((effect) => effect.kindId === EffectKindId.BlockEffect));
+              .flatMap((skillType) =>
+                skillType.effects.filter((effect) => effect.kindId === EffectKindId.PassiveBlockEffect)
+              );
             const immuneToEffectKinds = immuneToEffects.flatMap(
               (effect) => effect.blockEffectParams?.effectKindIds ?? []
             );

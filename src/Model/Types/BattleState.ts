@@ -44,6 +44,7 @@ export interface ChampionState {
   setup: Readonly<Required<ChampionSetup>>;
   speed: number;
   turnMeter: number;
+  takeImmediateTurn?: boolean;
   turnsTaken: number;
   abilityState: AbilityState[];
   debuffs: StatusEffect[];

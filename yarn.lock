@@ -2184,10 +2184,10 @@
     schema-utils "^3.0.0"
     source-map "^0.7.3"
 
-"@raid-toolkit/webclient@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@raid-toolkit/webclient/-/webclient-1.0.2.tgz#7f3df74b98519fecc5360ed58a7e7888361b3d33"
-  integrity sha512-YNCzGxtbnstUQ1VfyE5+1oetD94YWPDVnWwoAhOOmh/Y001MybLy0uHQLmU5TNvoL7BI0SZpZXIkVhfc1x0TLg==
+"@raid-toolkit/webclient@^1.0.7":
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/@raid-toolkit/webclient/-/webclient-1.0.8.tgz#63524f8fcd3521fee7b11e6f5e113921e0242011"
+  integrity sha512-kB5vpwE8A5jFEH+Nz73a4W2+PmRdAa9mDetlXW0aoGAuE40wYBSGsBLpxBRxlaHkToRW/xSrqJEi1fxLixdzXQ==
   dependencies:
     "@remote-ioc/runtime" "^2.0.4"
     "@remote-ioc/ws-router" "^0.1.2"

@@ -76,7 +76,7 @@ export function applyEffect(
     const relTarget = target; // TODO: Update to use effect info
     if (
       effect.condition &&
-      !evalExpression(state, effect.condition, {
+      !evalExpression(state, target, effect.condition, {
         [ExpressionBuilderVariable.TRG_RARITY]: RarityId[targetType.rarity],
         [ExpressionBuilderVariable.TRG_BUFF_COUNT]: target.buffs.length,
         [ExpressionBuilderVariable.TRG_DEBUFF_COUNT]: target.debuffs.length,
@@ -305,13 +305,17 @@ export function applyEffect(
       }
       case EffectKindId.ReduceStamina: {
         if (Math.floor(target.setup.typeId / 100) === 265) break; // Fyro is immune to TM decreases
-        const tmIncrease = evalExpression(state, effect.multiplier, {});
+        const tmIncrease = evalExpression(state, target, effect.multiplier, {});
         target.turnMeter -= tmIncrease;
         break;
       }
       case EffectKindId.IncreaseStamina: {
-        const tmIncrease = evalExpression(state, effect.multiplier, {});
+        const tmIncrease = evalExpression(state, target, effect.multiplier, {});
         target.turnMeter += tmIncrease;
+        break;
+      }
+      case EffectKindId.GiveTurn: {
+        target.takeImmediateTurn = true;
         break;
       }
       case EffectKindId.ExtraTurn: {
@@ -321,7 +325,7 @@ export function applyEffect(
         }
         if (
           effect.condition &&
-          !evalExpression(state, effect.condition, {
+          !evalExpression(state, target, effect.condition, {
             [ExpressionBuilderVariable.isOwnersTurn]: target.index === state.currentTurnOwner ? 1 : 0,
           })
         ) {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BattleState, ChampionTeam, EffectSummarySetting } from '../Model';
+import { BattleState, ChampionTeam, EffectSummarySetting, getVisualInfo } from '../Model';
 import { Avatar, TurnMeter } from '../Components';
 import { RTK } from '../Data';
 import { StatusEffectIcon } from './StatusEffectIcon';
@@ -9,6 +9,7 @@ export interface ChampionStateViewProps {
   state: BattleState;
   index: number;
   takingTurn?: boolean;
+  immediateTurn?: boolean;
   effectSummarySettings?: EffectSummarySetting;
   showTurnMeter?: boolean;
 }
@@ -19,6 +20,7 @@ export const ChampionStateView: React.FC<ChampionStateViewProps> = ({
   effectSummarySettings,
   showTurnMeter,
   takingTurn,
+  immediateTurn,
 }) => {
   const championState = state.championStates[index];
   const showEffects =
@@ -32,13 +34,20 @@ export const ChampionStateView: React.FC<ChampionStateViewProps> = ({
   return (
     <div className="champion-state-view">
       <Avatar
-        id={RTK.heroTypes[championState.setup.typeId].avatarKey}
+        id={getVisualInfo(RTK.heroTypes[championState.setup.typeId]).avatar}
         height={`${height}rem`}
         style={{ marginRight: 4 }}
       />
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyItems: 'flex-end' }}>
         {showTurnMeter && (
-          <TurnMeter showLabel value={championState.turnMeter / 100} winner={takingTurn} width="100%" height="1rem" />
+          <TurnMeter
+            showLabel
+            immediate={immediateTurn}
+            value={championState.turnMeter / 100}
+            winner={takingTurn}
+            width="100%"
+            height="1rem"
+          />
         )}
         {showEffects && (
           <>

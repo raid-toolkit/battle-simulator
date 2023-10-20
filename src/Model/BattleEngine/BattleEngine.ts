@@ -15,7 +15,7 @@ export class BattleEngine {
     for (const setup of championSetups) {
       assertValidChampionSetup(setup);
 
-      const baseSpeed = RTK.heroTypes[setup.typeId].unscaledStats.Speed;
+      const baseSpeed = RTK.heroTypes[setup.typeId].forms[0].unscaledStats.Speed;
       const speed = setup.speed + baseSpeed * ((speedAura ?? 0) / 100);
       this.championStates.push({
         setup,

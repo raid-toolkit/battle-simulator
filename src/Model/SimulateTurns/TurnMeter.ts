@@ -31,6 +31,10 @@ function tickChampion(champion: ChampionState) {
 export function getNextTurn(state: BattleState) {
   let nextTurn: ChampionState | undefined;
   for (const champion of state.championStates) {
+    if (champion.takeImmediateTurn) {
+      nextTurn = champion;
+      break;
+    }
     if (champion.turnMeter >= 100) {
       if (!nextTurn || champion.turnMeter > nextTurn.turnMeter) {
         nextTurn = champion;
@@ -115,6 +119,7 @@ export function simulateTurns(state: BattleState) {
 
       ability.cooldownRemaining = ability.ability.cooldown;
       ++champion.turnsTaken;
+      delete champion.takeImmediateTurn;
       turns.push(turn);
     }
 

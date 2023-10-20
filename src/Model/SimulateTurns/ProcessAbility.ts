@@ -24,7 +24,7 @@ export function processAbility(state: BattleState, turn: BattleTurn): void {
     const skill = RTK.skillTypes[ability.ability.skillTypeId];
     for (const effect of skill.effects) {
       for (let n = 0; n < effect.count; n++) {
-        const targets = selectEffectTargets(state, turn.championIndex, effect, turnState);
+        const targets = selectEffectTargets(state, turn.championIndex, effect, turnState, ability);
         applyEffect(state, turn.championIndex, ability.ability, skill, effect, targets, turnState);
       }
     }

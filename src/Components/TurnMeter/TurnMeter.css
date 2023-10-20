@@ -90,6 +90,10 @@
   bottom: 0px;
 }
 
+.turn-meter.immediate .filled {
+  background-color: #00c3ff; /* in-game */
+}
+
 .turn-meter .over-filled {
   background-color: #e58b5b;
   background: linear-gradient(to right, #c21919 75%, #e58b5b);
