@@ -347,6 +347,12 @@ export function applyEffect(
         if (params.skillIndex !== undefined) {
           debugAssert(params.skillToChange);
         }
+
+        // Kymar special case
+        if (target.setup.typeId === 1446 && owner.setup.typeId === 1446) {
+          break;
+        }
+
         const abilities = target.abilityState.reduce<AbilityState[]>((acc, ability) => {
           if (acc.length > params.skillToChange || ability.cooldownRemaining === 0) {
             return acc;
