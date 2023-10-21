@@ -8,6 +8,7 @@ import {
   BlessingTypeId,
   ChampionState,
   ExpressionBuilderVariable,
+  ExpressionVars,
   RarityId,
   StatusEffect,
   TurnState,
@@ -74,21 +75,26 @@ export function applyEffect(
     const ownerType = RTK.heroTypes[owner.setup.typeId];
     const targetType = RTK.heroTypes[target.setup.typeId];
     const relTarget = target; // TODO: Update to use effect info
-    if (
-      effect.condition &&
-      !evalExpression(state, target, effect.condition, {
-        [ExpressionBuilderVariable.TRG_RARITY]: RarityId[targetType.rarity],
-        [ExpressionBuilderVariable.TRG_BUFF_COUNT]: target.buffs.length,
-        [ExpressionBuilderVariable.TRG_DEBUFF_COUNT]: target.debuffs.length,
-        [ExpressionBuilderVariable.TRG_STAMINA]: target.turnMeter,
-        [ExpressionBuilderVariable.REL_TRG_STAMINA]: relTarget.turnMeter,
-        // [ExpressionBuilderVariable.targetFactionId]: targetType.faction,
-        [ExpressionBuilderVariable.RARITY]: RarityId[ownerType.rarity],
-        [ExpressionBuilderVariable.BUFF_COUNT]: owner.debuffs.length,
-        [ExpressionBuilderVariable.DEBUFF_COUNT]: owner.debuffs.length,
-        // TODO
-      })
-    ) {
+    const expVars: ExpressionVars = {
+      // [ExpressionBuilderVariable.targetId]: state.championStates.indexOf(target);
+      [ExpressionBuilderVariable.isOwnersTurn]: target.index === state.currentTurnOwner ? 1 : 0,
+      [ExpressionBuilderVariable.targetId]: target.index,
+      [ExpressionBuilderVariable.producerId]: ownerIndex,
+      [ExpressionBuilderVariable.targetBaseTypeId]: target.setup.typeId - (target.setup.typeId % 6),
+      [ExpressionBuilderVariable.skillProducerBaseTypeId]: owner.setup.typeId - (owner.setup.typeId % 6),
+
+      [ExpressionBuilderVariable.TRG_RARITY]: RarityId[targetType.rarity],
+      [ExpressionBuilderVariable.TRG_BUFF_COUNT]: target.buffs.length,
+      [ExpressionBuilderVariable.TRG_DEBUFF_COUNT]: target.debuffs.length,
+      [ExpressionBuilderVariable.TRG_STAMINA]: target.turnMeter,
+      [ExpressionBuilderVariable.REL_TRG_STAMINA]: relTarget.turnMeter,
+      // [ExpressionBuilderVariable.targetFactionId]: targetType.faction,
+      [ExpressionBuilderVariable.RARITY]: RarityId[ownerType.rarity],
+      [ExpressionBuilderVariable.BUFF_COUNT]: owner.debuffs.length,
+      [ExpressionBuilderVariable.DEBUFF_COUNT]: owner.debuffs.length,
+    };
+
+    if (effect.condition && !evalExpression(state, target, effect.condition, expVars)) {
       continue;
     }
 
@@ -305,12 +311,12 @@ export function applyEffect(
       }
       case EffectKindId.ReduceStamina: {
         if (Math.floor(target.setup.typeId / 100) === 265) break; // Fyro is immune to TM decreases
-        const tmIncrease = evalExpression(state, target, effect.multiplier, {});
+        const tmIncrease = evalExpression(state, target, effect.multiplier, expVars);
         target.turnMeter -= tmIncrease;
         break;
       }
       case EffectKindId.IncreaseStamina: {
-        const tmIncrease = evalExpression(state, target, effect.multiplier, {});
+        const tmIncrease = evalExpression(state, target, effect.multiplier, expVars);
         target.turnMeter += tmIncrease;
         break;
       }
@@ -323,17 +329,12 @@ export function applyEffect(
           // don't count non-guaranteed turns
           break;
         }
-        if (
-          effect.condition &&
-          !evalExpression(state, target, effect.condition, {
-            [ExpressionBuilderVariable.isOwnersTurn]: target.index === state.currentTurnOwner ? 1 : 0,
-          })
-        ) {
+        if (effect.condition && !evalExpression(state, target, effect.condition, expVars)) {
           // can't proc extra turn
           // TODO: Add debug logging?
           break;
         }
-        state.turnVariables[ExpressionBuilderVariable.targetIsAlreadyHasExtraTurn] = 1;
+        expVars[ExpressionBuilderVariable.targetIsAlreadyHasExtraTurn] = 1;
         state.turnQueue.push(target.index);
         break;
       }
